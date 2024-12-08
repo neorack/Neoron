@@ -43,6 +43,15 @@
 - [x] Specialized queries (by channel, guild, author)
 - [x] Thread message support
 
+## Code Quality (90% Complete)
+- [x] Code analyzers setup
+  - [x] Roslynator
+  - [x] StyleCop
+  - [x] SonarAnalyzer
+- [x] Custom ruleset configuration
+- [x] Enforce analysis on build
+- [ ] Fix existing analyzer warnings
+
 ## Testing Coverage (85% Complete)
 - [x] Unit tests for DiscordMessageRepository
   - [x] Basic CRUD operations

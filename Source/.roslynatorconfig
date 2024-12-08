@@ -1,0 +1,42 @@
+# Roslynator configuration
+root = true
+
+# Default settings
+[*]
+roslynator_accessibility_modifiers = explicit
+roslynator_enum_has_flag_style = operator
+roslynator_object_creation_type_style = implicit
+roslynator_use_var_instead_of_implicit_object_creation = true
+roslynator_binary_operator_new_line = before
+roslynator_blank_line_between_closing_brace_and_switch_section = true
+roslynator_blank_line_between_single_line_accessors = false
+roslynator_empty_line_between_single_line_declarations = false
+roslynator_max_line_length = 120
+
+# Analyzer settings
+roslynator_analyzers.enabled_by_default = true
+roslynator_compiler_diagnostic_fixes.enabled_by_default = true
+roslynator_refactorings.enabled_by_default = true
+
+# Specific rules configuration
+dotnet_diagnostic.RCS1001.severity = warning    # Add braces (when expression spans over multiple lines)
+dotnet_diagnostic.RCS1003.severity = warning    # Add braces to if-else
+dotnet_diagnostic.RCS1005.severity = warning    # Simplify nested using statements
+dotnet_diagnostic.RCS1006.severity = warning    # Merge else with nested if
+dotnet_diagnostic.RCS1015.severity = warning    # Use nameof operator
+dotnet_diagnostic.RCS1018.severity = warning    # Add accessibility modifiers
+dotnet_diagnostic.RCS1021.severity = warning    # Simplify lambda expression
+dotnet_diagnostic.RCS1032.severity = warning    # Remove redundant parentheses
+dotnet_diagnostic.RCS1037.severity = warning    # Remove trailing white-space
+dotnet_diagnostic.RCS1038.severity = warning    # Remove empty statement
+dotnet_diagnostic.RCS1043.severity = warning    # Remove partial modifier from type with single part
+dotnet_diagnostic.RCS1046.severity = warning    # Asynchronous method name should end with 'Async'
+dotnet_diagnostic.RCS1047.severity = warning    # Non-asynchronous method name should not end with 'Async'
+dotnet_diagnostic.RCS1055.severity = warning    # Avoid semicolon at the end of declaration
+dotnet_diagnostic.RCS1058.severity = warning    # Use compound assignment
+dotnet_diagnostic.RCS1061.severity = warning    # Merge if with nested if
+dotnet_diagnostic.RCS1069.severity = warning    # Remove unnecessary case label
+dotnet_diagnostic.RCS1070.severity = warning    # Remove redundant default switch section
+dotnet_diagnostic.RCS1071.severity = warning    # Remove redundant base constructor call
+dotnet_diagnostic.RCS1074.severity = warning    # Remove redundant constructor
+dotnet_diagnostic.RCS1085.severity = warning    # Use auto-implemented property
