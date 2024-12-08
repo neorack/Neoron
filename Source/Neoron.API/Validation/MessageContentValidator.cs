@@ -17,20 +17,20 @@ public static partial class MessageContentValidator
     public static MessageValidationResult ValidateContent(string content)
     {
         if (string.IsNullOrWhiteSpace(content))
-            return ValidationResult.Error("Content cannot be empty");
+            return MessageValidationResult.Error("Content cannot be empty");
 
         if (content.Length > MaxLength)
-            return ValidationResult.Error($"Content exceeds maximum length of {MaxLength}");
+            return MessageValidationResult.Error($"Content exceeds maximum length of {MaxLength}");
 
         var urlCount = UrlRegex.Matches(content).Count;
         if (urlCount > MaxUrls)
-            return ValidationResult.Error($"Too many URLs (max {MaxUrls})");
+            return MessageValidationResult.Error($"Too many URLs (max {MaxUrls})");
 
         var mentionCount = Regex.Matches(content, @"<@!?\d+>").Count;
         if (mentionCount > MaxMentions)
-            return ValidationResult.Error($"Too many mentions (max {MaxMentions})");
+            return MessageValidationResult.Error($"Too many mentions (max {MaxMentions})");
 
-        return ValidationResult.Success();
+        return MessageValidationResult.Success();
     }
 
     [GeneratedRegex(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture)]
