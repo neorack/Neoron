@@ -15,7 +15,7 @@ CREATE TABLE [dbo].[Person]
     [PreferredLanguage] NCHAR(5) NULL,                  -- ISO language code
     [LastLoginAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    [CreatedBy] UNIQUEIDENTIFIER NULL CONSTRAINT [FK_PersonTag_CreatedBy] FOREIGN KEY REFERENCES [dbo].[Person]([Id]),
+    [CreatedBy] UNIQUEIDENTIFIER NULL,
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedBy] UNIQUEIDENTIFIER NULL,
     [IsActive] BIT NOT NULL DEFAULT 1,
@@ -71,7 +71,9 @@ CREATE TABLE [dbo].[Group]
     [CreatedBy] UNIQUEIDENTIFIER NULL,
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedBy] UNIQUEIDENTIFIER NULL,
-    [IsActive] BIT NOT NULL DEFAULT 1
+    [IsActive] BIT NOT NULL DEFAULT 1,
+    CONSTRAINT [FK_Group_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_Group_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id])
 )
 GO
 
@@ -209,7 +211,8 @@ CREATE TABLE [dbo].[PersonTag]
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [CreatedBy] UNIQUEIDENTIFIER NULL,
     CONSTRAINT [FK_PersonTag_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_PersonTag_Tag] FOREIGN KEY ([TagId]) REFERENCES [dbo].[Tag]([Id])
+    CONSTRAINT [FK_PersonTag_Tag] FOREIGN KEY ([TagId]) REFERENCES [dbo].[Tag]([Id]),
+    CONSTRAINT [FK_PersonTag_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id])
 )
 GO
 
