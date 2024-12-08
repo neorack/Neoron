@@ -372,3 +372,96 @@ By organizing the directory structure thoughtfully, following a disciplined deve
 ---
 
 Feel free to reach out if you need further assistance or clarification on any aspect of this guide!
+# Project Guidelines
+
+## Overview
+This document outlines the development standards, processes, and best practices for the Neoron project.
+
+## Checklist-Driven Development
+
+### Purpose
+- Ensure consistent quality across deliverables
+- Track progress effectively
+- Identify blockers early
+- Maintain clear documentation
+- Enable efficient collaboration
+
+### Checklist Management
+1. **Creation**
+   - Create checklist at project/feature initiation
+   - Break down into measurable tasks
+   - Include acceptance criteria
+   - Set priorities (High/Medium/Low)
+   - Establish deadlines
+
+2. **Maintenance**
+   - Review weekly
+   - Update progress regularly
+   - Document blockers
+   - Track dependencies
+   - Adjust timelines as needed
+
+3. **Structure**
+   - Group items by category
+   - Include completion status
+   - Add progress percentages
+   - Note dependencies
+   - Track dates (start/completion)
+
+### Implementation Requirements
+
+#### Architecture
+- Use clean architecture principles
+- Implement repository pattern
+- Support dependency injection
+- Follow SOLID principles
+- Include proper separation of concerns
+
+#### Code Quality
+- Write unit tests
+- Perform code reviews
+- Follow C# coding standards
+- Document public APIs
+- Use consistent naming conventions
+
+#### Database
+- Use proper indexing
+- Implement soft deletes
+- Include audit fields
+- Follow naming conventions
+- Maintain referential integrity
+
+#### Security
+- Implement authentication
+- Add authorization
+- Validate input
+- Prevent SQL injection
+- Handle sensitive data appropriately
+
+#### Performance
+- Optimize queries
+- Implement caching
+- Use async/await properly
+- Add monitoring
+- Support scalability
+
+## Review Process
+1. Self-review against checklist
+2. Peer code review
+3. Technical lead review
+4. Final verification
+5. Documentation update
+
+## Documentation
+- Keep README current
+- Document API changes
+- Update deployment guides
+- Maintain change logs
+- Include setup instructions
+
+## Version Control
+- Use meaningful commit messages
+- Follow branching strategy
+- Tag releases
+- Keep clean history
+- Review before merge
