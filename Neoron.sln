@@ -1,10 +1,58 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{181BC054-F4BD-4471-9C8D-EEB8583BB7E9}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Neoron.Domain", "Source\Neoron.Domain\Neoron.Domain.sqlproj", "{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C85BFBE0-FBDC-4302-95AA-2B6B2CD2EAB0}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE.txt = LICENSE.txt
+		Documentation\Project guildelines.md = Documentation\Project guildelines.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neoron.API", "Source\Neoron.API\Neoron.API.csproj", "{DB4314BF-28B8-4E21-BFB2-2744CF238BAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neoron.AppHost", "Neoron.AppHost\Neoron.AppHost.csproj", "{1CDE563D-EB81-4515-AA60-829B25DDB2C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neoron.ServiceDefaults", "Neoron.ServiceDefaults\Neoron.ServiceDefaults.csproj", "{069C0729-2502-4132-9C44-7050F6234A03}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{DB4314BF-28B8-4E21-BFB2-2744CF238BAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB4314BF-28B8-4E21-BFB2-2744CF238BAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB4314BF-28B8-4E21-BFB2-2744CF238BAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB4314BF-28B8-4E21-BFB2-2744CF238BAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CDE563D-EB81-4515-AA60-829B25DDB2C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CDE563D-EB81-4515-AA60-829B25DDB2C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CDE563D-EB81-4515-AA60-829B25DDB2C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CDE563D-EB81-4515-AA60-829B25DDB2C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{069C0729-2502-4132-9C44-7050F6234A03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{069C0729-2502-4132-9C44-7050F6234A03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{069C0729-2502-4132-9C44-7050F6234A03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{069C0729-2502-4132-9C44-7050F6234A03}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD} = {181BC054-F4BD-4471-9C8D-EEB8583BB7E9}
+		{DB4314BF-28B8-4E21-BFB2-2744CF238BAB} = {181BC054-F4BD-4471-9C8D-EEB8583BB7E9}
+		{1CDE563D-EB81-4515-AA60-829B25DDB2C6} = {181BC054-F4BD-4471-9C8D-EEB8583BB7E9}
+		{069C0729-2502-4132-9C44-7050F6234A03} = {181BC054-F4BD-4471-9C8D-EEB8583BB7E9}
 	EndGlobalSection
 EndGlobal
