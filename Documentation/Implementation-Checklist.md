@@ -44,7 +44,7 @@
 - [x] Thread message support
 
 ## Missing/Todo Items
-- [ ] Unit tests
+- [x] Unit tests for DiscordMessageRepository
 - [ ] Integration tests
 - [ ] API endpoints/controllers
 - [ ] Authentication/Authorization
