@@ -229,6 +229,102 @@ public class DiscordMessageRepositoryTests : IDisposable
         // Should complete without throwing
     }
 
+    [Fact]
+    public async Task GetByChannelIdAsync_WithPagination_ReturnsCorrectPage()
+    {
+        // Arrange
+        var messages = Enumerable.Range(1, 20).Select(i => new DiscordMessage
+        {
+            MessageId = i,
+            ChannelId = 100,
+            Content = $"Test {i}",
+            CreatedAt = DateTimeOffset.UtcNow.AddMinutes(-i)
+        }).ToList();
+        await _context.DiscordMessages.AddRangeAsync(messages);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _repository.GetByChannelIdAsync(100, skip: 5, take: 5);
+
+        // Assert
+        Assert.Equal(5, result.Count());
+        Assert.Equal("Test 6", result.First().Content);
+    }
+
+    [Fact]
+    public async Task AddRangeAsync_AddsMultipleMessages()
+    {
+        // Arrange
+        var messages = Enumerable.Range(1, 5).Select(i => new DiscordMessage
+        {
+            MessageId = i,
+            Content = $"Bulk Test {i}",
+            CreatedAt = DateTimeOffset.UtcNow
+        }).ToList();
+
+        // Act
+        var result = await _repository.AddRangeAsync(messages);
+
+        // Assert
+        Assert.Equal(5, result);
+        Assert.Equal(5, await _context.DiscordMessages.CountAsync());
+    }
+
+    [Fact]
+    public async Task UpdateRangeAsync_UpdatesMultipleMessages()
+    {
+        // Arrange
+        var messages = Enumerable.Range(1, 3).Select(i => new DiscordMessage
+        {
+            MessageId = i,
+            Content = $"Original {i}",
+            CreatedAt = DateTimeOffset.UtcNow
+        }).ToList();
+        await _context.DiscordMessages.AddRangeAsync(messages);
+        await _context.SaveChangesAsync();
+
+        foreach (var msg in messages)
+        {
+            msg.Content = $"Updated {msg.MessageId}";
+        }
+
+        // Act
+        var result = await _repository.UpdateRangeAsync(messages);
+
+        // Assert
+        Assert.Equal(3, result);
+        var updated = await _context.DiscordMessages.ToListAsync();
+        Assert.All(updated, msg => Assert.StartsWith("Updated", msg.Content));
+    }
+
+    [Fact]
+    public async Task DeleteRangeAsync_SoftDeletesMultipleMessages()
+    {
+        // Arrange
+        var messages = Enumerable.Range(1, 4).Select(i => new DiscordMessage
+        {
+            MessageId = i,
+            Content = $"Test {i}",
+            CreatedAt = DateTimeOffset.UtcNow
+        }).ToList();
+        await _context.DiscordMessages.AddRangeAsync(messages);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _repository.DeleteRangeAsync(new[] { 1L, 3L });
+
+        // Assert
+        Assert.Equal(2, result);
+        var deletedMessages = await _context.DiscordMessages
+            .Where(m => m.MessageId == 1 || m.MessageId == 3)
+            .ToListAsync();
+        Assert.All(deletedMessages, msg =>
+        {
+            Assert.True(msg.IsDeleted);
+            Assert.NotNull(msg.DeletedAt);
+        });
+    }
+
     public void Dispose()
     {
         _context.Database.EnsureDeleted();
