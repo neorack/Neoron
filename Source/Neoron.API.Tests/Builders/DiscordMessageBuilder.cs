@@ -54,6 +54,14 @@ public class DiscordMessageBuilder
         return this;
     }
 
+    private string? _embeddedContent;
+
+    public DiscordMessageBuilder WithEmbeddedContent(string embeddedContent)
+    {
+        _embeddedContent = embeddedContent;
+        return this;
+    }
+
     public DiscordMessage Build()
     {
         return new DiscordMessage
@@ -63,6 +71,7 @@ public class DiscordMessageBuilder
             GuildId = _guildId,
             AuthorId = _authorId,
             Content = _content,
+            EmbeddedContent = _embeddedContent,
             MessageType = _messageType,
             CreatedAt = _createdAt
         };

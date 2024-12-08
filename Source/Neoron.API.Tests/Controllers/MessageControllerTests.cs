@@ -447,4 +447,118 @@ public class MessageControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
+    [Fact]
+    public async Task UpdateMessage_ConcurrentUpdates_ReturnsConflict()
+    {
+        // Arrange
+        var message = DiscordMessageBuilder.Create()
+            .WithContent("Original content")
+            .Build();
+
+        await DbContext.Messages.AddAsync(message);
+        await DbContext.SaveChangesAsync();
+
+        var request1 = new UpdateMessageRequest { Content = "Updated by user 1" };
+        var request2 = new UpdateMessageRequest { Content = "Updated by user 2" };
+
+        // Act
+        var task1 = Client.PutAsJsonAsync($"/api/messages/{message.MessageId}", request1);
+        var task2 = Client.PutAsJsonAsync($"/api/messages/{message.MessageId}", request2);
+        
+        var responses = await Task.WhenAll(task1, task2);
+
+        // Assert
+        responses.Should().Contain(r => r.StatusCode == HttpStatusCode.Conflict);
+    }
+
+    [Theory]
+    [InlineData("Test message with 🎉 emoji")]
+    [InlineData("Message with <script>alert('xss')</script>")]
+    [InlineData("Message with \u0000 null character")]
+    public async Task CreateMessage_WithSpecialCharacters_HandlesCorrectly(string content)
+    {
+        // Arrange
+        var request = new CreateMessageRequest
+        {
+            MessageId = 123456789,
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = content,
+            MessageType = 0
+        };
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/api/messages", request);
+        var result = await response.Content.ReadFromJsonAsync<MessageResponse>();
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        result.Should().NotBeNull();
+        result!.Content.Should().Be(content);
+    }
+
+    [Fact]
+    public async Task UpdateMessage_WithoutPermission_ReturnsForbidden()
+    {
+        // Arrange
+        var message = DiscordMessageBuilder.Create()
+            .WithAuthorId(22222222)
+            .WithGuildId(11111111)
+            .Build();
+
+        await DbContext.Messages.AddAsync(message);
+        await DbContext.SaveChangesAsync();
+
+        var request = new UpdateMessageRequest { Content = "Updated content" };
+        
+        Client.DefaultRequestHeaders.Add("X-User-Id", "33333333");
+        Client.DefaultRequestHeaders.Add("X-User-Roles", "user"); // Non-admin role
+
+        // Act
+        var response = await Client.PutAsJsonAsync($"/api/messages/{message.MessageId}", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        
+        // Cleanup
+        Client.DefaultRequestHeaders.Remove("X-User-Id");
+        Client.DefaultRequestHeaders.Remove("X-User-Roles");
+    }
+
+    [Fact]
+    public async Task CreateMessage_WithRateLimitingPerUser_EnforcesLimit()
+    {
+        // Arrange
+        var userId = "12345";
+        Client.DefaultRequestHeaders.Add("X-User-Id", userId);
+
+        var request = new CreateMessageRequest
+        {
+            MessageId = 123456789,
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = "Test message",
+            MessageType = 0
+        };
+
+        // Act - Send requests rapidly from same user
+        var tasks = new List<Task<HttpResponseMessage>>();
+        for (int i = 0; i < 5; i++)
+        {
+            request.MessageId = 123456789 + i;
+            tasks.Add(Client.PostAsJsonAsync("/api/messages", request));
+            await Task.Delay(100); // Small delay to simulate rapid requests
+        }
+
+        var responses = await Task.WhenAll(tasks);
+
+        // Assert
+        responses.Count(r => r.StatusCode == HttpStatusCode.TooManyRequests).Should().BeGreaterThan(0);
+        
+        // Cleanup
+        Client.DefaultRequestHeaders.Remove("X-User-Id");
+    }
 }
