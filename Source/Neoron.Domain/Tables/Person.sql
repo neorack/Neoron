@@ -44,7 +44,7 @@ CREATE TABLE [dbo].[PersonRelationship]
 GO
 
 -- Groups table
-CREATE TABLE [dbo].[Group]
+CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [Name] NVARCHAR(200) NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE [dbo].[PersonGroup]
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT [FK_PersonGroup_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_PersonGroup_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[Group]([Id])
+    CONSTRAINT [FK_PersonGroup_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[UserGroup]([Id]) ON DELETE CASCADE
 )
 GO
 
@@ -92,7 +92,7 @@ CREATE TABLE [dbo].[MessageLog]
     [Status] NVARCHAR(50) NOT NULL CHECK ([Status] IN ('Sent', 'Delivered', 'Read', 'Failed')), -- Message status
     CONSTRAINT [FK_MessageLog_Sender] FOREIGN KEY ([SenderId]) REFERENCES [dbo].[Person]([Id]),
     CONSTRAINT [FK_MessageLog_Receiver] FOREIGN KEY ([ReceiverId]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_MessageLog_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[Group]([Id]),
+    CONSTRAINT [FK_MessageLog_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[UserGroup]([Id]) ON DELETE CASCADE,
     CONSTRAINT [CK_MessageLog_Recipient] CHECK (
         ([ReceiverId] IS NULL AND [GroupId] IS NOT NULL) OR
         ([ReceiverId] IS NOT NULL AND [GroupId] IS NULL)
@@ -108,6 +108,23 @@ CREATE INDEX [IX_Person_Names] ON [dbo].[Person] ([LastName], [FirstName])
 GO
 
 CREATE INDEX [IX_Person_ExternalId] ON [dbo].[Person] ([ExternalId]) WHERE [ExternalId] IS NOT NULL
+GO
+
+-- Person Contact Information
+CREATE TABLE [dbo].[PersonContact]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [PersonId] UNIQUEIDENTIFIER NOT NULL,
+    [ContactTypeId] TINYINT NOT NULL,
+    [Value] NVARCHAR(MAX) NOT NULL,
+    [IsPrimary] BIT NOT NULL DEFAULT 0,
+    [IsVerified] BIT NOT NULL DEFAULT 0,
+    [VerifiedAt] DATETIME2 NULL,
+    [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT [FK_PersonContact_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_PersonContact_ContactType] FOREIGN KEY ([ContactTypeId]) REFERENCES [dbo].[RefContactType]([Id])
+)
 GO
 
 CREATE INDEX [IX_PersonContact_PersonId] ON [dbo].[PersonContact] ([PersonId])
