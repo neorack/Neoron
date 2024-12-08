@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Neoron.ServiceDefaults\Neoron.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Neoron.ServiceDefaults\Neoron.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
