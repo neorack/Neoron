@@ -465,3 +465,145 @@ This document outlines the development standards, processes, and best practices 
 - Tag releases
 - Keep clean history
 - Review before merge
+# Neoron Project Guidelines
+
+## Code Organization
+
+### Project Structure
+- Keep related files together in appropriate namespaces
+- Follow Clean Architecture principles with clear separation of concerns
+- Use feature folders where appropriate
+- Maintain consistent file naming conventions
+
+### Naming Conventions
+- Use PascalCase for class names, public members, and interfaces
+- Prefix interfaces with 'I' (e.g., IDiscordMessageRepository)
+- Use clear, descriptive names that reflect purpose
+- Avoid abbreviations unless widely understood
+
+## Coding Standards
+
+### General Guidelines
+- Follow C# coding conventions
+- Write self-documenting code with clear intent
+- Keep methods focused and small
+- Limit method parameters (consider using parameter objects)
+- Use dependency injection for better testability
+
+### Async/Await
+- Use async/await consistently
+- Include ConfigureAwait(false) where appropriate
+- Follow TAP (Task-based Asynchronous Pattern)
+- Use cancellation tokens for long-running operations
+
+### Error Handling
+- Use meaningful exception types
+- Implement global exception handling
+- Log exceptions appropriately
+- Return meaningful error responses from API endpoints
+
+## Documentation
+
+### Code Documentation
+- Provide XML documentation for public APIs
+- Include examples in complex scenarios
+- Document assumptions and preconditions
+- Keep documentation up-to-date with code changes
+
+### API Documentation
+- Use Swagger/OpenAPI for API documentation
+- Include example requests and responses
+- Document error scenarios
+- Keep API versioning information current
+
+## Testing
+
+### Unit Tests
+- Write tests for business logic
+- Follow Arrange-Act-Assert pattern
+- Use meaningful test names describing scenario
+- Mock external dependencies appropriately
+
+### Integration Tests
+- Test database operations
+- Verify API endpoints
+- Use appropriate test data
+- Clean up test data after execution
+
+## Database
+
+### Entity Framework
+- Use migrations for schema changes
+- Follow DbContext best practices
+- Implement repository pattern correctly
+- Use appropriate indexing strategies
+
+### Performance
+- Write efficient queries
+- Use pagination for large datasets
+- Implement caching where appropriate
+- Monitor query performance
+
+## Security
+
+### API Security
+- Implement proper authentication
+- Use appropriate authorization
+- Rate limit endpoints
+- Validate all inputs
+
+### Data Protection
+- Protect sensitive data
+- Use secure communication
+- Implement proper access controls
+- Follow security best practices
+
+## Deployment & DevOps
+
+### Build Process
+- Maintain clean build pipeline
+- Use appropriate versioning
+- Include necessary analysis steps
+- Automate where possible
+
+### Monitoring
+- Implement proper logging
+- Set up application monitoring
+- Track performance metrics
+- Configure appropriate alerts
+
+## Version Control
+
+### Git Practices
+- Write meaningful commit messages
+- Use feature branches
+- Keep commits focused and atomic
+- Follow branch naming conventions
+
+### Pull Requests
+- Include appropriate documentation
+- Add relevant tests
+- Update API documentation if needed
+- Ensure all checks pass
+
+## Dependencies
+
+### NuGet Packages
+- Keep dependencies up to date
+- Audit security vulnerabilities
+- Document major version updates
+- Consider package impact on build time
+
+## Review Process
+
+### Code Reviews
+- Review for functionality
+- Check code style consistency
+- Verify test coverage
+- Ensure documentation updates
+
+### Performance Reviews
+- Review query performance
+- Check memory usage
+- Verify response times
+- Monitor resource utilization
