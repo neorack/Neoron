@@ -27,15 +27,6 @@ CREATE TABLE [dbo].[Person]
 )
 GO
 
--- Indexes for Person table
-CREATE INDEX [IX_Person_Email] ON [dbo].[Person] ([Email])
-GO
-
-CREATE INDEX [IX_Person_Names] ON [dbo].[Person] ([LastName], [FirstName])
-GO
-
-CREATE INDEX [IX_Person_ExternalId] ON [dbo].[Person] ([ExternalId]) WHERE [ExternalId] IS NOT NULL
-GO
 CREATE TABLE [dbo].[PersonRelationship]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -122,7 +113,7 @@ GO
 CREATE INDEX [IX_PersonContact_PersonId] ON [dbo].[PersonContact] ([PersonId])
 GO
 
-CREATE INDEX [IX_PersonContact_Type_Value] ON [dbo].[PersonContact] ([ContactType], [Value]) 
+CREATE INDEX [IX_PersonContact_Type_Value] ON [dbo].[PersonContact] ([ContactTypeId], [Value]) 
     INCLUDE ([PersonId]) WHERE LEN([Value]) <= 900     -- Include PersonId and limit indexed value length
 GO
 

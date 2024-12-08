@@ -10,7 +10,7 @@ CREATE TABLE [dbo].[PersonContact]
     [VerifiedAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    CONSTRAINT [UQ_PersonContact_Primary] UNIQUE ([PersonId], [ContactType], [IsPrimary]) 
+    CONSTRAINT [UQ_PersonContact_Primary] UNIQUE ([PersonId], [ContactTypeId], [IsPrimary]) 
         WHERE [IsPrimary] = 1,
     CONSTRAINT [FK_PersonContact_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id])
 )
