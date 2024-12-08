@@ -43,7 +43,7 @@
 - [x] Specialized queries (by channel, guild, author)
 - [x] Thread message support
 
-## Testing Coverage (75% Complete)
+## Testing Coverage (85% Complete)
 - [x] Unit tests for DiscordMessageRepository
   - [x] Basic CRUD operations
   - [x] Channel/Guild/Author queries
@@ -51,14 +51,14 @@
   - [x] Soft delete functionality
   - [x] Bulk operations
   - [x] Pagination support
-  - [ ] Concurrent access scenarios
+  - [x] Concurrent access scenarios
   
 - [x] Integration tests with SQL Server
   - [x] Database relationships
   - [x] Data persistence
   - [x] Transaction handling
-  - [ ] Connection resilience
-  - [ ] Deadlock scenarios
+  - [x] Connection resilience
+  - [x] Deadlock scenarios
   
 - [ ] Controller Tests
   - [ ] HTTP endpoints

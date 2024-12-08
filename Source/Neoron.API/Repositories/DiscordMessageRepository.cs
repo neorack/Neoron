@@ -33,8 +33,29 @@ public class DiscordMessageRepository : IDiscordMessageRepository
 
     public async Task UpdateAsync(DiscordMessage entity)
     {
-        _context.Entry(entity).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        const int maxRetries = 3;
+        var retryCount = 0;
+
+        while (retryCount < maxRetries)
+        {
+            try
+            {
+                _context.Entry(entity).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return;
+            }
+            catch (DbUpdateConcurrencyException) when (retryCount < maxRetries - 1)
+            {
+                await Task.Delay(100 * (retryCount + 1)); // Exponential backoff
+                retryCount++;
+                
+                // Reload the entity and retry
+                await _context.Entry(entity).ReloadAsync();
+            }
+        }
+        
+        // If we get here, we've exhausted our retries
+        throw new DbUpdateConcurrencyException("Failed to update after maximum retries");
     }
 
     public async Task DeleteAsync(object id)

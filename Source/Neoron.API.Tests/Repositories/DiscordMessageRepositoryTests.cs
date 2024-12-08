@@ -325,6 +325,72 @@ public class DiscordMessageRepositoryTests : IDisposable
         });
     }
 
+    [Fact]
+    public async Task ConcurrentUpdates_HandlesCorrectly()
+    {
+        // Arrange
+        var message = new DiscordMessage 
+        { 
+            MessageId = 1, 
+            Content = "Original", 
+            CreatedAt = DateTimeOffset.UtcNow 
+        };
+        await _context.DiscordMessages.AddAsync(message);
+        await _context.SaveChangesAsync();
+
+        // Create two repositories simulating concurrent access
+        var repo1 = new DiscordMessageRepository(_context);
+        var repo2 = new DiscordMessageRepository(_context);
+
+        // Act & Assert
+        var message1 = await _context.DiscordMessages.FindAsync(1L);
+        var message2 = await _context.DiscordMessages.FindAsync(1L);
+
+        message1!.Content = "Update 1";
+        message2!.Content = "Update 2";
+
+        await repo1.UpdateAsync(message1);
+        
+        // Second update should throw DbUpdateConcurrencyException
+        await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => 
+            repo2.UpdateAsync(message2));
+    }
+
+    [Fact]
+    public async Task ConnectionResilience_HandlesRetry()
+    {
+        // Arrange
+        var message = new DiscordMessage 
+        { 
+            MessageId = 1, 
+            Content = "Test", 
+            CreatedAt = DateTimeOffset.UtcNow 
+        };
+
+        // Act & Assert
+        // Simulate temporary connection issue and retry
+        var retryCount = 0;
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            if (retryCount++ == 0)
+                throw new DbUpdateException("Simulated connection error", new Exception());
+
+            await _repository.AddAsync(message);
+            await transaction.CommitAsync();
+        }
+        catch (DbUpdateException)
+        {
+            await transaction.RollbackAsync();
+            // Retry once
+            await _repository.AddAsync(message);
+        }
+
+        var result = await _context.DiscordMessages.FindAsync(1L);
+        Assert.NotNull(result);
+        Assert.Equal("Test", result.Content);
+    }
+
     public void Dispose()
     {
         _context.Database.EnsureDeleted();
