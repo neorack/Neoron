@@ -45,7 +45,7 @@
 
 ## Missing/Todo Items
 - [x] Unit tests for DiscordMessageRepository
-- [ ] Integration tests
+- [x] Integration tests with SQL Server
 - [ ] API endpoints/controllers
 - [ ] Authentication/Authorization
 - [ ] Input validation
