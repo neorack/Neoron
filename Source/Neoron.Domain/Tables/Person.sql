@@ -101,7 +101,7 @@ CREATE TABLE [dbo].[MessageLog]
 GO
 
 -- Indexes for performance
-CREATE INDEX [IX_Person_Email] ON [dbo].[Person] ([Email])
+CREATE UNIQUE INDEX [IX_Person_Email] ON [dbo].[Person] ([Email]) -- Ensure email uniqueness
 GO
 
 CREATE INDEX [IX_Person_Names] ON [dbo].[Person] ([LastName], [FirstName])

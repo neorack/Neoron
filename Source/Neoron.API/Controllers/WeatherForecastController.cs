@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Neoron.API.Controllers;
 
-[Authorize]
+[Authorize] // Ensure this attribute is necessary for the endpoint
 [ApiController]
 [Route("[controller]")]
 [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
@@ -21,7 +21,7 @@ public class WeatherForecastController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Weather forecast endpoint called, but no data is available.");
+            _logger.LogInformation("Weather forecast endpoint accessed.");
             return NoContent();
         }
         catch (Exception ex)
