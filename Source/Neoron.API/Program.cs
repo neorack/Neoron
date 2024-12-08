@@ -1,28 +1,19 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
-using Microsoft.Identity.Abstractions;
-using Microsoft.Identity.Web.Resource;
 
 namespace Neoron.API;
 
 public class Program
 {
-    /// <summary>
-    /// Entry point for the application.
-    /// </summary>
-    /// <param name="args">Command line arguments.</param>
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.AddServiceDefaults();
 
-        // Add services to the container.
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
