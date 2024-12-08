@@ -248,4 +248,137 @@ public class MessageControllerTests : IntegrationTestBase
         result.Should().HaveCount(10);
         result.First().MessageId.Should().Be(6); // Should start from the 6th message
     }
+
+    [Fact]
+    public async Task CreateMessage_WithDuplicateMessageId_ReturnsBadRequest()
+    {
+        // Arrange
+        var existingMessage = new DiscordMessage
+        {
+            MessageId = 123456789,
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = "Existing message",
+            MessageType = 0,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        await DbContext.Messages.AddAsync(existingMessage);
+        await DbContext.SaveChangesAsync();
+
+        var request = new CreateMessageRequest
+        {
+            MessageId = existingMessage.MessageId, // Same MessageId
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = "Duplicate message",
+            MessageType = 0
+        };
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/api/messages", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task UpdateMessage_WithInvalidContent_ReturnsBadRequest()
+    {
+        // Arrange
+        var message = new DiscordMessage
+        {
+            MessageId = 123456789,
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = "Original content",
+            MessageType = 0,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        await DbContext.Messages.AddAsync(message);
+        await DbContext.SaveChangesAsync();
+
+        var request = new UpdateMessageRequest
+        {
+            Content = "", // Empty content
+            EmbeddedContent = "Some embedded content"
+        };
+
+        // Act
+        var response = await Client.PutAsJsonAsync($"/api/messages/{message.MessageId}", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task GetMessagesByChannel_WithInvalidPaginationParams_ReturnsBadRequest()
+    {
+        // Arrange
+        var channelId = 987654321L;
+
+        // Act
+        var response = await Client.GetAsync($"/api/messages/channel/{channelId}?skip=-1&take=0");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task CreateMessage_WithRateLimiting_ReturnsRateLimitError()
+    {
+        // Arrange
+        var request = new CreateMessageRequest
+        {
+            MessageId = 123456789,
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = "Test message",
+            MessageType = 0
+        };
+
+        // Act - Send multiple requests quickly
+        var tasks = Enumerable.Range(0, 10).Select(_ => 
+            Client.PostAsJsonAsync("/api/messages", request));
+        var responses = await Task.WhenAll(tasks);
+
+        // Assert
+        responses.Should().Contain(r => r.StatusCode == HttpStatusCode.TooManyRequests);
+    }
+
+    [Fact]
+    public async Task UpdateMessage_WhenNotMessageAuthor_ReturnsForbidden()
+    {
+        // Arrange
+        var message = new DiscordMessage
+        {
+            MessageId = 123456789,
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = "Original content",
+            MessageType = 0,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        await DbContext.Messages.AddAsync(message);
+        await DbContext.SaveChangesAsync();
+
+        var request = new UpdateMessageRequest
+        {
+            Content = "Updated content"
+        };
+
+        // TODO: Set different user context
+        // Act
+        var response = await Client.PutAsJsonAsync($"/api/messages/{message.MessageId}", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
 }
