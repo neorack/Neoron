@@ -25,9 +25,16 @@ CREATE TABLE [dbo].[Person]
     CONSTRAINT [FK_Person_DeletedBy] FOREIGN KEY ([DeletedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
+
+-- Indexes for Person table
+CREATE INDEX [IX_Person_Email] ON [dbo].[Person] ([Email])
 GO
 
--- Relationships table for person-to-person connections
+CREATE INDEX [IX_Person_Names] ON [dbo].[Person] ([LastName], [FirstName])
+GO
+
+CREATE INDEX [IX_Person_ExternalId] ON [dbo].[Person] ([ExternalId]) WHERE [ExternalId] IS NOT NULL
+GO
 CREATE TABLE [dbo].[PersonRelationship]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
