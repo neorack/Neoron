@@ -100,12 +100,6 @@ GO
 
 -- Indexes for performance
 
-CREATE INDEX [IX_Person_Names] ON [dbo].[Person] ([LastName], [FirstName])
-GO
-
-CREATE INDEX [IX_Person_ExternalId] ON [dbo].[Person] ([ExternalId]) WHERE [ExternalId] IS NOT NULL
-GO
-
 -- Person Contact Information
 CREATE TABLE [dbo].[PersonContact]
 (
