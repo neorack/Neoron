@@ -8,6 +8,7 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Neoron.Domain", "Source\Neo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C85BFBE0-FBDC-4302-95AA-2B6B2CD2EAB0}"
 	ProjectSection(SolutionItems) = preProject
+		.env = .env
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		LICENSE.txt = LICENSE.txt
@@ -17,9 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neoron.API", "Source\Neoron.API\Neoron.API.csproj", "{DB4314BF-28B8-4E21-BFB2-2744CF238BAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neoron.AppHost", "Neoron.AppHost\Neoron.AppHost.csproj", "{1CDE563D-EB81-4515-AA60-829B25DDB2C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neoron.AppHost", "Source\Neoron.AppHost\Neoron.AppHost.csproj", "{1CDE563D-EB81-4515-AA60-829B25DDB2C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neoron.ServiceDefaults", "Neoron.ServiceDefaults\Neoron.ServiceDefaults.csproj", "{069C0729-2502-4132-9C44-7050F6234A03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neoron.ServiceDefaults", "Source\Neoron.ServiceDefaults\Neoron.ServiceDefaults.csproj", "{069C0729-2502-4132-9C44-7050F6234A03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
