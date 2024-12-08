@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[Person]
     [PreferredName] NVARCHAR(100) NULL,
     [Email] NVARCHAR(256) NOT NULL UNIQUE,
     [DateOfBirth] DATE NULL,
-    [Gender] NVARCHAR(50) NULL,
+    [Gender] NVARCHAR(50) NULL CHECK ([Gender] IN ('Male', 'Female', 'Non-Binary', 'Other', 'Prefer Not To Say')),
     [ProfilePictureUrl] NVARCHAR(2048) NULL,
     [TimeZone] NVARCHAR(100) NULL,                      -- For global user base
     [PreferredLanguage] NCHAR(5) NULL,                  -- ISO language code
@@ -47,7 +47,7 @@ CREATE TABLE [dbo].[PersonRelationship]
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
     [RelatedPersonId] UNIQUEIDENTIFIER NOT NULL,
     [RelationType] NVARCHAR(50) NOT NULL,               -- Friend, Family, Colleague, etc.
-    [Strength] TINYINT NULL,                            -- Optional relationship strength 1-100
+    [Strength] TINYINT NULL CHECK ([Strength] BETWEEN 1 AND 100), -- Optional relationship strength 1-100
     [StartDate] DATE NULL,
     [EndDate] DATE NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -95,13 +95,13 @@ CREATE TABLE [dbo].[MessageLog]
     [SenderId] UNIQUEIDENTIFIER NOT NULL,
     [ReceiverId] UNIQUEIDENTIFIER NULL,                -- NULL for broadcast messages
     [GroupId] UNIQUEIDENTIFIER NULL,                   -- NULL for direct messages
-    [MessageType] NVARCHAR(50) NOT NULL,               -- Direct, Group, System, etc.
+    [MessageType] NVARCHAR(50) NOT NULL CHECK ([MessageType] IN ('Direct', 'Group', 'System', 'Broadcast')), -- Message type
     [Content] NVARCHAR(MAX) NOT NULL COMPRESSION_DELAY = 0, -- Enable compression for message content
     [ContentType] NVARCHAR(50) NOT NULL,               -- Text, HTML, JSON, etc.
     [SentAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [DeliveredAt] DATETIME2 NULL,
     [ReadAt] DATETIME2 NULL,
-    [Status] NVARCHAR(50) NOT NULL,                    -- Sent, Delivered, Read, Failed, etc.
+    [Status] NVARCHAR(50) NOT NULL CHECK ([Status] IN ('Sent', 'Delivered', 'Read', 'Failed')), -- Message status
     CONSTRAINT [FK_MessageLog_Sender] FOREIGN KEY ([SenderId]) REFERENCES [dbo].[Person]([Id]),
     CONSTRAINT [FK_MessageLog_Receiver] FOREIGN KEY ([ReceiverId]) REFERENCES [dbo].[Person]([Id]),
     CONSTRAINT [FK_MessageLog_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[Group]([Id])
