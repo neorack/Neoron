@@ -15,12 +15,15 @@ CREATE TABLE [dbo].[Person]
     [PreferredLanguage] NCHAR(5) NULL,                  -- ISO language code
     [LastLoginAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    [CreatedBy] UNIQUEIDENTIFIER NULL,
+    [CreatedBy] UNIQUEIDENTIFIER NULL CONSTRAINT [FK_PersonTag_CreatedBy] FOREIGN KEY REFERENCES [dbo].[Person]([Id]),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedBy] UNIQUEIDENTIFIER NULL,
     [IsActive] BIT NOT NULL DEFAULT 1,
     [DeletedAt] DATETIME2 NULL,                         -- Soft delete support
-    [DeletedBy] UNIQUEIDENTIFIER NULL
+    [DeletedBy] UNIQUEIDENTIFIER NULL,
+    CONSTRAINT [FK_Person_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_Person_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_Person_DeletedBy] FOREIGN KEY ([DeletedBy]) REFERENCES [dbo].[Person]([Id])
 )
 GO
 
@@ -96,7 +99,7 @@ CREATE TABLE [dbo].[MessageLog]
     [ReceiverId] UNIQUEIDENTIFIER NULL,                -- NULL for broadcast messages
     [GroupId] UNIQUEIDENTIFIER NULL,                   -- NULL for direct messages
     [MessageType] NVARCHAR(50) NOT NULL CHECK ([MessageType] IN ('Direct', 'Group', 'System', 'Broadcast')), -- Message type
-    [Content] NVARCHAR(MAX) NOT NULL COMPRESSION_DELAY = 0, -- Enable compression for message content
+    [Content] NVARCHAR(MAX) NOT NULL, -- Message content
     [ContentType] NVARCHAR(50) NOT NULL CHECK ([ContentType] IN ('Text', 'HTML', 'JSON', 'Markdown')),
     [SentAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [DeliveredAt] DATETIME2 NULL,
@@ -189,7 +192,9 @@ CREATE TABLE [dbo].[Tag]
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [CreatedBy] UNIQUEIDENTIFIER NULL,
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    [UpdatedBy] UNIQUEIDENTIFIER NULL
+    [UpdatedBy] UNIQUEIDENTIFIER NULL,
+    CONSTRAINT [FK_Group_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_Group_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id])
 )
 GO
 
