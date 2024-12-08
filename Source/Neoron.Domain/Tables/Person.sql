@@ -99,8 +99,6 @@ CREATE TABLE [dbo].[MessageLog]
 GO
 
 -- Indexes for performance
-CREATE UNIQUE INDEX [IX_Person_Email] ON [dbo].[Person] ([Email]) -- Ensure email uniqueness
-GO
 
 CREATE INDEX [IX_Person_Names] ON [dbo].[Person] ([LastName], [FirstName])
 GO
@@ -114,7 +112,7 @@ CREATE TABLE [dbo].[PersonContact]
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
     [ContactTypeId] TINYINT NOT NULL,
-    [Value] NVARCHAR(MAX) NOT NULL,
+    [Value] NVARCHAR(256) NOT NULL,                     -- Adjusted length for contact info
     [IsPrimary] BIT NOT NULL DEFAULT 0,
     [IsVerified] BIT NOT NULL DEFAULT 0,
     [VerifiedAt] DATETIME2 NULL,
