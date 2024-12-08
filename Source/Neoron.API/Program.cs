@@ -8,14 +8,8 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        // Configure Serilog first
-        Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
-                .Build())
-            .CreateLogger();
+        // Use bootstrap logger during startup
+        Log.Logger = LoggingExtensions.CreateBootstrapLogger();
 
         try
         {
@@ -23,8 +17,8 @@ public class Program
             
             var builder = WebApplication.CreateBuilder(args);
             
-            // Add Serilog
-            builder.Host.UseSerilog();
+            // Add enhanced Serilog configuration
+            builder.Host.AddCustomLogging();
             
             builder.AddServiceDefaults();
 
