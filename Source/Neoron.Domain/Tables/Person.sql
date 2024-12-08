@@ -30,7 +30,7 @@ CREATE TABLE [dbo].[PersonContact]
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
     [ContactType] NVARCHAR(50) NOT NULL,                -- Email, Phone, Address, etc.
-    [Value] NVARCHAR(MAX) NOT NULL,
+    [Value] NVARCHAR(1000) NOT NULL,                    -- Reasonable max length for contact info
     [IsPrimary] BIT NOT NULL DEFAULT 0,
     [IsVerified] BIT NOT NULL DEFAULT 0,
     [VerifiedAt] DATETIME2 NULL,
@@ -47,7 +47,7 @@ CREATE TABLE [dbo].[PersonRelationship]
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
     [RelatedPersonId] UNIQUEIDENTIFIER NOT NULL,
     [RelationType] NVARCHAR(50) NOT NULL,               -- Friend, Family, Colleague, etc.
-    [Strength] TINYINT NULL,                           -- Optional relationship strength 1-100
+    [Strength] TINYINT NULL,                            -- Optional relationship strength 1-100
     [StartDate] DATE NULL,
     [EndDate] DATE NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -96,7 +96,7 @@ CREATE TABLE [dbo].[MessageLog]
     [ReceiverId] UNIQUEIDENTIFIER NULL,                -- NULL for broadcast messages
     [GroupId] UNIQUEIDENTIFIER NULL,                   -- NULL for direct messages
     [MessageType] NVARCHAR(50) NOT NULL,               -- Direct, Group, System, etc.
-    [Content] NVARCHAR(MAX) NOT NULL,
+    [Content] NVARCHAR(MAX) NOT NULL COMPRESSION_DELAY = 0, -- Enable compression for message content
     [ContentType] NVARCHAR(50) NOT NULL,               -- Text, HTML, JSON, etc.
     [SentAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [DeliveredAt] DATETIME2 NULL,
@@ -121,7 +121,8 @@ GO
 CREATE INDEX [IX_PersonContact_PersonId] ON [dbo].[PersonContact] ([PersonId])
 GO
 
-CREATE INDEX [IX_PersonContact_Type_Value] ON [dbo].[PersonContact] ([ContactType], [Value])
+CREATE INDEX [IX_PersonContact_Type_Value] ON [dbo].[PersonContact] ([ContactType], [Value]) 
+    INCLUDE ([PersonId]) WHERE LEN([Value]) <= 900     -- Include PersonId and limit indexed value length
 GO
 
 CREATE INDEX [IX_PersonRelationship_PersonId] ON [dbo].[PersonRelationship] ([PersonId])
