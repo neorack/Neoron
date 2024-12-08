@@ -193,8 +193,8 @@ CREATE TABLE [dbo].[Tag]
     [CreatedBy] UNIQUEIDENTIFIER NULL,
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedBy] UNIQUEIDENTIFIER NULL,
-    CONSTRAINT [FK_Group_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_Group_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id])
+    CONSTRAINT [FK_Tag_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_Tag_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id])
 )
 GO
 
