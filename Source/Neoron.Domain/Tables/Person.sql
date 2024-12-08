@@ -1,0 +1,18 @@
+CREATE TABLE [dbo].[Person]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [FirstName] NVARCHAR(100) NOT NULL,
+    [LastName] NVARCHAR(100) NOT NULL,
+    [Email] NVARCHAR(256) NOT NULL UNIQUE,
+    [DateOfBirth] DATE NULL,
+    [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [IsActive] BIT NOT NULL DEFAULT 1
+)
+GO
+
+CREATE INDEX [IX_Person_Email] ON [dbo].[Person] ([Email])
+GO
+
+CREATE INDEX [IX_Person_Names] ON [dbo].[Person] ([LastName], [FirstName])
+GO
