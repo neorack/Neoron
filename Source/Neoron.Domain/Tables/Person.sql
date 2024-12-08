@@ -24,9 +24,7 @@ CREATE TABLE [dbo].[Person]
     CONSTRAINT [FK_Person_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_Person_DeletedBy] FOREIGN KEY ([DeletedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
-
--- Contact Information table for multiple contact methods
-CREATE TABLE [dbo].[PersonContact]
+GO
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
