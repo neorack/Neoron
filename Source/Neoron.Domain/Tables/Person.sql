@@ -21,9 +21,9 @@ CREATE TABLE [dbo].[Person]
     [IsActive] BIT NOT NULL DEFAULT 1,
     [DeletedAt] DATETIME2 NULL,                         -- Soft delete support
     [DeletedBy] UNIQUEIDENTIFIER NULL,
-    CONSTRAINT [FK_Person_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_Person_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_Person_DeletedBy] FOREIGN KEY ([DeletedBy]) REFERENCES [dbo].[Person]([Id])
+    CONSTRAINT [FK_Person_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_Person_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_Person_DeletedBy] FOREIGN KEY ([DeletedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
 
@@ -39,6 +39,8 @@ CREATE TABLE [dbo].[PersonContact]
     [VerifiedAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT [UQ_PersonContact_Primary] UNIQUE ([PersonId], [ContactType], [IsPrimary]) 
+        WHERE [IsPrimary] = 1,
     CONSTRAINT [FK_PersonContact_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id])
 )
 GO
@@ -109,7 +111,11 @@ CREATE TABLE [dbo].[MessageLog]
     [Status] NVARCHAR(50) NOT NULL CHECK ([Status] IN ('Sent', 'Delivered', 'Read', 'Failed')), -- Message status
     CONSTRAINT [FK_MessageLog_Sender] FOREIGN KEY ([SenderId]) REFERENCES [dbo].[Person]([Id]),
     CONSTRAINT [FK_MessageLog_Receiver] FOREIGN KEY ([ReceiverId]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_MessageLog_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[Group]([Id])
+    CONSTRAINT [FK_MessageLog_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[Group]([Id]),
+    CONSTRAINT [CK_MessageLog_Recipient] CHECK (
+        ([ReceiverId] IS NULL AND [GroupId] IS NOT NULL) OR
+        ([ReceiverId] IS NOT NULL AND [GroupId] IS NULL)
+    )
 )
 GO
 
