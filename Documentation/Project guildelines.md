@@ -10,6 +10,12 @@ This guide outlines the design and development of a .NET Core application that f
 - **Guidelines in Development Precedence**: Steps to develop the application efficiently, starting from the data layer in a data-first approach.
 - **Functional Programming Paradigms**: Integrating functional programming concepts realistically within the .NET Core framework and Clean Code standards.
 
+## **Project and Progress Tracking**
+
+- Utilize markdown files for project and progress tracking.
+- Ensure these files are named explicitly and updated continually.
+- This practice will facilitate automated LLM work on the repository.
+
 ---
 
 ## **1. Directory/Solution Organization**
