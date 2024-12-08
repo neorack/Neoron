@@ -29,7 +29,7 @@ CREATE TABLE [dbo].[PersonContact]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
-    [ContactType] NVARCHAR(50) NOT NULL,                -- Email, Phone, Address, etc.
+    [ContactType] NVARCHAR(50) NOT NULL CHECK ([ContactType] IN ('Email', 'Phone', 'Address', 'Social', 'Other')),
     [Value] NVARCHAR(1000) NOT NULL,                    -- Reasonable max length for contact info
     [IsPrimary] BIT NOT NULL DEFAULT 0,
     [IsVerified] BIT NOT NULL DEFAULT 0,
@@ -49,7 +49,7 @@ CREATE TABLE [dbo].[PersonRelationship]
     [RelationType] NVARCHAR(50) NOT NULL,               -- Friend, Family, Colleague, etc.
     [Strength] TINYINT NULL CHECK ([Strength] BETWEEN 1 AND 100), -- Optional relationship strength 1-100
     [StartDate] DATE NULL,
-    [EndDate] DATE NULL,
+    [EndDate] DATE NULL CHECK ([EndDate] IS NULL OR [EndDate] >= [StartDate]),
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT [FK_PersonRelationship_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
@@ -63,7 +63,7 @@ CREATE TABLE [dbo].[Group]
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [Name] NVARCHAR(200) NOT NULL,
     [Description] NVARCHAR(MAX) NULL,
-    [Type] NVARCHAR(50) NOT NULL,                      -- Social, Professional, Interest, etc.
+    [Type] NVARCHAR(50) NOT NULL CHECK ([Type] IN ('Social', 'Professional', 'Interest', 'Project', 'Other')),
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [CreatedBy] UNIQUEIDENTIFIER NULL,
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -78,7 +78,7 @@ CREATE TABLE [dbo].[PersonGroup]
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
     [GroupId] UNIQUEIDENTIFIER NOT NULL,
-    [Role] NVARCHAR(50) NOT NULL,                      -- Member, Admin, Moderator, etc.
+    [Role] NVARCHAR(50) NOT NULL CHECK ([Role] IN ('Member', 'Admin', 'Moderator', 'Owner')),
     [JoinedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ExpiresAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -97,7 +97,7 @@ CREATE TABLE [dbo].[MessageLog]
     [GroupId] UNIQUEIDENTIFIER NULL,                   -- NULL for direct messages
     [MessageType] NVARCHAR(50) NOT NULL CHECK ([MessageType] IN ('Direct', 'Group', 'System', 'Broadcast')), -- Message type
     [Content] NVARCHAR(MAX) NOT NULL COMPRESSION_DELAY = 0, -- Enable compression for message content
-    [ContentType] NVARCHAR(50) NOT NULL,               -- Text, HTML, JSON, etc.
+    [ContentType] NVARCHAR(50) NOT NULL CHECK ([ContentType] IN ('Text', 'HTML', 'JSON', 'Markdown')),
     [SentAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [DeliveredAt] DATETIME2 NULL,
     [ReadAt] DATETIME2 NULL,
