@@ -12,6 +12,7 @@
     <IncludeSymbols>True</IncludeSymbols>
     <NuGetAuditMode>all</NuGetAuditMode>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
