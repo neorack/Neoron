@@ -46,6 +46,6 @@ public class ApplicationDbContext : DbContext
             }
         }
 
-        return await base.SaveChangesAsync(cancellationToken);
+        return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

@@ -9,6 +9,11 @@ public static partial class MessageContentValidator
     private const int MaxMentions = 10;
     private const int MaxLength = 2000;
 
+    /// <summary>
+    /// Validates the content of a message.
+    /// </summary>
+    /// <param name="content">The message content to validate.</param>
+    /// <returns>A validation result indicating success or failure.</returns>
     public static ValidationResult ValidateContent(string content)
     {
         if (string.IsNullOrWhiteSpace(content))

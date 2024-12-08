@@ -18,6 +18,10 @@ public class WeatherForecastController : ControllerBase
         _logger = logger;
     }
 
+    /// <summary>
+    /// Gets the weather forecast.
+    /// </summary>
+    /// <returns>Weather forecast data.</returns>
     [HttpGet(Name = "GetWeatherForecast")]
     public ActionResult<IEnumerable<WeatherForecast>> Get()
     {

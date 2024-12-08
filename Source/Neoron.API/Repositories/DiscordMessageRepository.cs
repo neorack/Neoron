@@ -20,7 +20,7 @@ public class DiscordMessageRepository : IDiscordMessageRepository
 
     public async Task<IEnumerable<DiscordMessage>> GetAllAsync()
     {
-        return await _context.DiscordMessages.ToListAsync();
+        return await _context.DiscordMessages.ToListAsync().ConfigureAwait(false);
     }
 
     public async Task<DiscordMessage?> GetByIdAsync(object id)
