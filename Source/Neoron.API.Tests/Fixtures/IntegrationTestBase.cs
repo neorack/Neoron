@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Neoron.API.Data;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using Xunit;
 
 namespace Neoron.API.Tests.Fixtures;
