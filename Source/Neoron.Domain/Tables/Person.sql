@@ -98,8 +98,6 @@ CREATE TABLE [dbo].[MessageLog]
 )
 GO
 
--- Indexes for performance
-
 -- Person Contact Information
 CREATE TABLE [dbo].[PersonContact]
 (
