@@ -37,7 +37,7 @@ public static partial class MessageContentValidator
     private static partial Regex GetUrlRegex();
 }
 
-public record MessageValidationResult(bool IsValid, string? Error = null)
+public record MessageValidationResult(bool IsValid, string? ErrorMessage = null)
 {
     public static MessageValidationResult Success() => new(true);
     public static MessageValidationResult Error(string message) => new(false, message);
