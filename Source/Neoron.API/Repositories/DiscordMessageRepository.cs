@@ -8,10 +8,14 @@ namespace Neoron.API.Repositories;
 public class DiscordMessageRepository : IDiscordMessageRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<DiscordMessageRepository> _logger;
 
-    public DiscordMessageRepository(ApplicationDbContext context)
+    public DiscordMessageRepository(
+        ApplicationDbContext context,
+        ILogger<DiscordMessageRepository> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<DiscordMessage>> GetAllAsync()
@@ -26,9 +30,23 @@ public class DiscordMessageRepository : IDiscordMessageRepository
 
     public async Task<DiscordMessage> AddAsync(DiscordMessage entity)
     {
-        _context.DiscordMessages.Add(entity);
-        await _context.SaveChangesAsync();
-        return entity;
+        using var activity = DiagnosticSource.StartActivity("AddMessage");
+        try
+        {
+            _logger.LogInformation("Adding message {MessageId} for channel {ChannelId}", 
+                entity.MessageId, entity.ChannelId);
+            
+            _context.DiscordMessages.Add(entity);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            
+            _logger.LogInformation("Successfully added message {MessageId}", entity.MessageId);
+            return entity;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to add message {MessageId}", entity.MessageId);
+            throw;
+        }
     }
 
     public async Task UpdateAsync(DiscordMessage entity)
