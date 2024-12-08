@@ -33,7 +33,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="3.6.0" /> <!-- Update to latest version -->
+    <PackageReference Include="Microsoft.Identity.Web" Version="3.5.0" />
     <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.5.0" />
     <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
