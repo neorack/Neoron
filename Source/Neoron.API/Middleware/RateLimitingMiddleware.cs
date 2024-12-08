@@ -29,7 +29,7 @@ public class RateLimitingMiddleware
             return;
         }
 
-        await _next(context);
+        await _next(context).ConfigureAwait(false);
     }
 
     private static string GetClientKey(HttpContext context)

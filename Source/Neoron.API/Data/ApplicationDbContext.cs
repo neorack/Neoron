@@ -30,4 +30,22 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        foreach (var entry in ChangeTracker.Entries<DiscordMessage>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.CreatedAt = DateTimeOffset.UtcNow;
+                    break;
+                case EntityState.Modified:
+                    entry.Entity.EditedAt = DateTimeOffset.UtcNow;
+                    break;
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
 }

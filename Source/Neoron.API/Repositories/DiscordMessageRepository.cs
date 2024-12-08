@@ -30,7 +30,7 @@ public class DiscordMessageRepository : IDiscordMessageRepository
 
     public async Task<DiscordMessage> AddAsync(DiscordMessage entity)
     {
-        using var activity = DiagnosticSource.StartActivity("AddMessage");
+        using var activity = System.Diagnostics.Activity.Current?.Source.StartActivity("AddMessage");
         try
         {
             _logger.LogInformation("Adding message {MessageId} for channel {ChannelId}", 
