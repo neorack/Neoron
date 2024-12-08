@@ -2,12 +2,14 @@ using FluentAssertions;
 using Neoron.API.DTOs;
 using Neoron.API.Models;
 using Neoron.API.Tests.Fixtures;
+using Neoron.API.Tests.Builders;
 using System.Net;
 using System.Net.Http.Json;
 using Xunit;
 
 namespace Neoron.API.Tests.Controllers;
 
+[Collection("Database")]
 public class MessageControllerTests : IntegrationTestBase
 {
     public MessageControllerTests(TestWebApplicationFactory<Program> factory) 
@@ -17,19 +19,13 @@ public class MessageControllerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task GetMessage_WhenMessageExists_ReturnsMessage()
     {
         // Arrange
-        var message = new DiscordMessage
-        {
-            MessageId = 123456789,
-            ChannelId = 987654321,
-            GuildId = 11111111,
-            AuthorId = 22222222,
-            Content = "Test message",
-            MessageType = 0,
-            CreatedAt = DateTimeOffset.UtcNow
-        };
+        var message = DiscordMessageBuilder.Create()
+            .WithContent("Test message")
+            .Build();
 
         await DbContext.Messages.AddAsync(message);
         await DbContext.SaveChangesAsync();
