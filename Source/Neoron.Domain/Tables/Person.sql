@@ -8,7 +8,8 @@ CREATE TABLE [dbo].[Person]
     [PreferredName] NVARCHAR(100) NULL,
     [Email] NVARCHAR(256) NOT NULL UNIQUE,
     [DateOfBirth] DATE NULL,
-    [Gender] NVARCHAR(50) NULL CHECK ([Gender] IN ('Male', 'Female', 'Non-Binary', 'Other', 'Prefer Not To Say')),
+    [GenderId] TINYINT NULL,
+    CONSTRAINT [FK_Person_Gender] FOREIGN KEY ([GenderId]) REFERENCES [dbo].[RefGender]([Id]),
     [ProfilePictureUrl] NVARCHAR(2048) NULL,
     [TimeZone] NVARCHAR(100) NULL,                      -- For global user base
     [PreferredLanguage] NCHAR(5) NULL,                  -- ISO language code
