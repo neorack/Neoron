@@ -148,3 +148,121 @@ GO
 
 CREATE INDEX [IX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
 GO
+
+-- Ideology/Belief System table
+CREATE TABLE [dbo].[Ideology]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [Name] NVARCHAR(200) NOT NULL,
+    [Description] NVARCHAR(MAX) NULL,
+    [Category] NVARCHAR(50) NOT NULL CHECK ([Category] IN ('Political', 'Religious', 'Philosophical', 'Social', 'Economic', 'Other')),
+    [ParentId] UNIQUEIDENTIFIER NULL,                   -- For hierarchy of beliefs
+    [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT [FK_Ideology_Parent] FOREIGN KEY ([ParentId]) REFERENCES [dbo].[Ideology]([Id])
+)
+GO
+
+-- Person-Ideology associations
+CREATE TABLE [dbo].[PersonIdeology]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [PersonId] UNIQUEIDENTIFIER NOT NULL,
+    [IdeologyId] UNIQUEIDENTIFIER NOT NULL,
+    [Strength] TINYINT NOT NULL CHECK ([Strength] BETWEEN 1 AND 100),
+    [StartDate] DATE NOT NULL DEFAULT GETUTCDATE(),
+    [EndDate] DATE NULL CHECK ([EndDate] IS NULL OR [EndDate] >= [StartDate]),
+    [IsPublic] BIT NOT NULL DEFAULT 1,
+    [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT [FK_PersonIdeology_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_PersonIdeology_Ideology] FOREIGN KEY ([IdeologyId]) REFERENCES [dbo].[Ideology]([Id])
+)
+GO
+
+-- Tags for flexible categorization
+CREATE TABLE [dbo].[Tag]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [Name] NVARCHAR(100) NOT NULL UNIQUE,
+    [Category] NVARCHAR(50) NOT NULL,                   -- Skills, Interests, Traits, etc.
+    [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [CreatedBy] UNIQUEIDENTIFIER NULL,
+    [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [UpdatedBy] UNIQUEIDENTIFIER NULL
+)
+GO
+
+-- Person-Tag associations
+CREATE TABLE [dbo].[PersonTag]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [PersonId] UNIQUEIDENTIFIER NOT NULL,
+    [TagId] UNIQUEIDENTIFIER NOT NULL,
+    [Weight] TINYINT NULL CHECK ([Weight] BETWEEN 1 AND 100),
+    [Source] NVARCHAR(50) NOT NULL CHECK ([Source] IN ('Self', 'System', 'Peer', 'AI')),
+    [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [CreatedBy] UNIQUEIDENTIFIER NULL,
+    CONSTRAINT [FK_PersonTag_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_PersonTag_Tag] FOREIGN KEY ([TagId]) REFERENCES [dbo].[Tag]([Id])
+)
+GO
+
+-- Activity/Event logging
+CREATE TABLE [dbo].[ActivityLog]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [PersonId] UNIQUEIDENTIFIER NOT NULL,
+    [ActivityType] NVARCHAR(50) NOT NULL CHECK ([ActivityType] IN ('Login', 'Message', 'GroupJoin', 'IdeologyChange', 'RelationshipChange', 'ProfileUpdate', 'Other')),
+    [Description] NVARCHAR(MAX) NULL,
+    [Metadata] NVARCHAR(MAX) NULL,                      -- JSON data for flexible storage
+    [IpAddress] NVARCHAR(45) NULL,                      -- IPv6 compatible
+    [UserAgent] NVARCHAR(500) NULL,
+    [OccurredAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    CONSTRAINT [FK_ActivityLog_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id])
+)
+GO
+
+-- Influence/Reach metrics
+CREATE TABLE [dbo].[PersonInfluence]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [PersonId] UNIQUEIDENTIFIER NOT NULL,
+    [MetricType] NVARCHAR(50) NOT NULL CHECK ([MetricType] IN ('NetworkSize', 'MessageReach', 'IdeologicalInfluence', 'GroupInfluence', 'Overall')),
+    [Score] DECIMAL(10,2) NOT NULL,
+    [CalculatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [ValidUntil] DATETIME2 NULL,
+    CONSTRAINT [FK_PersonInfluence_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id])
+)
+GO
+
+-- Add necessary indexes
+CREATE INDEX [IX_Ideology_Category] ON [dbo].[Ideology] ([Category])
+GO
+
+CREATE INDEX [IX_PersonIdeology_PersonId] ON [dbo].[PersonIdeology] ([PersonId])
+GO
+
+CREATE INDEX [IX_PersonIdeology_IdeologyId] ON [dbo].[PersonIdeology] ([IdeologyId])
+GO
+
+CREATE INDEX [IX_Tag_Category] ON [dbo].[Tag] ([Category])
+GO
+
+CREATE INDEX [IX_PersonTag_PersonId] ON [dbo].[PersonTag] ([PersonId])
+GO
+
+CREATE INDEX [IX_PersonTag_TagId] ON [dbo].[PersonTag] ([TagId])
+GO
+
+CREATE INDEX [IX_ActivityLog_PersonId] ON [dbo].[ActivityLog] ([PersonId])
+GO
+
+CREATE INDEX [IX_ActivityLog_ActivityType] ON [dbo].[ActivityLog] ([ActivityType])
+GO
+
+CREATE INDEX [IX_ActivityLog_OccurredAt] ON [dbo].[ActivityLog] ([OccurredAt])
+GO
+
+CREATE INDEX [IX_PersonInfluence_PersonId] ON [dbo].[PersonInfluence] ([PersonId])
+GO
