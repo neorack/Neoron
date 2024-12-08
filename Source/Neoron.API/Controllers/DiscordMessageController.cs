@@ -69,6 +69,10 @@ public class DiscordMessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<MessageResponse>> Create(CreateMessageRequest request)
     {
+        var validationResult = MessageContentValidator.ValidateContent(request.Content);
+        if (!validationResult.IsValid)
+            return BadRequest(new { error = validationResult.Error });
+
         var message = request.ToEntity();
         var result = await _repository.AddAsync(message);
         
@@ -89,6 +93,10 @@ public class DiscordMessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(long id, UpdateMessageRequest request)
     {
+        var validationResult = MessageContentValidator.ValidateContent(request.Content);
+        if (!validationResult.IsValid)
+            return BadRequest(new { error = validationResult.Error });
+
         var message = await _repository.GetByIdAsync(id);
         if (message == null) return NotFound();
 
