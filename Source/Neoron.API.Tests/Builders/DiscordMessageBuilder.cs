@@ -36,6 +36,24 @@ public class DiscordMessageBuilder
         return this;
     }
 
+    public DiscordMessageBuilder WithAuthorId(long authorId)
+    {
+        _authorId = authorId;
+        return this;
+    }
+
+    public DiscordMessageBuilder WithGuildId(long guildId)
+    {
+        _guildId = guildId;
+        return this;
+    }
+
+    public DiscordMessageBuilder WithMessageType(int messageType)
+    {
+        _messageType = messageType;
+        return this;
+    }
+
     public DiscordMessage Build()
     {
         return new DiscordMessage

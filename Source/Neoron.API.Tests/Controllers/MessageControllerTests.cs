@@ -347,20 +347,65 @@ public class MessageControllerTests : IntegrationTestBase
         responses.Should().Contain(r => r.StatusCode == HttpStatusCode.TooManyRequests);
     }
 
-    [Fact]
-    public async Task UpdateMessage_WhenNotMessageAuthor_ReturnsForbidden()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [InlineData(10001)]
+    public async Task GetMessagesByChannel_WithInvalidTakeParameter_ReturnsBadRequest(int take)
     {
         // Arrange
-        var message = new DiscordMessage
+        var channelId = 987654321L;
+
+        // Act
+        var response = await Client.GetAsync($"/api/messages/channel/{channelId}?take={take}");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task GetMessagesByChannel_WithExcessivePaginationSize_ReturnsBadRequest()
+    {
+        // Arrange
+        var channelId = 987654321L;
+        const int excessivePageSize = 1001; // Assuming max page size is 1000
+
+        // Act
+        var response = await Client.GetAsync($"/api/messages/channel/{channelId}?take={excessivePageSize}");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task CreateMessage_WithEmptyContent_ReturnsBadRequest()
+    {
+        // Arrange
+        var request = new CreateMessageRequest
         {
             MessageId = 123456789,
             ChannelId = 987654321,
             GuildId = 11111111,
             AuthorId = 22222222,
-            Content = "Original content",
-            MessageType = 0,
-            CreatedAt = DateTimeOffset.UtcNow
+            Content = string.Empty,
+            MessageType = 0
         };
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/api/messages", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task UpdateMessage_WhenNotMessageAuthor_ReturnsForbidden()
+    {
+        // Arrange
+        var message = DiscordMessageBuilder.Create()
+            .WithAuthorId(22222222)
+            .WithContent("Original content")
+            .Build();
 
         await DbContext.Messages.AddAsync(message);
         await DbContext.SaveChangesAsync();
@@ -370,11 +415,36 @@ public class MessageControllerTests : IntegrationTestBase
             Content = "Updated content"
         };
 
-        // TODO: Set different user context
+        Client.DefaultRequestHeaders.Add("X-User-Id", "33333333"); // Different user
+
         // Act
         var response = await Client.PutAsJsonAsync($"/api/messages/{message.MessageId}", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        
+        // Cleanup
+        Client.DefaultRequestHeaders.Remove("X-User-Id");
+    }
+
+    [Fact]
+    public async Task CreateMessage_WithInvalidMessageType_ReturnsBadRequest()
+    {
+        // Arrange
+        var request = new CreateMessageRequest
+        {
+            MessageId = 123456789,
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = "Test message",
+            MessageType = 999 // Invalid message type
+        };
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/api/messages", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
