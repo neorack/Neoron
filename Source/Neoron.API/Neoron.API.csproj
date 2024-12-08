@@ -13,6 +13,8 @@
     <NuGetAuditMode>all</NuGetAuditMode>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
