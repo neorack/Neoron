@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[PersonContact]
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
     [ContactTypeId] TINYINT NOT NULL,
     CONSTRAINT [FK_PersonContact_ContactType] FOREIGN KEY ([ContactTypeId]) REFERENCES [dbo].[RefContactType]([Id]) ON DELETE CASCADE,
-    [Value] NVARCHAR(1000) NOT NULL,                    -- Reasonable max length for contact info
+    [Value] NVARCHAR(256) NOT NULL,                     -- Adjusted length for contact info
     [IsPrimary] BIT NOT NULL DEFAULT 0,
     [IsVerified] BIT NOT NULL DEFAULT 0,
     [VerifiedAt] DATETIME2 NULL,
