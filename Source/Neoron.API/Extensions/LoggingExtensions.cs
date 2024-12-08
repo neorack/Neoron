@@ -34,7 +34,7 @@ public static class LoggingExtensions
                 restrictedToMinimumLevel: LogEventLevel.Debug)));
     }
 
-    public static ILogger CreateBootstrapLogger()
+    public static Serilog.ILogger CreateBootstrapLogger()
     {
         return new LoggerConfiguration()
             .MinimumLevel.Information()

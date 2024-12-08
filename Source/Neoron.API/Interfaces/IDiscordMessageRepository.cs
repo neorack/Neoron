@@ -1,3 +1,5 @@
+using Neoron.API.Models;
+
 namespace Neoron.API.Interfaces;
 
 public interface IDiscordMessageRepository : IRepository<DiscordMessage>

@@ -14,7 +14,7 @@ public static partial class MessageContentValidator
     /// </summary>
     /// <param name="content">The message content to validate.</param>
     /// <returns>A validation result indicating success or failure.</returns>
-    public static ValidationResult ValidateContent(string content)
+    public static MessageValidationResult ValidateContent(string content)
     {
         if (string.IsNullOrWhiteSpace(content))
             return ValidationResult.Error("Content cannot be empty");
@@ -37,8 +37,8 @@ public static partial class MessageContentValidator
     private static partial Regex GetUrlRegex();
 }
 
-public record ValidationResult(bool IsValid, string? Error = null)
+public record MessageValidationResult(bool IsValid, string? Error = null)
 {
-    public static ValidationResult Success() => new(true);
-    public static ValidationResult Error(string message) => new(false, message);
+    public static MessageValidationResult Success() => new(true);
+    public static MessageValidationResult Error(string message) => new(false, message);
 }
