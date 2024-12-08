@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Tables" />
+    <Folder Include="Indexes" />
+  </ItemGroup>
+  <ItemGroup>
     <Build Include="Tables\*.sql" />
+    <Build Include="Indexes\*.sql" />
   </ItemGroup>
 </Project>

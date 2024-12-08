@@ -1,4 +1,3 @@
--- Core Person table with essential information
 CREATE TABLE [dbo].[Person]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -25,7 +24,6 @@ CREATE TABLE [dbo].[Person]
     CONSTRAINT [FK_Person_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_Person_DeletedBy] FOREIGN KEY ([DeletedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
-GO
 
 -- Contact Information table for multiple contact methods
 CREATE TABLE [dbo].[PersonContact]
