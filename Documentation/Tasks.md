@@ -6,9 +6,9 @@
 - [ ] Create test project structure
   - [x] Set up xUnit test project
     - [x] Install NuGet packages (xUnit, Moq, FluentAssertions)
-    - [ ] Configure test.runsettings
+    - [ ] Configure test.runsettings ⚠️ NEXT STEP
     - [x] Set up test project references
-  - [ ] Configure test dependencies
+  - [ ] Configure test dependencies ⚠️ HIGH PRIORITY
     - [ ] Set up WebApplicationFactory
     - [ ] Configure test database context (using TestContainers)
     - [ ] Add mock service providers
