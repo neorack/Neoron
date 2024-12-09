@@ -92,7 +92,7 @@
      - [x] Configure test.runsettings
      - [x] Set up WebApplicationFactory
      - [x] Configure TestContainers
-     - [ ] Add mock service providers
+     - [x] Add mock service providers
      - [ ] HTTP endpoints
      - [ ] Request validation
      - [ ] Response formatting
