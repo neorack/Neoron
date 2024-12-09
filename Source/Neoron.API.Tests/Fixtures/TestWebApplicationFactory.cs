@@ -12,14 +12,19 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
 {
     private readonly MsSqlContainer _sqlContainer;
     private bool _disposed;
+    private IServiceProvider? _serviceProvider;
 
     public TestWebApplicationFactory()
     {
         _sqlContainer = new MsSqlBuilder()
             .WithName($"sql_test_{Guid.NewGuid()}")
             .WithPassword("Strong_password_123!")
+            .WithAutoRemove(true)
+            .WithCleanUp(true)
             .Build();
     }
+
+    public IServiceProvider Services => _serviceProvider ?? throw new InvalidOperationException("Services not initialized");
 
     protected override async void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -50,38 +55,71 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
             // Add test authentication
             services.AddTestAuth();
 
-            var sp = services.BuildServiceProvider();
+            _serviceProvider = services.BuildServiceProvider();
 
-            using (var scope = sp.CreateScope())
-            {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<ApplicationDbContext>();
+            using var scope = _serviceProvider.CreateScope();
+            var scopedServices = scope.ServiceProvider;
+            var db = scopedServices.GetRequiredService<ApplicationDbContext>();
 
-                db.Database.Migrate();
-                
-                // Seed test data if needed
-                SeedTestData(db);
-            }
+            db.Database.Migrate();
+            
+            // Initialize test data
+            InitializeTestData(db).GetAwaiter().GetResult();
         });
     }
 
-    private static void SeedTestData(ApplicationDbContext db)
+    private static async Task InitializeTestData(ApplicationDbContext db)
     {
-        // Add test data seeding logic here
-        db.SaveChanges();
+        // Clear existing data
+        db.Messages.RemoveRange(db.Messages);
+        await db.SaveChangesAsync();
+
+        // Add base test data
+        var baseMessage = new DiscordMessage
+        {
+            MessageId = 1,
+            ChannelId = 1,
+            GuildId = 1,
+            AuthorId = 1,
+            Content = "Base test message",
+            MessageType = 0,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        await db.Messages.AddAsync(baseMessage);
+        await db.SaveChangesAsync();
     }
 
     public new async ValueTask DisposeAsync()
     {
         if (!_disposed)
         {
+            if (_serviceProvider is IDisposable disposableServices)
+            {
+                disposableServices.Dispose();
+            }
+
             if (_sqlContainer != null)
             {
-                await _sqlContainer.DisposeAsync();
+                await _sqlContainer.DisposeAsync().ConfigureAwait(false);
             }
+
             _disposed = true;
         }
 
-        await base.DisposeAsync();
+        await base.DisposeAsync().ConfigureAwait(false);
+        GC.SuppressFinalize(this);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && !_disposed)
+        {
+            if (_serviceProvider is IDisposable disposableServices)
+            {
+                disposableServices.Dispose();
+            }
+        }
+        base.Dispose(disposing);
     }
 }
