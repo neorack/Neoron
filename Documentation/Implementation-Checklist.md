@@ -93,11 +93,11 @@
      - [x] Set up WebApplicationFactory
      - [x] Configure TestContainers
      - [x] Add mock service providers
-     - [ ] HTTP endpoints
-     - [ ] Request validation
-     - [ ] Response formatting
-     - [ ] Error handling
-     - [ ] Authentication/Authorization scenarios
+     - [x] HTTP endpoints
+     - [x] Request validation
+     - [x] Response formatting
+     - [x] Error handling
+     - [x] Authentication/Authorization scenarios
    - [ ] Performance Tests (Medium Priority)
      - [ ] Load testing
      - [ ] Stress testing
