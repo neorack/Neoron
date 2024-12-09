@@ -42,6 +42,8 @@
   <TestRunParameters>
     <Parameter name="UseTestDatabase" value="true" />
     <Parameter name="TestDatabaseConnectionString" value="Server=localhost;Database=NeoronTest;Trusted_Connection=True;TrustServerCertificate=True;" />
+    <Parameter name="TestDatabaseName" value="NeoronTest" />
+    <Parameter name="TestContainerPrefix" value="neoron_test" />
     <Parameter name="EnableDetailedLogs" value="true" />
     <Parameter name="TestEnvironment" value="Integration" />
     <Parameter name="TestAuthScheme" value="Test" />
