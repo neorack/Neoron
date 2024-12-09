@@ -1,7 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Neoron.API.Data;
 using Neoron.API.Interfaces;
 using Neoron.API.Models;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
