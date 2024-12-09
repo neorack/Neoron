@@ -3,6 +3,15 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Environment files
+.env
+.env.*
+!.env.example
+launchSettings.json
+*.Development.json
+!appsettings.Development.example.json
+.aider*
+
 # User-specific files
 *.rsuser
 *.suo

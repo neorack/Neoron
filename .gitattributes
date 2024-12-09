@@ -3,6 +3,23 @@
 ###############################################################################
 * text=auto
 
+# Source code files
+*.cs text diff=csharp
+*.csproj text diff=xml
+*.sln text
+*.md text diff=markdown
+*.json text
+*.yml text
+*.yaml text
+*.config text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #
