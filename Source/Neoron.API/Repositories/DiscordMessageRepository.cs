@@ -62,6 +62,8 @@ namespace Neoron.API.Repositories
                 throw new ArgumentNullException(nameof(entity));
             }
 
+            _logger.LogInformation("Updating message {MessageId}", entity.MessageId);
+
             const int maxRetries = 3;
             var retryCount = 0;
 
@@ -71,30 +73,40 @@ namespace Neoron.API.Repositories
                 {
                     _context.Entry(entity).State = EntityState.Modified;
                     await _context.SaveChangesAsync().ConfigureAwait(false);
+                    _logger.LogInformation("Successfully updated message {MessageId}", entity.MessageId);
                     return;
                 }
                 catch (DbUpdateConcurrencyException) when (retryCount < maxRetries - 1)
                 {
-                    await Task.Delay(100 * (retryCount + 1)).ConfigureAwait(false); // Exponential backoff
+                    _logger.LogWarning("Concurrency conflict when updating message {MessageId}, retrying...", entity.MessageId);
+                    await Task.Delay(100 * (retryCount + 1)).ConfigureAwait(false);
                     retryCount++;
-                    
-                    // Reload the entity and retry
                     await _context.Entry(entity).ReloadAsync().ConfigureAwait(false);
                 }
             }
-            
-            // If we get here, we've exhausted our retries
+
+            _logger.LogError("Failed to update message {MessageId} after maximum retries", entity.MessageId);
             throw new DbUpdateConcurrencyException("Failed to update after maximum retries");
         }
 
         public async Task DeleteAsync(object id)
         {
-            var message = await GetByIdAsync(id).ConfigureAwait(false);
-            if (message != null)
+            try
             {
-                message.IsDeleted = true;
-                message.DeletedAt = DateTimeOffset.UtcNow;
-                await UpdateAsync(message).ConfigureAwait(false);
+                var message = await GetByIdAsync(id).ConfigureAwait(false);
+                if (message != null)
+                {
+                    _logger.LogInformation("Deleting message {MessageId}", message.MessageId);
+                    message.IsDeleted = true;
+                    message.DeletedAt = DateTimeOffset.UtcNow;
+                    await UpdateAsync(message).ConfigureAwait(false);
+                    _logger.LogInformation("Successfully deleted message {MessageId}", message.MessageId);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete message with id {Id}", id);
+                throw;
             }
         }
 
@@ -140,13 +152,16 @@ namespace Neoron.API.Repositories
             await using var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false);
             try
             {
+                _logger.LogInformation("Adding a range of messages");
                 await _context.DiscordMessages.AddRangeAsync(messages).ConfigureAwait(false);
                 var result = await _context.SaveChangesAsync().ConfigureAwait(false);
                 await transaction.CommitAsync().ConfigureAwait(false);
+                _logger.LogInformation("Successfully added a range of messages");
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Failed to add a range of messages");
                 await transaction.RollbackAsync().ConfigureAwait(false);
                 throw;
             }
