@@ -45,18 +45,15 @@ public class TokenBucket
 {
     private readonly int _maxTokens;
     private readonly int _refillRate;
-    
-    public TokenBucket(int maxTokens = 100, int refillRate = 10)
-    {
-        _maxTokens = maxTokens;
-        _refillRate = refillRate;
     private double _tokens;
     private DateTime _lastRefill;
     private readonly object _lock = new();
 
-    public TokenBucket()
+    public TokenBucket(int maxTokens = 100, int refillRate = 10)
     {
-        _tokens = MaxTokens;
+        _maxTokens = maxTokens;
+        _refillRate = refillRate;
+        _tokens = maxTokens;
         _lastRefill = DateTime.UtcNow;
     }
 
@@ -78,9 +75,9 @@ public class TokenBucket
     {
         var now = DateTime.UtcNow;
         var elapsed = (now - _lastRefill).TotalSeconds;
-        var tokensToAdd = elapsed * RefillRate;
+        var tokensToAdd = elapsed * _refillRate;
 
-        _tokens = Math.Min(MaxTokens, _tokens + tokensToAdd);
+        _tokens = Math.Min(_maxTokens, _tokens + tokensToAdd);
         _lastRefill = now;
     }
 }
