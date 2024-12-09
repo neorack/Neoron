@@ -20,6 +20,8 @@ public class Program
             // Add enhanced Serilog configuration
             builder.Host.AddCustomLogging();
             
+            Log.Information("Configuring application services...");
+            
             builder.AddServiceDefaults();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -38,7 +40,17 @@ public class Program
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.UseDeveloperExceptionPage();
             }
+
+            // Add diagnostic middleware
+            app.Use(async (context, next) =>
+            {
+                Log.Debug("Processing request: {Method} {Path}", 
+                    context.Request.Method, 
+                    context.Request.Path);
+                await next();
+            });
 
             app.UseHttpsRedirection();
 
