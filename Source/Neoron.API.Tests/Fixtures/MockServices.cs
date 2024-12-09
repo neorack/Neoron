@@ -1,14 +1,5 @@
-namespace Neoron.API.Tests.Fixtures;
-
-public static class TestConstants
-{
-    public const string TestUserId = "test-user-id";
-    public const string TestUserName = "Test User";
-    public const string TestUserRole = "admin";
-    public const string TestAuthScheme = "Test";
-}
-
 using Microsoft.Extensions.DependencyInjection;
+using static Neoron.API.Tests.TestConstants;
 using Moq;
 using Neoron.API.Services;
 using Neoron.API.Interfaces;

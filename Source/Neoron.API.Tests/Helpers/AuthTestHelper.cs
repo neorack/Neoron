@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using static Neoron.API.Tests.TestConstants;
 
 namespace Neoron.API.Tests.Helpers;
 
@@ -26,13 +27,13 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, _configuration["TestAuthUserName"] ?? "Test User"),
-            new Claim(ClaimTypes.NameIdentifier, _configuration["TestAuthUserId"] ?? "test-user-id"),
-            new Claim(ClaimTypes.Role, _configuration["TestAuthUserRole"] ?? "admin")
+            new Claim(ClaimTypes.Name, _configuration["TestAuthUserName"] ?? Auth.TestUserName),
+            new Claim(ClaimTypes.NameIdentifier, _configuration["TestAuthUserId"] ?? Auth.TestUserId),
+            new Claim(ClaimTypes.Role, _configuration["TestAuthUserRole"] ?? Auth.TestUserRole)
         };
-        var identity = new ClaimsIdentity(claims, _configuration["TestAuthScheme"] ?? "Test");
+        var identity = new ClaimsIdentity(claims, _configuration["TestAuthScheme"] ?? Auth.TestAuthScheme);
         var principal = new ClaimsPrincipal(identity);
-        var ticket = new AuthenticationTicket(principal, _configuration["TestAuthScheme"] ?? "Test");
+        var ticket = new AuthenticationTicket(principal, _configuration["TestAuthScheme"] ?? Auth.TestAuthScheme);
 
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }
