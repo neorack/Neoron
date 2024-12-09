@@ -30,6 +30,9 @@ public class Program
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            
+            // Add health checks
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
 
@@ -57,6 +60,14 @@ public class Program
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // Add test endpoints
+            app.MapGet("/test", () => {
+                Log.Information("Test endpoint called");
+                return Results.Ok(new { message = "API is running", timestamp = DateTime.UtcNow });
+            });
+
+            app.MapHealthChecks("/health");
+            
             app.MapControllers();
 
             app.Run();
