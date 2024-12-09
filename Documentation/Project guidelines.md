@@ -166,3 +166,88 @@ Neoron is a .NET-based system for:
 2. Finish security integration
 3. Add message search functionality
 4. Implement caching
+# Project Guidelines
+
+## Code Organization
+
+### Architecture
+- Follow clean layered architecture principles
+- Use repository pattern for data access
+- Implement dependency injection
+- Follow SOLID principles
+
+### Project Structure
+- Keep related files in appropriate namespaces
+- Group by feature when possible
+- Maintain clear separation of concerns
+
+## Coding Standards
+
+### General
+- Use C# latest language features appropriately
+- Follow Microsoft's C# coding conventions
+- Use async/await consistently
+- Implement proper exception handling
+- Use cancellation tokens for async operations
+
+### Documentation
+- Provide XML documentation for public APIs
+- Keep documentation up-to-date with changes
+- Include examples in complex scenarios
+- Document non-obvious implementation details
+
+### Testing
+- Write unit tests for business logic
+- Create integration tests for data access
+- Test error scenarios
+- Use meaningful test names
+- Follow Arrange-Act-Assert pattern
+
+## Database
+- Use Entity Framework Core best practices
+- Implement proper indexing strategies
+- Use appropriate data types
+- Include foreign key relationships
+- Implement soft delete where appropriate
+
+## Security
+- Validate all input data
+- Implement proper authentication/authorization
+- Use parameterized queries
+- Implement rate limiting
+- Follow OWASP security guidelines
+
+## Performance
+- Use async operations appropriately
+- Implement caching where beneficial
+- Use pagination for large datasets
+- Optimize database queries
+- Monitor and log performance metrics
+
+## Source Control
+- Write meaningful commit messages
+- Keep commits focused and atomic
+- Use feature branches
+- Review code before merging
+- Keep main branch stable
+
+## Deployment
+- Use continuous integration
+- Implement automated testing
+- Follow semantic versioning
+- Document deployment procedures
+- Maintain deployment scripts
+
+## Monitoring
+- Implement structured logging
+- Set up appropriate alerting
+- Monitor application health
+- Track key metrics
+- Use proper logging levels
+
+## Review Process
+- Conduct code reviews
+- Use pull requests
+- Check for security issues
+- Verify test coverage
+- Ensure documentation is updated
