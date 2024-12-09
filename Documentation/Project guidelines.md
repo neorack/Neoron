@@ -63,3 +63,106 @@
 - Document API endpoints
 - Include examples where helpful
 - Document configuration options
+# Project Guidelines and Development Tasks
+
+## Project Overview
+Neoron is a .NET-based system for:
+- Discord message processing and storage
+- User relationship and ideology tracking
+- Group and activity management
+- Influence metrics calculation
+
+## Architecture
+- Clean layered architecture with repository pattern
+- SQL Server database with EF Core
+- OpenTelemetry for observability
+- Azure AD authentication
+- Rate limiting and validation
+
+## Current Status (December 2024)
+- Core database schema implemented
+- Basic Discord message handling
+- Initial test infrastructure
+- Basic rate limiting
+
+## Immediate Tasks (High Priority)
+1. Controller Testing
+   - Complete MessageController test coverage
+   - Add authentication test scenarios
+   - Implement performance tests
+   - Add concurrency tests
+
+2. Security Implementation
+   - Complete Azure AD integration
+   - Add role-based authorization
+   - Implement API key validation
+   - Add input sanitization
+
+3. Message Processing
+   - Add message search capabilities
+   - Implement thread handling
+   - Add message history tracking
+   - Enhance validation rules
+
+## Medium Priority Tasks
+1. Infrastructure
+   - Set up Redis caching
+   - Configure monitoring dashboards
+   - Add custom metrics
+   - Implement alert rules
+
+2. User Management
+   - Implement user profile endpoints
+   - Add relationship management
+   - Add ideology tracking
+   - Implement influence calculations
+
+3. Documentation
+   - API documentation
+   - Deployment guide
+   - Database migration guide
+   - Security documentation
+
+## Low Priority Tasks
+1. Administrative Features
+   - Admin dashboard
+   - User management interface
+   - System configuration UI
+   - Analytics dashboard
+
+2. Integration Features
+   - Webhook support
+   - External API integrations
+   - Batch processing
+   - Export capabilities
+
+## Development Standards
+1. Code Quality
+   - All new code must have tests
+   - Maintain >80% test coverage
+   - Follow StyleCop rules
+   - Use static analysis
+
+2. Security
+   - Input validation on all endpoints
+   - Proper error handling
+   - Rate limiting
+   - Audit logging
+
+3. Performance
+   - Response time <200ms
+   - Efficient database queries
+   - Proper caching
+   - Regular performance testing
+
+## Success Criteria
+- All critical paths tested
+- Security compliance verified
+- Performance targets met
+- Documentation complete
+
+## Next Steps
+1. Complete controller test implementation
+2. Finish security integration
+3. Add message search functionality
+4. Implement caching
