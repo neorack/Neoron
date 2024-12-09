@@ -9,24 +9,21 @@
       "documentExposedElements": true,
       "documentInternalElements": false,
       "documentPrivateElements": false,
-      "documentPrivateFields": false
+      "documentPrivateFields": false,
+      "documentationCulture": "en-US"
     },
     "layoutRules": {
-      "newlineAtEndOfFile": "require"
+      "newlineAtEndOfFile": "require",
+      "allowConsecutiveUsings": true
     },
     "orderingRules": {
       "usingDirectivesPlacement": "outsideNamespace",
       "systemUsingDirectivesFirst": true,
-      "elementOrder": [
-        "kind",
-        "constant",
-        "accessibility",
-        "static",
-        "readonly"
-      ]
+      "blankLinesBetweenUsingGroups": "allow"
     },
     "namingRules": {
-      "allowCommonHungarianPrefixes": false
+      "allowCommonHungarianPrefixes": false,
+      "includeInferredTupleElementNames": true
     },
     "maintainabilityRules": {
       "topLevelTypes": [

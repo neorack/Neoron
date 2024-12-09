@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  
+  <Target Name="CustomAfterBuild" AfterTargets="Build">
+    <Message Text="Build completed for $(ProjectName)" Importance="high" />
+  </Target>
+</Project>
