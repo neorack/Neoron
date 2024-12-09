@@ -44,6 +44,9 @@
     <Parameter name="TestDatabaseConnectionString" value="Server=localhost;Database=NeoronTest;Trusted_Connection=True;TrustServerCertificate=True;" />
     <Parameter name="EnableDetailedLogs" value="true" />
     <Parameter name="TestEnvironment" value="Integration" />
-    <Parameter name="AuthTestToken" value="test-token-value" />
+    <Parameter name="TestAuthScheme" value="Test" />
+    <Parameter name="TestAuthUserName" value="Test User" />
+    <Parameter name="TestAuthUserId" value="test-user-id" />
+    <Parameter name="TestAuthUserRole" value="admin" />
   </TestRunParameters>
 </RunSettings>
