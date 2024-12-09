@@ -2,10 +2,11 @@
 
 ## Prerequisites
 - .NET 8.0 SDK
-- SQL Server 2019 or later
+- PostgreSQL 15 or later (DigitalOcean Managed Database)
 - Docker Desktop (for development)
 - Visual Studio 2022 or VS Code
 - Git
+- DigitalOcean Account
 
 ## Development Environment Setup
 
@@ -57,11 +58,19 @@ dotnet test --settings Source/Neoron.API.Tests/test.runsettings
 ## Production Deployment
 
 ### 1. Infrastructure Requirements
-- DigitalOcean Droplet (Ubuntu 22.04 LTS recommended)
-- DigitalOcean Managed Database (PostgreSQL)
-- DigitalOcean Spaces for storage (optional)
+- DigitalOcean Droplet
+  - Ubuntu 22.04 LTS
+  - Basic: 2GB RAM / 2 vCPUs ($15/mo)
+  - Production: 4GB RAM / 2 vCPUs ($20/mo)
+- DigitalOcean Managed Database
+  - PostgreSQL 15
+  - Basic: 1GB RAM / 1 vCPU ($15/mo)
+  - Production: 2GB RAM / 1 vCPU ($25/mo)
+- DigitalOcean Spaces (optional)
+  - 250GB storage ($5/mo)
 - Redis Cache (optional)
-- Nginx for reverse proxy
+  - Basic: 1GB RAM ($15/mo)
+- Nginx for reverse proxy (included with Droplet)
 
 ### 2. Server Setup
 1. Create Droplet and configure basic security:
