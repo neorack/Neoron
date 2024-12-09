@@ -8,9 +8,9 @@
     - [x] Install NuGet packages (xUnit, Moq, FluentAssertions)
     - [x] Configure test.runsettings
     - [x] Set up test project references
-  - [ ] Configure test dependencies ⚠️ HIGH PRIORITY
-    - [ ] Set up WebApplicationFactory
-    - [ ] Configure test database context (using TestContainers)
+  - [x] Configure test dependencies ⚠️ HIGH PRIORITY
+    - [x] Set up WebApplicationFactory
+    - [x] Configure test database context (using TestContainers)
     - [ ] Add mock service providers
   - [ ] Add test utilities and helpers
     - [ ] Authentication test helpers

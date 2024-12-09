@@ -4,13 +4,27 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Neoron.API.Data;
 using Neoron.API.Tests.Helpers;
+using Testcontainers.MsSql;
 
 namespace Neoron.API.Tests.Fixtures;
 
-public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
+public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>, IAsyncDisposable where TProgram : class
 {
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    private readonly MsSqlContainer _sqlContainer;
+    private bool _disposed;
+
+    public TestWebApplicationFactory()
     {
+        _sqlContainer = new MsSqlBuilder()
+            .WithName($"sql_test_{Guid.NewGuid()}")
+            .WithPassword("Strong_password_123!")
+            .Build();
+    }
+
+    protected override async void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        await _sqlContainer.StartAsync();
+
         builder.UseEnvironment("Testing");
 
         builder.ConfigureServices(services =>
@@ -25,7 +39,7 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseInMemoryDatabase($"TestDb_{Guid.NewGuid()}");
+                options.UseSqlServer(_sqlContainer.GetConnectionString());
                 options.EnableSensitiveDataLogging();
                 options.EnableDetailedErrors();
             });
@@ -40,10 +54,10 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<ApplicationDbContext>();
 
-                db.Database.EnsureCreated();
+                db.Database.Migrate();
                 
                 // Seed test data if needed
-                // SeedTestData(db);
+                SeedTestData(db);
             }
         });
     }
@@ -52,5 +66,19 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
     {
         // Add test data seeding logic here
         db.SaveChanges();
+    }
+
+    public new async ValueTask DisposeAsync()
+    {
+        if (!_disposed)
+        {
+            if (_sqlContainer != null)
+            {
+                await _sqlContainer.DisposeAsync();
+            }
+            _disposed = true;
+        }
+
+        await base.DisposeAsync();
     }
 }
