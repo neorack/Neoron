@@ -15,9 +15,11 @@ namespace Neoron.API.Controllers
 
         public DiscordMessageController(
             IDiscordMessageRepository repository,
-            ILogger<DiscordMessageController> logger) => 
-            (_repository, _logger) = (repository ?? throw new ArgumentNullException(nameof(repository)), 
-                                      logger ?? throw new ArgumentNullException(nameof(logger)));
+            ILogger<DiscordMessageController> logger)
+        {
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         /// <summary>
         /// Gets a message by its ID
