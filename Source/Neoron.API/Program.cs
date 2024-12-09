@@ -63,7 +63,19 @@ public class Program
             // Add test endpoints
             app.MapGet("/test", () => {
                 Log.Information("Test endpoint called");
-                return Results.Ok(new { message = "API is running", timestamp = DateTime.UtcNow });
+                var diagnostics = new {
+                    message = "API is running",
+                    timestamp = DateTime.UtcNow,
+                    environment = app.Environment.EnvironmentName,
+                    isDevMode = app.Environment.IsDevelopment(),
+                    authEnabled = app.Configuration["AzureAd:ClientId"] != null
+                };
+                return Results.Ok(diagnostics);
+            });
+
+            app.MapGet("/test/error", () => {
+                Log.Warning("Test error endpoint called");
+                throw new Exception("Test exception to verify error handling");
             });
 
             app.MapHealthChecks("/health");
