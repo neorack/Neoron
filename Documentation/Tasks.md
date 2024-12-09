@@ -4,41 +4,45 @@
 
 ### 1. Controller Tests Implementation (Priority: High)
 - [ ] Create test project structure
-  - [ ] Set up xUnit test project
-    - [ ] Install NuGet packages (xUnit, Moq, FluentAssertions)
+  - [x] Set up xUnit test project
+    - [x] Install NuGet packages (xUnit, Moq, FluentAssertions)
     - [ ] Configure test.runsettings
-    - [ ] Set up test project references
+    - [x] Set up test project references
   - [ ] Configure test dependencies
     - [ ] Set up WebApplicationFactory
-    - [ ] Configure test database context
+    - [ ] Configure test database context (using TestContainers)
     - [ ] Add mock service providers
   - [ ] Add test utilities and helpers
     - [ ] Authentication test helpers
     - [ ] Database seeding utilities
     - [ ] Common test fixtures
-    - [ ] Custom assertions
+    - [ ] Custom assertions for HTTP responses
 
-- [ ] Implement MessageController tests
+- [ ] Implement MessageController tests (Target: 90% coverage)
   - [ ] GET endpoints
-    - [ ] Test successful retrieval
-    - [ ] Test pagination
-    - [ ] Test filtering
-    - [ ] Test not found scenarios
+    - [ ] Test successful retrieval of single message
+    - [ ] Test successful retrieval of message list
+    - [ ] Test pagination with different page sizes
+    - [ ] Test filtering by channel/guild/author
+    - [ ] Test not found scenarios (invalid IDs)
+    - [ ] Test empty result sets
   - [ ] POST endpoints
-    - [ ] Test successful creation
-    - [ ] Test validation failures
-    - [ ] Test duplicate handling
-    - [ ] Test required fields
+    - [ ] Test successful message creation
+    - [ ] Test validation failures (missing required fields)
+    - [ ] Test duplicate message handling
+    - [ ] Test message thread creation
+    - [ ] Test message with attachments
   - [ ] PUT endpoints
-    - [ ] Test successful updates
-    - [ ] Test concurrency handling
-    - [ ] Test partial updates
-    - [ ] Test invalid updates
+    - [ ] Test successful message updates
+    - [ ] Test optimistic concurrency handling
+    - [ ] Test partial updates (PATCH)
+    - [ ] Test invalid update scenarios
+    - [ ] Test thread message updates
   - [ ] DELETE endpoints
-    - [ ] Test successful deletion
-    - [ ] Test cascade deletion
-    - [ ] Test soft delete
-    - [ ] Test permanent delete
+    - [ ] Test successful soft deletion
+    - [ ] Test cascade deletion for threads
+    - [ ] Test permanent deletion
+    - [ ] Test deletion authorization
 
 - [ ] Test coverage requirements
   - [ ] Request validation scenarios
@@ -126,9 +130,16 @@
 ## Timeline
 
 ### Week 1-2: Controller Tests
-- Setup test infrastructure
-- Implement core test cases
-- Achieve 90% test coverage
+- Week 1:
+  - Setup test infrastructure
+  - Configure TestContainers
+  - Implement GET endpoint tests
+  - Setup CI pipeline for tests
+- Week 2:
+  - Implement POST/PUT/DELETE tests
+  - Add authentication test scenarios
+  - Performance test implementation
+  - Achieve 90% test coverage
 
 ### Week 3-4: Security Implementation
 - Authentication/Authorization
