@@ -43,8 +43,13 @@ public class RateLimitingMiddleware
 
 public class TokenBucket
 {
-    private const int MaxTokens = 100;
-    private const int RefillRate = 10; // tokens per second
+    private readonly int _maxTokens;
+    private readonly int _refillRate;
+    
+    public TokenBucket(int maxTokens = 100, int refillRate = 10)
+    {
+        _maxTokens = maxTokens;
+        _refillRate = refillRate;
     private double _tokens;
     private DateTime _lastRefill;
     private readonly object _lock = new();

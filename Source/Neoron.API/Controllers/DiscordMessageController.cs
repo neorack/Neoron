@@ -33,10 +33,24 @@ public class DiscordMessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<MessageResponse>> GetById(long id)
     {
-        var message = await _repository.GetByIdAsync(id);
-        if (message == null) return NotFound();
-        
-        return Ok(MessageResponse.FromEntity(message));
+        try
+        {
+            _logger.LogInformation("Retrieving message with ID: {MessageId}", id);
+            
+            var message = await _repository.GetByIdAsync(id);
+            if (message == null)
+            {
+                _logger.LogWarning("Message with ID {MessageId} not found", id);
+                return NotFound(new { error = "Message not found" });
+            }
+            
+            return Ok(MessageResponse.FromEntity(message));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving message {MessageId}", id);
+            throw;
+        }
     }
 
     /// <summary>

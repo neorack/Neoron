@@ -28,6 +28,8 @@ public class DiscordMessage
     /// <summary>
     /// Gets or sets the content of the message.
     /// </summary>
+    [Required]
+    [StringLength(2000, MinimumLength = 1)]
     public required string Content { get; set; }
 
     /// <summary>
