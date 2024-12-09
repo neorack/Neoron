@@ -8,7 +8,8 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
-namespace Microsoft.Extensions.Hosting;
-
-// This file previously contained duplicate definitions of the ServiceDefaultsExtensions class.
-// The class has been consolidated into ServiceDefaultsExtensions.cs to avoid ambiguity and duplication.
+namespace Microsoft.Extensions.Hosting
+{
+    // This file previously contained duplicate definitions of the ServiceDefaultsExtensions class.
+    // The class has been consolidated into ServiceDefaultsExtensions.cs to avoid ambiguity and duplication.
+}

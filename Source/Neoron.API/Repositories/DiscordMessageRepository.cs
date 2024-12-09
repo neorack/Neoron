@@ -1,27 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Neoron.API.Data;
 using Neoron.API.Interfaces;
 using Neoron.API.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Neoron.API.Repositories
 {
-    public class DiscordMessageRepository : IDiscordMessageRepository
+    public class DiscordMessageRepository(
+        ApplicationDbContext context,
+        ILogger<DiscordMessageRepository> logger) : IDiscordMessageRepository
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<DiscordMessageRepository> _logger;
-
-        public DiscordMessageRepository(
-            ApplicationDbContext context,
-            ILogger<DiscordMessageRepository> logger)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
+        private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
+        private readonly ILogger<DiscordMessageRepository> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<IEnumerable<DiscordMessage>> GetAllAsync() =>
             await _context.DiscordMessages.ToListAsync().ConfigureAwait(false);

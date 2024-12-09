@@ -8,18 +8,12 @@ namespace Neoron.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class DiscordMessageController : ControllerBase
+    public class DiscordMessageController(
+        IDiscordMessageRepository repository,
+        ILogger<DiscordMessageController> logger) : ControllerBase
     {
-        private readonly IDiscordMessageRepository _repository;
-        private readonly ILogger<DiscordMessageController> _logger;
-
-        public DiscordMessageController(
-            IDiscordMessageRepository repository,
-            ILogger<DiscordMessageController> logger)
-        {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
+        private readonly IDiscordMessageRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        private readonly ILogger<DiscordMessageController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         /// <summary>
         /// Gets a message by its ID
