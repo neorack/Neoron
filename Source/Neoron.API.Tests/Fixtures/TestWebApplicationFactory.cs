@@ -44,6 +44,9 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
                 options.EnableDetailedErrors();
             });
 
+            // Add mock services
+            MockServices.AddMockServices(services);
+
             // Add test authentication
             services.AddTestAuth();
 
