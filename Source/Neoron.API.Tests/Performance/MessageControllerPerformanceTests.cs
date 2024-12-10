@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Neoron.API.DTOs;
 using Neoron.API.Models;
 using Neoron.API.Tests.Builders;
@@ -20,7 +22,14 @@ public class MessageControllerPerformanceTests : IntegrationTestBase
         ITestOutputHelper output) : base(factory)
     {
         _output = output;
-        Cleanup();
+        Cleanup().GetAwaiter().GetResult();
+    }
+
+    private async Task Cleanup()
+    {
+        var messages = await DbContext.DiscordMessages.ToListAsync();
+        DbContext.DiscordMessages.RemoveRange(messages);
+        await DbContext.SaveChangesAsync();
     }
 
     [Fact]
@@ -92,6 +101,150 @@ public class MessageControllerPerformanceTests : IntegrationTestBase
 
         successRate.Should().BeGreaterThan(0.95); // 95% success rate minimum
         stopwatch.ElapsedMilliseconds.Should().BeLessThan(numberOfRequests * 100); // Average 100ms per request
+    }
+
+    [Fact]
+    public async Task MemoryLeakTest_RepeatedOperations_StableMemoryUsage()
+    {
+        // Arrange
+        const int iterations = 100;
+        var initialMemory = GC.GetTotalMemory(true);
+        var memoryReadings = new List<long>();
+
+        // Act
+        for (int i = 0; i < iterations; i++)
+        {
+            var message = new DiscordMessageBuilder().WithRandomData().Build();
+            await Client.PostAsJsonAsync("/api/messages", message);
+            
+            if (i % 10 == 0) // Take memory reading every 10 iterations
+            {
+                GC.Collect();
+                var currentMemory = GC.GetTotalMemory(true);
+                memoryReadings.Add(currentMemory);
+            }
+        }
+
+        // Assert
+        var memoryGrowth = memoryReadings.Last() - memoryReadings.First();
+        var averageGrowth = memoryGrowth / (memoryReadings.Count - 1);
+        
+        _output.WriteLine($"Initial Memory: {initialMemory / 1024 / 1024}MB");
+        _output.WriteLine($"Final Memory: {memoryReadings.Last() / 1024 / 1024}MB");
+        _output.WriteLine($"Average Growth: {averageGrowth / 1024}KB per 10 operations");
+
+        // Memory growth should be relatively stable
+        averageGrowth.Should().BeLessThan(1024 * 1024); // Less than 1MB growth per 10 operations
+    }
+
+    [Theory]
+    [InlineData(10)]
+    [InlineData(50)]
+    [InlineData(100)]
+    public async Task ConcurrentOperations_MixedRequests_HandlesEfficiently(int concurrentRequests)
+    {
+        // Arrange
+        var stopwatch = new Stopwatch();
+        var random = new Random();
+        var tasks = new List<Task<HttpResponseMessage>>();
+
+        // Act
+        stopwatch.Start();
+        for (int i = 0; i < concurrentRequests; i++)
+        {
+            var task = random.Next(3) switch
+            {
+                0 => Client.GetAsync($"/api/messages/{TestUtils.GenerateRandomId()}"),
+                1 => Client.PostAsJsonAsync("/api/messages", 
+                    new DiscordMessageBuilder().WithRandomData().Build()),
+                _ => Client.DeleteAsync($"/api/messages/{TestUtils.GenerateRandomId()}")
+            };
+            tasks.Add(task);
+        }
+        await Task.WhenAll(tasks);
+        stopwatch.Stop();
+
+        // Assert
+        var responses = tasks.Select(t => t.Result).ToList();
+        var successRate = (double)responses.Count(r => 
+            r.StatusCode == HttpStatusCode.OK || 
+            r.StatusCode == HttpStatusCode.Created || 
+            r.StatusCode == HttpStatusCode.NotFound) / concurrentRequests;
+
+        _output.WriteLine($"Total time: {stopwatch.ElapsedMilliseconds}ms");
+        _output.WriteLine($"Average time per request: {stopwatch.ElapsedMilliseconds / concurrentRequests}ms");
+        _output.WriteLine($"Success rate: {successRate:P}");
+
+        successRate.Should().BeGreaterThan(0.95);
+        stopwatch.ElapsedMilliseconds.Should().BeLessThan(concurrentRequests * 50); // 50ms per request max
+    }
+
+    [Fact]
+    public async Task DatabasePerformance_BulkOperations_HandlesEfficiently()
+    {
+        // Arrange
+        const int batchSize = 1000;
+        var messages = DiscordMessageBuilder.CreateMany(batchSize).ToList();
+        var stopwatch = new Stopwatch();
+
+        // Act
+        stopwatch.Start();
+        foreach (var batch in messages.Chunk(100))
+        {
+            var tasks = batch.Select(msg => 
+                Client.PostAsJsonAsync("/api/messages", msg));
+            await Task.WhenAll(tasks);
+        }
+        stopwatch.Stop();
+
+        // Assert
+        var insertedCount = await DbContext.DiscordMessages
+            .CountAsync(m => messages.Select(msg => msg.MessageId)
+            .Contains(m.MessageId));
+
+        _output.WriteLine($"Total time: {stopwatch.ElapsedMilliseconds}ms");
+        _output.WriteLine($"Average time per message: {stopwatch.ElapsedMilliseconds / batchSize}ms");
+        _output.WriteLine($"Messages per second: {batchSize / (stopwatch.ElapsedMilliseconds / 1000.0):F2}");
+
+        insertedCount.Should().Be(batchSize);
+        stopwatch.ElapsedMilliseconds.Should().BeLessThan(30000); // 30 seconds max
+    }
+
+    [Fact]
+    public async Task ResponseTimeDistribution_UnderLoad_MeetsPerformanceTargets()
+    {
+        // Arrange
+        const int sampleSize = 1000;
+        var responseTimes = new List<long>();
+        var message = new DiscordMessageBuilder().WithRandomData().Build();
+
+        // Act
+        for (int i = 0; i < sampleSize; i++)
+        {
+            var sw = Stopwatch.StartNew();
+            await Client.PostAsJsonAsync("/api/messages", message);
+            sw.Stop();
+            responseTimes.Add(sw.ElapsedMilliseconds);
+
+            // Small delay to prevent overwhelming the server
+            await Task.Delay(10);
+        }
+
+        // Calculate percentiles
+        responseTimes.Sort();
+        var p50 = responseTimes[sampleSize / 2];
+        var p90 = responseTimes[(int)(sampleSize * 0.9)];
+        var p99 = responseTimes[(int)(sampleSize * 0.99)];
+
+        // Assert
+        _output.WriteLine($"P50: {p50}ms");
+        _output.WriteLine($"P90: {p90}ms");
+        _output.WriteLine($"P99: {p99}ms");
+        _output.WriteLine($"Max: {responseTimes.Max()}ms");
+
+        p50.Should().BeLessThan(100);  // 50th percentile under 100ms
+        p90.Should().BeLessThan(200);  // 90th percentile under 200ms
+        p99.Should().BeLessThan(500);  // 99th percentile under 500ms
     }
 
     [Fact]
