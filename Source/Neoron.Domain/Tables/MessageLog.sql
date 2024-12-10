@@ -22,6 +22,7 @@ CREATE TABLE [dbo].[MessageLog]
 GO
 
 CREATE INDEX [IX_MessageLog_SenderId] ON [dbo].[MessageLog] ([SenderId])
+INCLUDE ([MessageType], [SentAt], [Status])
 GO
 
 CREATE INDEX [IX_MessageLog_ReceiverId] ON [dbo].[MessageLog] ([ReceiverId]) 
@@ -30,14 +31,16 @@ WHERE [ReceiverId] IS NOT NULL
 GO
 
 CREATE INDEX [IX_MessageLog_GroupId] ON [dbo].[MessageLog] ([GroupId])
-INCLUDE ([SenderId], [MessageType])
+INCLUDE ([SenderId], [MessageType], [Content], [SentAt])
 WHERE [GroupId] IS NOT NULL
 GO
 
 CREATE INDEX [IX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
 GO
 
-CREATE INDEX [IX_MessageLog_Status] ON [dbo].[MessageLog] ([Status])
+CREATE INDEX [IX_MessageLog_Status] ON [dbo].[MessageLog] ([Status], [SentAt])
+INCLUDE ([SenderId], [ReceiverId], [GroupId])
+WHERE [Status] IN ('Sent', 'Delivered')
 GO
 
 CREATE INDEX [IX_MessageLog_SenderReceiver] ON [dbo].[MessageLog] ([SenderId], [ReceiverId], [SentAt])
