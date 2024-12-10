@@ -4,7 +4,8 @@ namespace Neoron.API.Interfaces
     /// Generic repository interface for data access operations.
     /// </summary>
     /// <typeparam name="T">The entity type.</typeparam>
-    public interface IRepository<T> where T : class
+    public interface IRepository<T>
+        where T : class
     {
         /// <summary>
         /// Gets all entities asynchronously.
