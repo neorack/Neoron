@@ -11,8 +11,8 @@ CREATE TABLE [dbo].[MessageLog]
     [DeliveredAt] DATETIME2 NULL,
     [ReadAt] DATETIME2 NULL,
     [Status] NVARCHAR(50) NOT NULL CHECK ([Status] IN ('Sent', 'Delivered', 'Read', 'Failed')),
-    CONSTRAINT [FK_MessageLog_Sender] FOREIGN KEY ([SenderId]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_MessageLog_Receiver] FOREIGN KEY ([ReceiverId]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_MessageLog_Sender] FOREIGN KEY ([SenderId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_MessageLog_Receiver] FOREIGN KEY ([ReceiverId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_MessageLog_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[UserGroup]([Id]) ON DELETE CASCADE,
     CONSTRAINT [CK_MessageLog_Recipient] CHECK (
         ([ReceiverId] IS NULL AND [GroupId] IS NOT NULL) OR
@@ -35,4 +35,12 @@ WHERE [GroupId] IS NOT NULL
 GO
 
 CREATE INDEX [IX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
+GO
+
+CREATE INDEX [IX_MessageLog_Status] ON [dbo].[MessageLog] ([Status])
+GO
+
+CREATE INDEX [IX_MessageLog_SenderReceiver] ON [dbo].[MessageLog] ([SenderId], [ReceiverId], [SentAt])
+INCLUDE ([MessageType], [Content], [Status])
+WHERE [ReceiverId] IS NOT NULL
 GO
