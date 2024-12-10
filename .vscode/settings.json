@@ -32,7 +32,7 @@
     "mssql.intelliSense.enableIntelliSense": true,
     "mssql.intelliSense.enableQuickInfo": true,
     "mssql.intelliSense.enableSuggestions": true,
-    "editor.inlineSuggest.edits.experimental.useMixedLinesDiff": "whenPossible",
+    "editor.inlineSuggest.edits.experimental.useMixedLinesDiff": "auto",
     "editor.inlineSuggest.enabled": true,
     "editor.inlineSuggest.edits.experimental.enabled": true
     
