@@ -8,14 +8,14 @@ namespace Neoron.API.Middleware
     /// </summary>
     public class ExceptionHandlingMiddleware
     {
-        private readonly RequestDelegate next;
-        private readonly ILogger<ExceptionHandlingMiddleware> logger;
-
         private static readonly Action<ILogger, Exception> LogUnhandledException =
             LoggerMessage.Define(
                 LogLevel.Error,
                 new EventId(1, nameof(InvokeAsync)),
                 "An unhandled exception occurred");
+
+        private readonly RequestDelegate next;
+        private readonly ILogger<ExceptionHandlingMiddleware> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExceptionHandlingMiddleware"/> class.
@@ -35,10 +35,7 @@ namespace Neoron.API.Middleware
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
+            ArgumentNullException.ThrowIfNull(context);
 
             try
             {
