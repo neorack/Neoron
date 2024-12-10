@@ -40,6 +40,9 @@
           <UseSourceLink>true</UseSourceLink>
           <SkipAutoProps>true</SkipAutoProps>
           <DeterministicReport>true</DeterministicReport>
+          <SingleHit>false</SingleHit>
+          <IncludeTestAssembly>false</IncludeTestAssembly>
+          <MergeWith>/custom/result/path</MergeWith>
         </Configuration>
       </DataCollector>
     </DataCollectors>

@@ -12,6 +12,7 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
 {
     private readonly MsSqlContainer _sqlContainer;
     private bool _disposed;
+    private bool _databaseInitialized;
     private IServiceProvider? _serviceProvider;
 
     public TestWebApplicationFactory()
@@ -28,7 +29,11 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
 
     protected override async void ConfigureWebHost(IWebHostBuilder builder)
     {
-        await _sqlContainer.StartAsync();
+        if (!_databaseInitialized)
+        {
+            await _sqlContainer.StartAsync();
+            _databaseInitialized = true;
+        }
 
         builder.UseEnvironment("Testing");
 
