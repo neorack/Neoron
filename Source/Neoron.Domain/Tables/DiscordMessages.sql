@@ -24,9 +24,19 @@ CREATE TABLE [dbo].[DiscordMessages]
     CONSTRAINT [FK_DiscordMessages_Group] FOREIGN KEY ([GroupId])
         REFERENCES [dbo].[ChannelGroups]([Id]) ON DELETE NO ACTION
 );
+GO
 
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_MessageId] ON [dbo].[DiscordMessages]([MessageId]);
+GO
+
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_ChannelId] ON [dbo].[DiscordMessages]([ChannelId]);
+GO
+
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GuildId] ON [dbo].[DiscordMessages]([GuildId]);
+GO
+
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_AuthorId] ON [dbo].[DiscordMessages]([AuthorId]);
+GO
+
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GroupId] ON [dbo].[DiscordMessages]([GroupId]);
+GO
