@@ -18,7 +18,7 @@ CREATE TABLE [dbo].[Person]
     [GenderId] TINYINT NULL,
     CONSTRAINT [FK_Person_Gender] FOREIGN KEY ([GenderId]) REFERENCES [dbo].[RefGender]([Id]) ON DELETE NO ACTION,
     [TimeZone] NVARCHAR(100) NULL,                      -- For global user base
-    [PreferredLanguage] NCHAR(5) NULL,                  -- ISO language code
+    [PreferredLanguage] NCHAR(5) NULL CHECK (LEN([PreferredLanguage]) = 5),  -- ISO language code (xx-XX format)
     [LastLoginAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [CreatedBy] UNIQUEIDENTIFIER NULL,
@@ -98,6 +98,7 @@ CREATE TABLE [dbo].[PersonContact]
     [ContactTypeId] TINYINT NOT NULL,
     [Value] NVARCHAR(256) NOT NULL,                     -- Adjusted length for contact info
     [IsPrimary] BIT NOT NULL DEFAULT 0,
+    CONSTRAINT [UQ_PersonContact_Primary] UNIQUE ([PersonId], [ContactTypeId]) WHERE [IsPrimary] = 1,
     [IsVerified] BIT NOT NULL DEFAULT 0,
     [VerifiedAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -105,6 +106,9 @@ CREATE TABLE [dbo].[PersonContact]
     CONSTRAINT [FK_PersonContact_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE CASCADE,
     CONSTRAINT [FK_PersonContact_ContactType] FOREIGN KEY ([ContactTypeId]) REFERENCES [dbo].[RefContactType]([Id]) ON DELETE NO ACTION
 )
+GO
+
+CREATE INDEX [IX_Person_ExternalId] ON [dbo].[Person] ([ExternalId]) WHERE [ExternalId] IS NOT NULL
 GO
 
 CREATE INDEX [IX_PersonContact_PersonId] ON [dbo].[PersonContact] ([PersonId])
