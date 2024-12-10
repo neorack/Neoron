@@ -5,13 +5,6 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 
-using System.Globalization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
-using Microsoft.OpenApi.Models;
-using Serilog;
-using Serilog.Events;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Use bootstrap logger during startup

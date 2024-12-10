@@ -24,10 +24,14 @@ GO
 CREATE INDEX [IX_MessageLog_SenderId] ON [dbo].[MessageLog] ([SenderId])
 GO
 
-CREATE INDEX [IX_MessageLog_ReceiverId] ON [dbo].[MessageLog] ([ReceiverId]) WHERE [ReceiverId] IS NOT NULL
+CREATE INDEX [IX_MessageLog_ReceiverId] ON [dbo].[MessageLog] ([ReceiverId]) 
+INCLUDE ([SenderId], [MessageType]) 
+WHERE [ReceiverId] IS NOT NULL
 GO
 
-CREATE INDEX [IX_MessageLog_GroupId] ON [dbo].[MessageLog] ([GroupId]) WHERE [GroupId] IS NOT NULL
+CREATE INDEX [IX_MessageLog_GroupId] ON [dbo].[MessageLog] ([GroupId])
+INCLUDE ([SenderId], [MessageType])
+WHERE [GroupId] IS NOT NULL
 GO
 
 CREATE INDEX [IX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
