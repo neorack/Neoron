@@ -5,7 +5,11 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 
-var builder = WebApplication.CreateBuilder(args);
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
 // Use bootstrap logger during startup
 Log.Logger = new LoggerConfiguration()
@@ -119,8 +123,10 @@ catch (Exception ex)
 {
     Log.Fatal(ex, "Application start-up failed");
     throw;
-}
-finally
-{
-    Log.CloseAndFlush();
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+    }
 }
