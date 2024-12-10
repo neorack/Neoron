@@ -11,6 +11,50 @@ using Neoron.API.Models;
 
 namespace Neoron.API.Repositories
 {
+    public static partial class LogMessages
+    {
+        [LoggerMessage(Level = LogLevel.Information, Message = "Adding message {MessageId} for channel {ChannelId}")]
+        public static partial void LogAddingMessage(ILogger logger, long messageId, long channelId);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Successfully added message {MessageId}")]
+        public static partial void LogAddedMessage(ILogger logger, long messageId);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Failed to add message {MessageId}")]
+        public static partial void LogAddMessageError(ILogger logger, Exception ex, long messageId);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Updating message {MessageId}")]
+        public static partial void LogUpdatingMessage(ILogger logger, long messageId);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Successfully updated message {MessageId}")]
+        public static partial void LogUpdatedMessage(ILogger logger, long messageId);
+
+        [LoggerMessage(Level = LogLevel.Warning, Message = "Concurrency conflict when updating message {MessageId}, retrying...")]
+        public static partial void LogUpdateRetry(ILogger logger, long messageId);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Failed to update message {MessageId} after maximum retries")]
+        public static partial void LogUpdateError(ILogger logger, long messageId);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Deleting message {MessageId}")]
+        public static partial void LogDeletingMessage(ILogger logger, long messageId);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Successfully deleted message {MessageId}")]
+        public static partial void LogDeletedMessage(ILogger logger, long messageId);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Failed to delete message with id {Id}")]
+        public static partial void LogDeleteError(ILogger logger, Exception ex, object id);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Adding a range of messages")]
+        public static partial void LogAddingRange(ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Successfully added a range of messages")]
+        public static partial void LogAddedRange(ILogger logger);
+
+        [LoggerMessage(Level = LogLevel.Error, Message = "Failed to add a range of messages")]
+        public static partial void LogAddRangeError(ILogger logger, Exception ex);
+    }
+
+namespace Neoron.API.Repositories
+{
     /// <summary>
     /// Repository for managing Discord messages.
     /// </summary>
@@ -66,17 +110,17 @@ namespace Neoron.API.Repositories
             using var activity = System.Diagnostics.Activity.Current?.Source.StartActivity("AddMessage");
             try
             {
-                logger.LogInformation("Adding message {MessageId} for channel {ChannelId}", entity.MessageId, entity.ChannelId);
+                LogMessages.LogAddingMessage(logger, entity.MessageId, entity.ChannelId);
 
                 context.DiscordMessages.Add(entity);
                 await context.SaveChangesAsync().ConfigureAwait(false);
 
-                logger.LogInformation("Successfully added message {MessageId}", entity.MessageId);
+                LogMessages.LogAddedMessage(logger, entity.MessageId);
                 return entity;
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to add message {MessageId}", entity.MessageId);
+                LogMessages.LogAddMessageError(logger, ex, entity.MessageId);
                 throw;
             }
         }
@@ -90,7 +134,7 @@ namespace Neoron.API.Repositories
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            logger.LogInformation("Updating message {MessageId}", entity.MessageId);
+            LogMessages.LogUpdatingMessage(logger, entity.MessageId);
 
             const int maxRetries = 3;
             var retryCount = 0;
@@ -101,19 +145,19 @@ namespace Neoron.API.Repositories
                 {
                     context.Entry(entity).State = EntityState.Modified;
                     await context.SaveChangesAsync().ConfigureAwait(false);
-                    logger.LogInformation("Successfully updated message {MessageId}", entity.MessageId);
+                    LogMessages.LogUpdatedMessage(logger, entity.MessageId);
                     return;
                 }
                 catch (DbUpdateConcurrencyException) when (retryCount < maxRetries - 1)
                 {
-                    logger.LogWarning("Concurrency conflict when updating message {MessageId}, retrying...", entity.MessageId);
+                    LogMessages.LogUpdateRetry(logger, entity.MessageId);
                     await Task.Delay(100 * (retryCount + 1)).ConfigureAwait(false);
                     retryCount++;
                     await context.Entry(entity).ReloadAsync().ConfigureAwait(false);
                 }
             }
 
-            logger.LogError("Failed to update message {MessageId} after maximum retries", entity.MessageId);
+            LogMessages.LogUpdateError(logger, entity.MessageId);
             throw new DbUpdateConcurrencyException("Failed to update after maximum retries");
         }
 
@@ -129,16 +173,16 @@ namespace Neoron.API.Repositories
                 var message = await GetByIdAsync(id).ConfigureAwait(false);
                 if (message != null)
                 {
-                    logger.LogInformation("Deleting message {MessageId}", message.MessageId);
+                    LogMessages.LogDeletingMessage(logger, message.MessageId);
                     message.IsDeleted = true;
                     message.DeletedAt = DateTimeOffset.UtcNow;
                     await UpdateAsync(message).ConfigureAwait(false);
-                    logger.LogInformation("Successfully deleted message {MessageId}", message.MessageId);
+                    LogMessages.LogDeletedMessage(logger, message.MessageId);
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to delete message with id {Id}", id);
+                LogMessages.LogDeleteError(logger, ex, id);
                 throw;
             }
         }
@@ -152,7 +196,7 @@ namespace Neoron.API.Repositories
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of Discord messages.</returns>
         public async Task<IEnumerable<DiscordMessage>> GetByChannelIdAsync(long channelId, int skip = 0, int take = 100)
         {
-            var messages = await context.DiscordMessages
+            var messages = await context.DiscordMessages.ConfigureAwait(false)
                 .Where(m => m.ChannelId == channelId)
                 .OrderByDescending(m => m.CreatedAt)
                 .Skip(skip)
@@ -227,18 +271,18 @@ namespace Neoron.API.Repositories
             await using var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false);
             try
             {
-                logger.LogInformation("Adding a range of messages");
+                LogMessages.LogAddingRange(logger);
 
                 await context.DiscordMessages.AddRangeAsync(messages).ConfigureAwait(false);
                 var result = await context.SaveChangesAsync().ConfigureAwait(false);
                 await transaction.CommitAsync().ConfigureAwait(false);
 
-                logger.LogInformation("Successfully added a range of messages");
+                LogMessages.LogAddedRange(logger);
                 return result;
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to add a range of messages");
+                LogMessages.LogAddRangeError(logger, ex);
                 await transaction.RollbackAsync().ConfigureAwait(false);
                 throw;
             }
@@ -285,7 +329,7 @@ namespace Neoron.API.Repositories
             await using var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false);
             try
             {
-                var messages = await context.DiscordMessages
+                var messages = await context.DiscordMessages.ConfigureAwait(false)
                     .Where(m => messageIds.Contains(m.MessageId))
                     .ToListAsync().ConfigureAwait(false);
 
