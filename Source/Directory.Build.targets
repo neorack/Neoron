@@ -1,8 +1,18 @@
 <Project>
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- Suppress XML documentation warnings -->
   </PropertyGroup>
   
+  <!-- Add this target to clean generated files -->
+  <Target Name="CleanGeneratedFiles" BeforeTargets="Clean">
+    <ItemGroup>
+      <FilesToDelete Include="$(BaseIntermediateOutputPath)**\*.AssemblyAttributes.cs" />
+      <FilesToDelete Include="$(BaseIntermediateOutputPath)**\*.AssemblyInfo.cs" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" />
+  </Target>
+
   <Target Name="CustomAfterBuild" AfterTargets="Build">
     <Message Text="Build completed for $(ProjectName)" Importance="high" />
   </Target>
