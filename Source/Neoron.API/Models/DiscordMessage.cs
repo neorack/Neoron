@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Neoron.API.Models;
 
 namespace Neoron.API.Models
 {
@@ -93,11 +95,5 @@ namespace Neoron.API.Models
         /// Gets or sets the collection of messages in this thread.
         /// </summary>
         public virtual ICollection<DiscordMessage>? ThreadMessages { get; set; }
-    }
-
-    public enum MessageType : byte
-    {
-        Regular = 0,
-        System = 1
     }
 }

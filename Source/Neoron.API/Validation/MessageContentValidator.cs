@@ -2,12 +2,15 @@ using System.Text.RegularExpressions;
 
 namespace Neoron.API.Validation
 {
+    /// <summary>
+    /// Provides methods for validating message content.
+    /// </summary>
     public static partial class MessageContentValidator
     {
-        private static readonly Regex UrlRegex = GetUrlRegex();
         private const int MaxUrls = 5;
         private const int MaxMentions = 10;
         private const int MaxLength = 2000;
+        private static readonly Regex UrlRegex = GetUrlRegex();
 
         /// <summary>
         /// Validates the content of a message.
@@ -40,11 +43,5 @@ namespace Neoron.API.Validation
 
         [GeneratedRegex(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", RegexOptions.Compiled | RegexOptions.ExplicitCapture)]
         private static partial Regex GetUrlRegex();
-    }
-
-    public record MessageValidationResult(bool IsValid, string? ErrorMessage = null)
-    {
-        public static MessageValidationResult Success() => new(true);
-        public static MessageValidationResult Error(string message) => new(false, message);
     }
 }

@@ -119,10 +119,13 @@ namespace Neoron.API.Controllers
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            var validationResult = MessageContentValidator.ValidateContent(request.Content);
-            if (!validationResult.IsValid)
+            if (request.Content != null)
             {
-                return BadRequest(new { error = validationResult.ErrorMessage });
+                var validationResult = MessageContentValidator.ValidateContent(request.Content);
+                if (!validationResult.IsValid)
+                {
+                    return BadRequest(new { error = validationResult.ErrorMessage });
+                }
             }
 
             var message = await repository.GetByIdAsync(id).ConfigureAwait(false);
