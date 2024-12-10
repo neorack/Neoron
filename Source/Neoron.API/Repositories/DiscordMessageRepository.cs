@@ -52,9 +52,6 @@ namespace Neoron.API.Repositories
         [LoggerMessage(Level = LogLevel.Error, Message = "Failed to add a range of messages")]
         public static partial void LogAddRangeError(ILogger logger, Exception ex);
     }
-
-namespace Neoron.API.Repositories
-{
     /// <summary>
     /// Repository for managing Discord messages.
     /// </summary>
