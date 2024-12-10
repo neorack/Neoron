@@ -54,6 +54,7 @@ namespace Neoron.API.Middleware
             {
                 int retryCount = 0;
                 const int maxRetries = 3;
+                const int retryDelayMs = 50;
 
                 while (retryCount < maxRetries)
                 {
@@ -65,21 +66,23 @@ namespace Neoron.API.Middleware
                             return true;
                         }
 
+                        // If we're out of tokens, no point retrying immediately
                         return false;
+                    }
+                    catch (Exception ex) when (retryCount < maxRetries - 1)
+                    {
+                        retryCount++;
+                        Thread.Sleep(retryDelayMs * retryCount); // Exponential backoff
+                        continue;
                     }
                     catch (Exception)
                     {
-                        retryCount++;
-                        if (retryCount == maxRetries)
-                        {
-                            // Fail open on final retry
-                            return true;
-                        }
-                        Thread.Sleep(10); // Brief pause before retry
+                        // On final retry, fail open to avoid blocking operations
+                        return true;
                     }
                 }
 
-                return false; // Should never reach here
+                return false;
             }
         }
 

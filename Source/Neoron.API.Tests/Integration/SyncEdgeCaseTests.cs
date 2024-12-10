@@ -66,10 +66,22 @@ namespace Neoron.API.Tests.Integration
             var task1 = _ingestionService.SyncMessagesAsync(guildId, channelId);
             var task2 = _ingestionService.SyncMessagesAsync(guildId, channelId);
 
-            var results = await Task.WhenAll(task1, task2);
+            // Act
+            var tasks = new List<Task<int>>
+            {
+                task1,
+                task2,
+                _ingestionService.SyncMessagesAsync(guildId, channelId), // Add third concurrent sync
+                _ingestionService.SyncMessagesAsync(guildId, channelId)  // Add fourth concurrent sync
+            };
+
+            var results = await Task.WhenAll(tasks);
 
             // Assert
             results.Sum().Should().Be(1); // Message should only be counted once
+            var checkpoint = await _ingestionService.GetSyncCheckpointAsync(guildId, channelId);
+            checkpoint.Should().NotBeNull();
+            checkpoint!.LastMessageId.Should().Be(message.Id);
         }
 
         [Fact]

@@ -347,13 +347,14 @@ namespace Neoron.API.Tests.Integration
         }
 
         [Theory]
-        [InlineData(0, 1)]
-        [InlineData(1, 1)]
-        [InlineData(0, 2)]
-        [InlineData(0, 100)]
-        [InlineData(-1, 10)] // Should throw
-        [InlineData(0, 0)]   // Should throw
-        [InlineData(0, 1001)] // Should throw
+        [InlineData(0, 1)]    // Minimum valid take
+        [InlineData(1, 1)]    // Skip one, take one
+        [InlineData(0, 100)]  // Standard page size
+        [InlineData(0, 1000)] // Maximum valid take
+        [InlineData(-1, 10)]  // Invalid skip
+        [InlineData(0, 0)]    // Invalid take
+        [InlineData(0, 1001)] // Take too large
+        [InlineData(1000, 1)] // Large skip, valid take
         public async Task GetByChannelId_WithPagination_ShouldReturnCorrectPage(int skip, int take)
         {
             // Arrange
