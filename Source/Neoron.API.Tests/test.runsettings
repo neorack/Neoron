@@ -83,5 +83,6 @@
     <!-- Performance Testing -->
     <Parameter name="PerformanceTestIterations" value="1000" />
     <Parameter name="EnablePerformanceLogging" value="true" />
+    <Parameter name="PerformanceTestTimeout" value="300" />
   </TestRunParameters>
 </RunSettings>
