@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Neoron.API.Models
 {
     /// <summary>

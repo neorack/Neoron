@@ -15,6 +15,9 @@ namespace Neoron.API.Middleware
         bool ConsumeToken();
     }
 
+    /// <summary>
+    /// Implements a token bucket rate limiter.
+    /// </summary>
     public class TokenBucket : ITokenBucket
     {
         private readonly double maxTokens;

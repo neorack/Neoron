@@ -9,6 +9,8 @@ using Neoron.API.Data;
 using Neoron.API.Interfaces;
 using Neoron.API.Models;
 
+namespace Neoron.API.Repositories
+{
     public static partial class LogMessages
     {
         [LoggerMessage(Level = LogLevel.Information, Message = "Adding message {MessageId} for channel {ChannelId}")]
@@ -194,7 +196,7 @@ namespace Neoron.API.Repositories
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of Discord messages.</returns>
         public async Task<IEnumerable<DiscordMessage>> GetByChannelIdAsync(long channelId, int skip = 0, int take = 100)
         {
-            var messages = await context.DiscordMessages.ConfigureAwait(false)
+            var messages = await context.DiscordMessages
                 .Where(m => m.ChannelId == channelId)
                 .OrderByDescending(m => m.CreatedAt)
                 .Skip(skip)

@@ -51,12 +51,12 @@ namespace Neoron.API.Middleware
             ArgumentNullException.ThrowIfNull(context);
 
             // Add rate limit headers
-            context.Response.Headers.Add("X-RateLimit-Limit", options.MaxTokens.ToString());
+            context.Response.Headers.Append("X-RateLimit-Limit", options.MaxTokens.ToString(System.Globalization.CultureInfo.InvariantCulture));
             
             if (!tokenBucket.ConsumeToken())
             {
                 context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                context.Response.Headers.Add("Retry-After", "1");
+                context.Response.Headers.Append("Retry-After", "1");
                 await context.Response.WriteAsync("Too Many Requests").ConfigureAwait(false);
                 logger.LogWarning("Rate limit exceeded for IP: {IpAddress}", 
                     context.Connection.RemoteIpAddress?.ToString() ?? "unknown");
