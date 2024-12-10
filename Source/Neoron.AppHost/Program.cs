@@ -50,3 +50,10 @@ catch (Exception ex)
     Console.WriteLine($"Current Directory: {Environment.CurrentDirectory}");
     throw;
 }
+using Aspire.Hosting;
+
+var builder = DistributedApplication.CreateBuilder(args);
+
+var api = builder.AddProject<Projects.Neoron_API>("api");
+
+builder.Build().Run();
