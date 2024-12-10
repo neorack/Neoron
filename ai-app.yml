@@ -1,7 +1,0 @@
-# yaml-language-server: $schema=https://aka.ms/ai-toolkit/v0.1/yaml.schema.json
-
-version: v0.1
-
-workingDir: ai-resource/ # default artifacts folder
-
-projectId: 47d46612-9849-47e9-ae63-eef1f6976688 # for telemetry

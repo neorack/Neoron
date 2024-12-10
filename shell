@@ -1,5 +1,0 @@
-dotnet clean
-rm -rf **/obj/
-rm -rf **/bin/
-dotnet restore
-dotnet build
