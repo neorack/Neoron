@@ -15,15 +15,15 @@
 - Use async/await consistently
 - Follow SOLID principles
 
-## Project Structure
-- Organize by feature
-- Maintain clear separation of concerns
-- Group related files in appropriate namespaces
-- Use Clean Architecture principles
-- Implement repository pattern
+## Architecture
+- Follow Clean Architecture principles
+- Keep controllers thin, business logic in services
 - Use dependency injection
+- Implement repository pattern
+- Group by feature when possible
+- Maintain clear separation of concerns
 
-## Database Practices
+## Database Guidelines
 - Follow Entity Framework Core best practices
 - Implement proper indexing strategies
 - Use appropriate data types
@@ -47,38 +47,3 @@
 - Use pagination for large datasets
 - Profile critical paths
 - Monitor performance metrics
-
-## Architecture
-- Follow Clean Architecture principles
-- Keep controllers thin, business logic in services
-- Use dependency injection
-- Follow SOLID principles
-- Use repository pattern for data access
-
-## Project Structure
-- Keep related files in appropriate namespaces
-- Group by feature when possible
-- Maintain clear separation of concerns
-- Files should not exceed 300 lines
-- Classes should not exceed 200 lines
-
-## Database
-- Use Entity Framework Core best practices
-- Implement proper indexing strategies
-- Use appropriate data types
-- Include foreign key relationships
-- Implement soft delete where appropriate
-
-## Security
-- Validate all inputs
-- Use HTTPS
-- Implement rate limiting
-- Follow OWASP security guidelines
-- Keep dependencies updated
-
-## Performance
-- Use async operations for I/O
-- Implement caching where appropriate
-- Monitor and optimize database queries
-- Consider pagination for large datasets
-- Profile and benchmark critical paths
