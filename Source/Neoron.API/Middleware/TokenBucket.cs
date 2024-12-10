@@ -8,16 +8,20 @@ namespace Neoron.API.Middleware
     /// </summary>
     public interface ITokenBucket : IDisposable
     {
+        /// <summary>
+        /// Attempts to consume a token from the bucket.
+        /// </summary>
+        /// <returns>True if a token was successfully consumed, false if no tokens are available.</returns>
         bool ConsumeToken();
     }
 
     public class TokenBucket : ITokenBucket
     {
-        private readonly int maxTokens;
+        private readonly double maxTokens;
         private readonly double refillRate;
         private readonly object lockObject = new();
         private readonly Timer refillTimer;
-        private int tokens;
+        private double tokens;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenBucket"/> class.
@@ -79,7 +83,7 @@ namespace Neoron.API.Middleware
         {
             lock (lockObject)
             {
-                tokens = Math.Min(tokens + (int)(refillRate * 1.0), maxTokens);
+                tokens = Math.Min(tokens + refillRate, maxTokens);
             }
         }
     }

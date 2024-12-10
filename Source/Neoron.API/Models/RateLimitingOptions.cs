@@ -3,7 +3,7 @@ namespace Neoron.API.Models
     /// <summary>
     /// Options for rate limiting.
     /// </summary>
-    public class RateLimitingOptions
+    public class RateLimitingOptions : IValidatableObject
     {
         /// <summary>
         /// Gets or sets the maximum number of tokens allowed in the bucket.
@@ -22,5 +22,33 @@ namespace Neoron.API.Models
         /// </summary>
         /// <remarks>Defaults to 1 hour if not specified.</remarks>
         public TimeSpan CleanupInterval { get; set; } = TimeSpan.FromHours(1);
+
+        /// <summary>
+        /// Validates the options.
+        /// </summary>
+        /// <returns>An enumerable of validation results.</returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (MaxTokens <= 0)
+            {
+                yield return new ValidationResult(
+                    "MaxTokens must be greater than 0",
+                    new[] { nameof(MaxTokens) });
+            }
+
+            if (TokenRefillRate <= 0)
+            {
+                yield return new ValidationResult(
+                    "TokenRefillRate must be greater than 0",
+                    new[] { nameof(TokenRefillRate) });
+            }
+
+            if (CleanupInterval <= TimeSpan.Zero)
+            {
+                yield return new ValidationResult(
+                    "CleanupInterval must be greater than zero",
+                    new[] { nameof(CleanupInterval) });
+            }
+        }
     }
 }

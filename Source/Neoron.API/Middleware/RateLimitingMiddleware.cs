@@ -14,10 +14,10 @@ namespace Neoron.API.Middleware
     public class RateLimitingMiddleware : IDisposable
     {
 
-        private readonly RequestDelegate next = default!;
-        private readonly ILogger<RateLimitingMiddleware> logger = default!;
-        private readonly RateLimitingOptions options = default!;
-        private readonly TokenBucket tokenBucket;
+        private readonly RequestDelegate next;
+        private readonly ILogger<RateLimitingMiddleware> logger;
+        private readonly RateLimitingOptions options;
+        private readonly ITokenBucket tokenBucket;
         private readonly Timer cleanupTimer;
 
         /// <summary>
