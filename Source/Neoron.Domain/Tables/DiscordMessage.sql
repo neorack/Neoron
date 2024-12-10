@@ -45,23 +45,23 @@ GO
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_ChannelId] 
 ON [dbo].[DiscordMessage]([ChannelId])
 INCLUDE ([MessageId], [Content], [CreatedAt])
-WHERE [IsDeleted] = 0
+WHERE IsDeleted = 0
 GO
 
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GuildId] 
 ON [dbo].[DiscordMessage]([GuildId])
 INCLUDE ([MessageId], [ChannelId], [CreatedAt])
-WHERE [IsDeleted] = 0
+WHERE IsDeleted = 0
 GO
 
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_AuthorId] 
 ON [dbo].[DiscordMessage]([AuthorId])
 INCLUDE ([MessageId], [Content], [CreatedAt])
-WHERE [IsDeleted] = 0
+WHERE IsDeleted = 0
 GO
 
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GroupId] 
 ON [dbo].[DiscordMessage]([GroupId])
 INCLUDE ([MessageId], [Content], [CreatedAt])
-WHERE [IsDeleted] = 0
+WHERE IsDeleted = 0
 GO

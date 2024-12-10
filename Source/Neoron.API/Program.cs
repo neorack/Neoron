@@ -1,3 +1,5 @@
+[assembly: System.Runtime.CompilerServices.EntryPoint]
+
 using System.Globalization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
