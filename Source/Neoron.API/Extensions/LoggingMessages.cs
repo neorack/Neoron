@@ -10,11 +10,14 @@ namespace Neoron.API.Extensions
     /// </summary>
     public static class LoggingMessages
     {
-        private static readonly Action<ILogger, string?, Exception?> failedToAddMessage;
+        private static readonly Action<ILogger, string?, Exception?> FailedToAddMessageDelegate;
 
         static LoggingMessages()
         {
-            failedToAddMessage = LoggerMessage.Define<string?, Exception>(LogLevel.Warning, new EventId(1, nameof(FailedToAddMessage)), "Failed to add message for client {ClientId}");
+            FailedToAddMessageDelegate = LoggerMessage.Define<string?>(
+                LogLevel.Warning,
+                new EventId(1, nameof(FailedToAddMessage)),
+                "Failed to add message for client {ClientId}");
         }
 
         /// <summary>
@@ -25,7 +28,7 @@ namespace Neoron.API.Extensions
         /// <param name="ex">The exception that occurred.</param>
         public static void FailedToAddMessage(ILogger logger, string? clientId, Exception ex)
         {
-            failedToAddMessage(logger, clientId, ex);
+            FailedToAddMessageDelegate(logger, clientId, ex);
         }
     }
 }

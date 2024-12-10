@@ -2,12 +2,15 @@ using System.Net;
 
 namespace Neoron.API.Middleware
 {
+    /// <summary>
+    /// Middleware for handling exceptions globally.
+    /// </summary>
     public class ExceptionHandlingMiddleware(
         RequestDelegate next,
         ILogger<ExceptionHandlingMiddleware> logger)
     {
-        private readonly RequestDelegate _next = next;
-        private readonly ILogger<ExceptionHandlingMiddleware> _logger = logger;
+        private readonly RequestDelegate next = next;
+        private readonly ILogger<ExceptionHandlingMiddleware> logger = logger;
 
         public async Task InvokeAsync(HttpContext context)
         {
