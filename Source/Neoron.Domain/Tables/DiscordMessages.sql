@@ -1,4 +1,5 @@
 -- Create ChannelGroups table first
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'ChannelGroups')
 CREATE TABLE [dbo].[ChannelGroups]
 (
     [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
@@ -10,10 +11,15 @@ CREATE TABLE [dbo].[ChannelGroups]
 );
 GO
 
+CREATE NONCLUSTERED INDEX [IX_ChannelGroups_GuildId] ON [dbo].[ChannelGroups]([GuildId]);
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'DiscordMessages')
 CREATE TABLE [dbo].[DiscordMessages]
 (
     [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    [MessageId] BIGINT NOT NULL UNIQUE,
+    [MessageId] BIGINT NOT NULL,
+    CONSTRAINT [UQ_DiscordMessages_MessageId] UNIQUE ([MessageId]),
     [ChannelId] BIGINT NOT NULL,
     [GuildId] BIGINT NOT NULL,
     [AuthorId] BIGINT NOT NULL,
