@@ -11,8 +11,8 @@ namespace Neoron.API.Interfaces
         /// Gets Discord messages by channel identifier asynchronously.
         /// </summary>
         /// <param name="channelId">The channel identifier.</param>
-        /// <param name="skip">The number of messages to skip.</param>
-        /// <param name="take">The number of messages to take.</param>
+        /// <param name="skip">The number of messages to skip (must be >= 0).</param>
+        /// <param name="take">The number of messages to take (must be between 1 and 1000).</param>
         /// <returns>A collection of Discord messages.</returns>
         Task<IEnumerable<DiscordMessage>> GetByChannelIdAsync(long channelId, int skip = 0, int take = 100);
 

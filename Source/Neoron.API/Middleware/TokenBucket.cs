@@ -52,13 +52,21 @@ namespace Neoron.API.Middleware
         {
             lock (lockObject)
             {
-                if (tokens > 0)
+                try
                 {
-                    tokens--;
+                    if (tokens > 0)
+                    {
+                        tokens--;
+                        return true;
+                    }
+
+                    return false;
+                }
+                catch (Exception)
+                {
+                    // Fail open to avoid blocking requests if rate limiting fails
                     return true;
                 }
-
-                return false;
             }
         }
 

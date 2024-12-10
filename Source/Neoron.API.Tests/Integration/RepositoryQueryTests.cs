@@ -52,8 +52,9 @@ namespace Neoron.API.Tests.Integration
             var result = await _messageRepository.GetByChannelIdAsync(channelId);
 
             // Assert
-            result.Should().HaveCount(2);
-            result.Should().OnlyContain(m => m.ChannelId == channelId);
+            result.Should().HaveCount(2)
+                .And.OnlyContain(m => m.ChannelId == channelId)
+                .And.BeInDescendingOrder(m => m.CreatedAt);
         }
 
         [Fact]
@@ -343,6 +344,71 @@ namespace Neoron.API.Tests.Integration
             // Assert
             result.Should().HaveCount(2);
             result.Should().OnlyContain(g => g.GuildId == guildId);
+        }
+
+        [Theory]
+        [InlineData(0, 1)]
+        [InlineData(1, 1)]
+        [InlineData(0, 2)]
+        public async Task GetByChannelId_WithPagination_ShouldReturnCorrectPage(int skip, int take)
+        {
+            // Arrange
+            const long channelId = 567;
+            var messages = new[]
+            {
+                new DiscordMessage
+                {
+                    Id = 15,
+                    ChannelId = channelId,
+                    Content = "Message 1",
+                    CreatedAt = DateTimeOffset.UtcNow.AddMinutes(-2)
+                },
+                new DiscordMessage
+                {
+                    Id = 16,
+                    ChannelId = channelId,
+                    Content = "Message 2",
+                    CreatedAt = DateTimeOffset.UtcNow.AddMinutes(-1)
+                }
+            };
+
+            await _messageRepository.AddRangeAsync(messages);
+
+            // Act
+            var result = await _messageRepository.GetByChannelIdAsync(channelId, skip, take);
+
+            // Assert
+            result.Should().HaveCount(take);
+            if (skip == 0 && take == 1)
+            {
+                result.Single().Id.Should().Be(16); // Most recent
+            }
+            else if (skip == 1 && take == 1)
+            {
+                result.Single().Id.Should().Be(15); // Older message
+            }
+        }
+
+        [Fact]
+        public async Task UpdateMessage_WithConcurrentModification_ShouldHandleConflict()
+        {
+            // Arrange
+            var message = new DiscordMessage
+            {
+                Id = 17,
+                ChannelId = 123,
+                Content = "Original content",
+                CreatedAt = DateTimeOffset.UtcNow
+            };
+
+            await _messageRepository.AddAsync(message);
+
+            // Act & Assert
+            var task1 = _messageRepository.UpdateAsync(message with { Content = "Update 1" });
+            var task2 = _messageRepository.UpdateAsync(message with { Content = "Update 2" });
+
+            await FluentActions.Awaiting(() => Task.WhenAll(task1, task2))
+                .Should().ThrowAsync<DbUpdateConcurrencyException>();
         }
     }
 }
