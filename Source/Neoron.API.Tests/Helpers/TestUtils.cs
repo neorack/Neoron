@@ -117,4 +117,26 @@ public static class TestUtils
             return response;
         }, maxAttempts);
     }
+
+    public static async Task<T> AssertDbChangeAsync<T>(
+        ApplicationDbContext context,
+        Func<Task<T>> action,
+        Func<T, Task> verification)
+    {
+        var result = await action();
+        await verification(result);
+        await context.SaveChangesAsync();
+        return result;
+    }
+
+    public static async Task AssertThrowsAsync<TException>(
+        Func<Task> action,
+        string expectedMessage = null) where TException : Exception
+    {
+        var exception = await Assert.ThrowsAsync<TException>(action);
+        if (expectedMessage != null)
+        {
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+    }
 }

@@ -48,6 +48,17 @@
     </DataCollectors>
   </DataCollectionRunSettings>
 
+  <TestCategoryFilter>
+    <Include>
+      <Category>Unit</Category>
+      <Category>Integration</Category>
+      <Category>Database</Category>
+    </Include>
+    <Exclude>
+      <Category>Performance</Category>
+    </Exclude>
+  </TestCategoryFilter>
+
   <TestRunParameters>
     <!-- Database Configuration -->
     <Parameter name="UseTestDatabase" value="true" />
