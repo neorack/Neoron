@@ -1,19 +1,26 @@
 using System;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using Microsoft.Identity.Web;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+
 using Serilog;
 using Serilog.Events;
-using Serilog.Sinks.Console;
-using Serilog.Sinks.File;
 
 namespace Neoron.API
 {
+    /// <summary>
+    /// The main program class for the Neoron API.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        /// <param name="args">Command line arguments.</param>
         public static void Main(string[] args)
         {
             // Use bootstrap logger during startup
@@ -92,7 +99,7 @@ namespace Neoron.API
                         timestamp = DateTime.UtcNow,
                         environment = app.Environment.EnvironmentName,
                         isDevMode = app.Environment.IsDevelopment(),
-                        authEnabled = app.Configuration["AzureAd:ClientId"] != null
+                        authEnabled = app.Configuration["AzureAd:ClientId"] != null,
                     };
                     return Results.Ok(diagnostics);
                 });
@@ -100,7 +107,7 @@ namespace Neoron.API
                 app.MapGet("/test/error", () =>
                 {
                     Log.Warning("Test error endpoint called");
-                    throw new Exception("Test exception to verify error handling");
+                    throw new InvalidOperationException("Test exception to verify error handling");
                 });
 
                 app.MapHealthChecks("/health");

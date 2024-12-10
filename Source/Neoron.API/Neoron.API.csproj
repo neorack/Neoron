@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="2.15.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
@@ -21,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Neoron.ServiceDefaults\Neoron.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Neoron.API.Validation\Neoron.API.Validation.csproj" />
     <ProjectReference Include="..\Neoron.API.DTOs\Neoron.API.DTOs.csproj" />
     <ProjectReference Include="..\Neoron.API.Interfaces\Neoron.API.Interfaces.csproj" />
