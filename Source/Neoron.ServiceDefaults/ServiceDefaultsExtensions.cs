@@ -27,14 +27,14 @@ namespace Microsoft.Extensions.Hosting
         public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder)
             where TBuilder : IHostApplicationBuilder
         {
-            builder.ConfigureOpenTelemetry();
-            builder.AddDefaultHealthChecks();
+            _ = builder.ConfigureOpenTelemetry();
+            _ = builder.AddDefaultHealthChecks();
             builder.Services.AddServiceDiscovery();
             builder.Services.ConfigureHttpClientDefaults(http =>
             {
 
                 // Turn on resilience by default
-                http.AddStandardResilienceHandler();
+                _ = http.AddStandardResilienceHandler();
                 // Turn on service discovery by default
                 http.AddServiceDiscovery();
             });
@@ -57,22 +57,22 @@ namespace Microsoft.Extensions.Hosting
         public static TBuilder ConfigureOpenTelemetry<TBuilder>(this TBuilder builder)
             where TBuilder : IHostApplicationBuilder
         {
-            builder.Logging.AddOpenTelemetry(logging =>
+            _ = builder.Logging.AddOpenTelemetry(logging =>
             {
                 logging.IncludeFormattedMessage = true;
                 logging.IncludeScopes = true;
             });
 
-            builder.Services.AddOpenTelemetry()
+            _ = builder.Services.AddOpenTelemetry()
                 .WithMetrics(metrics =>
                 {
-                    metrics.AddAspNetCoreInstrumentation()
+                    _ = metrics.AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddRuntimeInstrumentation();
                 })
                 .WithTracing(tracing =>
                 {
-                    tracing.AddSource(builder.Environment.ApplicationName)
+                    _ = tracing.AddSource(builder.Environment.ApplicationName)
                         .AddAspNetCoreInstrumentation()
 
                         // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
@@ -80,7 +80,7 @@ namespace Microsoft.Extensions.Hosting
                         .AddHttpClientInstrumentation();
                 });
 
-            builder.AddOpenTelemetryExporters();
+            _ = builder.AddOpenTelemetryExporters();
 
             return builder;
         }
@@ -94,7 +94,7 @@ namespace Microsoft.Extensions.Hosting
         public static TBuilder AddDefaultHealthChecks<TBuilder>(this TBuilder builder)
             where TBuilder : IHostApplicationBuilder
         {
-            builder.Services.AddHealthChecks()
+            _ = builder.Services.AddHealthChecks()
                 // Add a default liveness check to ensure app is responsive
                 .AddCheck("self", () => HealthCheckResult.Healthy(), new[] { "live" });
 
@@ -115,10 +115,10 @@ namespace Microsoft.Extensions.Hosting
             if (app.Environment.IsDevelopment())
             {
                 // All health checks must pass for app to be considered ready to accept traffic after starting
-                app.MapHealthChecks("/health");
+                _ = app.MapHealthChecks("/health");
 
                 // Only health checks tagged with the "live" tag must pass for app to be considered alive
-                app.MapHealthChecks("/alive", new HealthCheckOptions
+                _ = app.MapHealthChecks("/alive", new HealthCheckOptions
                 {
                     Predicate = r => r.Tags.Contains("live"),
                 });

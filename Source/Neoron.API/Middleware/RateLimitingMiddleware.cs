@@ -52,13 +52,13 @@ namespace Neoron.API.Middleware
 
             // Add rate limit headers
             context.Response.Headers.Append("X-RateLimit-Limit", options.MaxTokens.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            
+
             if (!tokenBucket.ConsumeToken())
             {
                 context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                 context.Response.Headers.Append("Retry-After", "1");
                 await context.Response.WriteAsync("Too Many Requests").ConfigureAwait(false);
-                logger.LogWarning("Rate limit exceeded for IP: {IpAddress}", 
+                logger.LogWarning("Rate limit exceeded for IP: {IpAddress}",
                     context.Connection.RemoteIpAddress?.ToString() ?? "unknown");
                 return;
             }
@@ -79,14 +79,9 @@ namespace Neoron.API.Middleware
         /// Performs periodic cleanup of middleware resources.
         /// </summary>
         /// <param name="state">The state object (unused).</param>
-        protected void Cleanup(object? state)
-        {
+        protected void Cleanup(object? state) =>
             // Log cleanup activity
-            logger.LogDebug("Performing periodic rate limiting cleanup");
-            
-            // Could implement additional cleanup logic here if needed
-            // For example: clearing any cached data, updating metrics, etc.
-        }
+            logger.LogDebug("Performing periodic rate limiting cleanup");// Could implement additional cleanup logic here if needed// For example: clearing any cached data, updating metrics, etc.
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
