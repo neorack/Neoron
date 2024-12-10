@@ -8,38 +8,38 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
     
-    // Configure detailed logging first
+    // Configure logging first
     builder.Logging.ClearProviders();
     builder.Logging.AddConsole();
     builder.Logging.AddDebug();
     builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
-    var logger = builder.Services.BuildServiceProvider()
-        .GetRequiredService<ILogger<Program>>();
-    
-    logger.LogInformation("Starting application initialization...");
-
-    // Add service defaults
+    // Add service defaults before other services
     builder.AddServiceDefaults();
-    logger.LogInformation("Service defaults added");
-
-    // Add the API service
+    
+    // Add services to the container
     builder.Services.AddHostedService<ApiHostedService>();
-    logger.LogInformation("API hosted service registered");
 
-    // Configure API project
-    var apiBuilder = builder.AddProject<Projects.Neoron_API>("api");
-    apiBuilder.WithReference(builder.AddProject<Projects.Neoron_ServiceDefaults>("servicedefaults"));
-    logger.LogInformation("API project configured");
+    // Add service discovery
+    builder.Services.AddServiceDiscovery();
 
-    logger.LogInformation("Building application...");
+    // Add health checks
+    builder.Services.AddHealthChecks();
+
     var app = builder.Build();
 
-    // Map default health check and metrics endpoints
-    app.MapDefaultEndpoints();
-    logger.LogInformation("Default endpoints mapped");
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
 
-    logger.LogInformation("Starting application...");
+    // Map health checks and default endpoints
+    app.MapDefaultEndpoints();
+
+    app.Logger.LogInformation("Application built and configured successfully");
+    app.Logger.LogInformation($"Environment: {app.Environment.EnvironmentName}");
+    app.Logger.LogInformation($"Application Name: {builder.Environment.ApplicationName}");
+    
     await app.RunAsync();
 }
 catch (Exception ex)
