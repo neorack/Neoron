@@ -36,14 +36,17 @@ internal sealed class ApiHostedService : BackgroundService
     {
         try
         {
+            _logger.LogInformation("ApiHostedService starting...");
             RunningLog(_logger, null);
             
-            // Register application start with error handling
+            // Register application start with detailed error handling
             _appLifetime.ApplicationStarted.Register(() =>
             {
                 try
                 {
-                    _logger.LogInformation("Application has started");
+                    _logger.LogInformation("Application has started successfully");
+                    _logger.LogInformation($"Current directory: {Environment.CurrentDirectory}");
+                    _logger.LogInformation($"ASPNETCORE_ENVIRONMENT: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
                 }
                 catch (Exception ex)
                 {
@@ -51,17 +54,18 @@ internal sealed class ApiHostedService : BackgroundService
                 }
             });
 
-            // Add cancellation token handling
+            // Add detailed cancellation token handling
             stoppingToken.Register(() =>
             {
-                _logger.LogInformation("Cancellation requested");
+                _logger.LogInformation("Cancellation requested for ApiHostedService");
             });
 
+            _logger.LogInformation("ApiHostedService started successfully");
             return Task.CompletedTask;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error starting API service");
+            _logger.LogError(ex, "Critical error starting ApiHostedService");
             throw;
         }
     }
