@@ -137,6 +137,160 @@ public class MessageControllerPerformanceTests : IntegrationTestBase
         averageGrowth.Should().BeLessThan(1024 * 1024); // Less than 1MB growth per 10 operations
     }
 
+    [Fact]
+    public async Task RateLimiting_ExceedsThreshold_ThrottlesRequests()
+    {
+        // Arrange
+        const int requestCount = 100;
+        const int expectedRateLimit = 10; // requests per second
+        var tasks = new List<Task<HttpResponseMessage>>();
+        var stopwatch = new Stopwatch();
+
+        // Act
+        stopwatch.Start();
+        for (int i = 0; i < requestCount; i++)
+        {
+            tasks.Add(_fixture.Client.GetAsync($"/api/messages/{TestUtils.GenerateRandomId()}"));
+        }
+        var responses = await Task.WhenAll(tasks);
+        stopwatch.Stop();
+
+        // Assert
+        var throttledCount = responses.Count(r => r.StatusCode == HttpStatusCode.TooManyRequests);
+        var successCount = responses.Count(r => r.IsSuccessStatusCode);
+
+        _output.WriteLine($"Total requests: {requestCount}");
+        _output.WriteLine($"Throttled requests: {throttledCount}");
+        _output.WriteLine($"Successful requests: {successCount}");
+        _output.WriteLine($"Total time: {stopwatch.ElapsedMilliseconds}ms");
+
+        throttledCount.Should().BeGreaterThan(0);
+        (successCount / (double)requestCount).Should().BeLessThan(1.0);
+    }
+
+    [Fact]
+    public async Task DatabaseResilience_TemporaryFailure_Recovers()
+    {
+        // Arrange
+        var message = new DiscordMessageBuilder().WithRandomData().Build();
+        var dbContext = _fixture.Factory.Services.GetRequiredService<ApplicationDbContext>();
+        
+        // Simulate connection issue by disposing context
+        await dbContext.DisposeAsync();
+
+        // Act & Assert
+        await TestUtils.RetryAsync(async () =>
+        {
+            var response = await _fixture.Client.PostAsJsonAsync("/api/messages", message);
+            response.IsSuccessStatusCode.Should().BeTrue();
+        }, maxAttempts: 3);
+    }
+
+    [Fact]
+    public async Task ConcurrentUpdates_OptimisticConcurrency_HandlesConflicts()
+    {
+        // Arrange
+        var message = await TestUtils.TestDataSeeder.SeedTestMessages(_fixture.DbContext, 1);
+        var messageId = message.First().MessageId;
+        var tasks = new List<Task<HttpResponseMessage>>();
+
+        // Act
+        for (int i = 0; i < 5; i++)
+        {
+            var updateContent = new UpdateMessageRequest { Content = $"Concurrent update {i}" };
+            tasks.Add(_fixture.Client.PutAsJsonAsync($"/api/messages/{messageId}", updateContent));
+        }
+        var responses = await Task.WhenAll(tasks);
+
+        // Assert
+        var successCount = responses.Count(r => r.IsSuccessStatusCode);
+        var conflictCount = responses.Count(r => r.StatusCode == HttpStatusCode.Conflict);
+
+        _output.WriteLine($"Successful updates: {successCount}");
+        _output.WriteLine($"Conflict responses: {conflictCount}");
+
+        successCount.Should().Be(1);
+        conflictCount.Should().Be(4);
+    }
+
+    [Fact]
+    public async Task MessageValidation_UnderLoad_MaintainsIntegrity()
+    {
+        // Arrange
+        const int messageCount = 100;
+        var validMessages = Enumerable.Range(0, messageCount / 2)
+            .Select(_ => new DiscordMessageBuilder().WithRandomData().Build());
+        var invalidMessages = Enumerable.Range(0, messageCount / 2)
+            .Select(_ => new DiscordMessageBuilder().WithContent("").Build());
+        var allMessages = validMessages.Concat(invalidMessages).ToList();
+
+        // Act
+        var tasks = allMessages.Select(msg => 
+            _fixture.Client.PostAsJsonAsync("/api/messages", msg));
+        var responses = await Task.WhenAll(tasks);
+
+        // Assert
+        var validCount = responses.Count(r => r.IsSuccessStatusCode);
+        var invalidCount = responses.Count(r => r.StatusCode == HttpStatusCode.BadRequest);
+
+        _output.WriteLine($"Valid responses: {validCount}");
+        _output.WriteLine($"Invalid responses: {invalidCount}");
+
+        validCount.Should().Be(messageCount / 2);
+        invalidCount.Should().Be(messageCount / 2);
+    }
+
+    [Fact]
+    public async Task ThreadMessages_LargeThread_PerformsEfficiently()
+    {
+        // Arrange
+        const int threadSize = 500;
+        var threadParent = new DiscordMessageBuilder().WithRandomData().Build();
+        await _fixture.DbContext.DiscordMessages.AddAsync(threadParent);
+        await _fixture.DbContext.SaveChangesAsync();
+
+        var threadMessages = Enumerable.Range(0, threadSize)
+            .Select(_ => new DiscordMessageBuilder()
+                .WithRandomData()
+                .InThread(threadParent.MessageId)
+                .Build());
+        await _fixture.DbContext.DiscordMessages.AddRangeAsync(threadMessages);
+        await _fixture.DbContext.SaveChangesAsync();
+
+        // Act
+        var metrics = await TestUtils.PerformanceMetrics.MeasureOperation(async () =>
+        {
+            var response = await _fixture.Client.GetAsync($"/api/messages/thread/{threadParent.MessageId}");
+            response.IsSuccessStatusCode.Should().BeTrue();
+            var result = await response.Content.ReadFromJsonAsync<IEnumerable<MessageResponse>>();
+            result.Should().HaveCount(threadSize);
+        });
+
+        // Assert
+        _output.WriteLine($"Duration: {metrics.Duration.TotalMilliseconds}ms");
+        _output.WriteLine($"Memory used: {metrics.MemoryUsed / 1024 / 1024}MB");
+
+        metrics.Duration.Should().BeLessThan(TimeSpan.FromSeconds(2));
+        metrics.MemoryUsed.Should().BeLessThan(100 * 1024 * 1024); // 100MB
+    }
+
+    private async Task CleanupTestData()
+    {
+        var messages = await _fixture.DbContext.DiscordMessages.ToListAsync();
+        _fixture.DbContext.DiscordMessages.RemoveRange(messages);
+        await _fixture.DbContext.SaveChangesAsync();
+    }
+
+    public async Task InitializeAsync()
+    {
+        await CleanupTestData();
+    }
+
+    public async Task DisposeAsync()
+    {
+        await CleanupTestData();
+    }
+
     [Theory]
     [InlineData(10)]
     [InlineData(50)]
