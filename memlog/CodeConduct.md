@@ -1,10 +1,10 @@
-# Neoron Project Guidelines
+# Code Standards and Practices
 
-This document outlines the coding standards, architectural principles, and workflow for the Neoron project. Adherence to these guidelines ensures code quality, maintainability, and consistency across the project.
+This document defines our coding standards, architectural principles, and development workflow. Following these guidelines ensures consistent, maintainable, and high-quality code.
 
-## Code Style
+## Code Style Guidelines
 
-- **C# Coding Conventions:** Adhere to the latest Microsoft C# coding conventions.  Use the [official Microsoft style guide](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/index) as a reference.
+- Follow Microsoft C# coding conventions ([style guide](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/index))
 - **Meaningful Names:** Use descriptive and meaningful names for variables, methods, classes, and namespaces.  Avoid abbreviations unless widely understood within the project.
 - **Method Size:** Keep methods focused and concise.  Large methods should be broken down into smaller, more manageable units.
 - **Documentation:** Document public APIs with comprehensive XML comments.  Comments should clearly explain the purpose, parameters, return values, and potential exceptions of each method.
