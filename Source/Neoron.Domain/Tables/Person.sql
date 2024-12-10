@@ -36,13 +36,11 @@ CREATE TABLE [dbo].[PersonRelationship]
     [EndDate] DATE NULL CHECK ([EndDate] IS NULL OR [EndDate] >= [StartDate]),
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    CONSTRAINT [FK_PersonRelationship_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_PersonRelationship_RelatedPerson] FOREIGN KEY ([RelatedPersonId]) REFERENCES [dbo].[Person]([Id])
+    CONSTRAINT [FK_PersonRelationship_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_PersonRelationship_RelatedPerson] FOREIGN KEY ([RelatedPersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
 
--- Groups table
-GO
 
 CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
 (
@@ -60,8 +58,6 @@ CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
 )
 GO
 
--- Person-Group memberships
-GO
 
 CREATE TABLE [dbo].[PersonGroup]
 (
@@ -79,8 +75,6 @@ CREATE TABLE [dbo].[PersonGroup]
 GO
 
 
--- Person Contact Information
-GO
 
 CREATE TABLE [dbo].[PersonContact]
 (
@@ -144,13 +138,11 @@ CREATE TABLE [dbo].[PersonIdeology]
     [IsPublic] BIT NOT NULL DEFAULT 1,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    CONSTRAINT [FK_PersonIdeology_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_PersonIdeology_Ideology] FOREIGN KEY ([IdeologyId]) REFERENCES [dbo].[Ideology]([Id])
+    CONSTRAINT [FK_PersonIdeology_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_PersonIdeology_Ideology] FOREIGN KEY ([IdeologyId]) REFERENCES [dbo].[Ideology]([Id]) ON DELETE NO ACTION
 )
 GO
 
--- Tags for flexible categorization
-GO
 
 CREATE TABLE [dbo].[Tag]
 (
@@ -166,8 +158,6 @@ CREATE TABLE [dbo].[Tag]
 )
 GO
 
--- Person-Tag associations
-GO
 
 CREATE TABLE [dbo].[PersonTag]
 (
@@ -185,8 +175,6 @@ CREATE TABLE [dbo].[PersonTag]
 GO
 
 
--- Influence/Reach metrics
-GO
 
 CREATE TABLE [dbo].[PersonInfluence]
 (
