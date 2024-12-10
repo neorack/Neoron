@@ -32,10 +32,10 @@ namespace Neoron.API.Middleware
             ArgumentNullException.ThrowIfNull(logger);
             ArgumentNullException.ThrowIfNull(options);
 
-            this.next = next;
-            this.logger = logger;
-            this.options = options.Value;
-            this.tokenBucket = new TokenBucket(this.options.MaxTokens, this.options.TokenRefillRate);
+            next = next;
+            logger = logger;
+            options = options.Value;
+            tokenBucket = new TokenBucket(options.MaxTokens, options.TokenRefillRate);
 
             // Start the cleanup timer
             var cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, CleanupInterval);
@@ -50,15 +50,15 @@ namespace Neoron.API.Middleware
         {
             ArgumentNullException.ThrowIfNull(context);
 
-            if (!this.tokenBucket.ConsumeToken())
+            if (!tokenBucket.ConsumeToken())
             {
                 context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                 await context.Response.WriteAsync("Too Many Requests").ConfigureAwait(false);
-                LoggingMessages.FailedToAddMessage(this.logger, context.Connection.RemoteIpAddress?.ToString(), new InvalidOperationException("Rate limit exceeded"));
+                LoggingMessages.FailedToAddMessage(logger, context.Connection.RemoteIpAddress?.ToString(), new InvalidOperationException("Rate limit exceeded"));
                 return;
             }
 
-            await this.next(context).ConfigureAwait(false);
+            await next(context).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -81,14 +81,15 @@ namespace Neoron.API.Middleware
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
-        * </summary>
+        /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                this.tokenBucket.Dispose();
+                tokenBucket.Dispose();
             }
         }
+
     }
 }
