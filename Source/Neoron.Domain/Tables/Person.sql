@@ -25,8 +25,6 @@ CREATE TABLE [dbo].[Person]
 )
 GO
 
-GO
-
 CREATE TABLE [dbo].[PersonRelationship]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -221,14 +219,6 @@ GO
 CREATE INDEX [IX_PersonTag_TagId] ON [dbo].[PersonTag] ([TagId])
 GO
 
-CREATE INDEX [IX_ActivityLog_PersonId] ON [dbo].[ActivityLog] ([PersonId])
-GO
-
-CREATE INDEX [IX_ActivityLog_ActivityType] ON [dbo].[ActivityLog] ([ActivityType])
-GO
-
-CREATE INDEX [IX_ActivityLog_OccurredAt] ON [dbo].[ActivityLog] ([OccurredAt])
-GO
 
 CREATE INDEX [IX_PersonInfluence_PersonId] ON [dbo].[PersonInfluence] ([PersonId])
 GO
