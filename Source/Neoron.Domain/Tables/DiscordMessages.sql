@@ -1,5 +1,3 @@
--- Create ChannelGroups table first
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'ChannelGroups')
 CREATE TABLE [dbo].[ChannelGroups]
 (
     [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
@@ -9,13 +7,9 @@ CREATE TABLE [dbo].[ChannelGroups]
     [CreatedAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
     [LastActiveAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET())
 );
-GO
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ChannelGroups_GuildId')
 CREATE NONCLUSTERED INDEX [IX_ChannelGroups_GuildId] ON [dbo].[ChannelGroups]([GuildId]);
-GO
 
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'DiscordMessages')
 CREATE TABLE [dbo].[DiscordMessages]
 (
     [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
@@ -45,22 +39,8 @@ CREATE TABLE [dbo].[DiscordMessages]
 );
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_DiscordMessages_MessageId')
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_MessageId] ON [dbo].[DiscordMessages]([MessageId]);
-GO
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_DiscordMessages_ChannelId')
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_ChannelId] ON [dbo].[DiscordMessages]([ChannelId]);
-GO
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_DiscordMessages_GuildId')
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GuildId] ON [dbo].[DiscordMessages]([GuildId]);
-GO
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_DiscordMessages_AuthorId')
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_AuthorId] ON [dbo].[DiscordMessages]([AuthorId]);
-GO
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_DiscordMessages_GroupId')
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GroupId] ON [dbo].[DiscordMessages]([GroupId]);
-GO
