@@ -8,8 +8,14 @@ namespace Neoron.API.Middleware
     /// </summary>
     public class ExceptionHandlingMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        private readonly RequestDelegate next;
+        private readonly ILogger<ExceptionHandlingMiddleware> logger;
+
+        private static readonly Action<ILogger, Exception> LogUnhandledException =
+            LoggerMessage.Define(
+                LogLevel.Error,
+                new EventId(1, nameof(InvokeAsync)),
+                "An unhandled exception occurred");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExceptionHandlingMiddleware"/> class.
@@ -18,8 +24,8 @@ namespace Neoron.API.Middleware
         /// <param name="logger">The logger instance.</param>
         public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
-            _next = next;
-            _logger = logger;
+            this.next = next ?? throw new ArgumentNullException(nameof(next));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
@@ -29,14 +35,19 @@ namespace Neoron.API.Middleware
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task InvokeAsync(HttpContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
             try
             {
-                await _next(context).ConfigureAwait(false);
+                await next(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occurred");
-                await HandleExceptionAsync(context, ex);
+                LogUnhandledException(logger, ex);
+                await HandleExceptionAsync(context, ex).ConfigureAwait(false);
             }
         }
 
@@ -50,11 +61,11 @@ namespace Neoron.API.Middleware
                 DbUpdateException => (HttpStatusCode.BadRequest, "Unable to save changes to the database."),
                 KeyNotFoundException => (HttpStatusCode.NotFound, "The requested resource was not found."),
                 ArgumentException => (HttpStatusCode.BadRequest, exception.Message),
-                _ => (HttpStatusCode.InternalServerError, "An unexpected error occurred.")
+                _ => (HttpStatusCode.InternalServerError, "An unexpected error occurred."),
             };
 
             context.Response.StatusCode = (int)statusCode;
-            await context.Response.WriteAsJsonAsync(new { error = message });
+            await context.Response.WriteAsJsonAsync(new { error = message }).ConfigureAwait(false);
         }
     }
 }
