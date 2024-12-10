@@ -350,6 +350,10 @@ namespace Neoron.API.Tests.Integration
         [InlineData(0, 1)]
         [InlineData(1, 1)]
         [InlineData(0, 2)]
+        [InlineData(0, 100)]
+        [InlineData(-1, 10)] // Should throw
+        [InlineData(0, 0)]   // Should throw
+        [InlineData(0, 1001)] // Should throw
         public async Task GetByChannelId_WithPagination_ShouldReturnCorrectPage(int skip, int take)
         {
             // Arrange
@@ -378,7 +382,14 @@ namespace Neoron.API.Tests.Integration
             var result = await _messageRepository.GetByChannelIdAsync(channelId, skip, take);
 
             // Assert
-            result.Should().HaveCount(take);
+            if (skip < 0 || take <= 0 || take > 1000)
+            {
+                await FluentActions.Awaiting(() => _messageRepository.GetByChannelIdAsync(channelId, skip, take))
+                    .Should().ThrowAsync<ArgumentException>();
+                return;
+            }
+
+            result.Should().HaveCount(Math.Min(take, 2 - skip));
             if (skip == 0 && take == 1)
             {
                 result.Single().Id.Should().Be(16); // Most recent

@@ -52,21 +52,34 @@ namespace Neoron.API.Middleware
         {
             lock (lockObject)
             {
-                try
-                {
-                    if (tokens > 0)
-                    {
-                        tokens--;
-                        return true;
-                    }
+                int retryCount = 0;
+                const int maxRetries = 3;
 
-                    return false;
-                }
-                catch (Exception)
+                while (retryCount < maxRetries)
                 {
-                    // Fail open to avoid blocking requests if rate limiting fails
-                    return true;
+                    try
+                    {
+                        if (tokens > 0)
+                        {
+                            tokens--;
+                            return true;
+                        }
+
+                        return false;
+                    }
+                    catch (Exception)
+                    {
+                        retryCount++;
+                        if (retryCount == maxRetries)
+                        {
+                            // Fail open on final retry
+                            return true;
+                        }
+                        Thread.Sleep(10); // Brief pause before retry
+                    }
                 }
+
+                return false; // Should never reach here
             }
         }
 
