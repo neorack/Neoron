@@ -9,6 +9,7 @@ namespace Neoron.API;
 
 public class Program
 {
+    [STAThread]
     public static async Task<int> Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
