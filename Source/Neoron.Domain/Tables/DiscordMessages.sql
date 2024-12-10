@@ -1,3 +1,15 @@
+-- Create ChannelGroups table first
+CREATE TABLE [dbo].[ChannelGroups]
+(
+    [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [GuildId] BIGINT NOT NULL,
+    [Name] NVARCHAR(100) NOT NULL,
+    [Description] NVARCHAR(500) NULL,
+    [CreatedAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
+    [LastActiveAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET())
+);
+GO
+
 CREATE TABLE [dbo].[DiscordMessages]
 (
     [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
