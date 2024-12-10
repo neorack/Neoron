@@ -1,3 +1,4 @@
-CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GuildChannel]
-ON [dbo].[DiscordMessages] ([GuildId], [ChannelId])
-INCLUDE ([MessageId], [AuthorId], [Content], [CreatedAt]);
+CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GuildChannel]
+ON [dbo].[DiscordMessage] ([GuildId], [ChannelId])
+INCLUDE ([MessageId], [AuthorId], [Content], [CreatedAt])
+WHERE [IsDeleted] = 0;
