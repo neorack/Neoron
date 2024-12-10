@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
+    <SourceProjectsPath>$(SolutionDir)src</SourceProjectsPath>
     <TestProjectsPath>$(SolutionDir)tests</TestProjectsPath>
     <AnalysisMode>All</AnalysisMode>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
