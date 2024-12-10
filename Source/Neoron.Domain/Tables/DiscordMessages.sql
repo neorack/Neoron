@@ -13,6 +13,8 @@ CREATE TABLE [dbo].[DiscordMessages]
     [ReplyToMessageId] BIGINT NULL,
     [ThreadId] BIGINT NULL,
     [IsDeleted] BIT NOT NULL DEFAULT(0),
-    CONSTRAINT [FK_DiscordMessages_ReplyTo] FOREIGN KEY ([ReplyToMessageId]) REFERENCES [dbo].[DiscordMessages]([MessageId]),
-    CONSTRAINT [FK_DiscordMessages_Thread] FOREIGN KEY ([ThreadId]) REFERENCES [dbo].[DiscordMessages]([MessageId])
+    CONSTRAINT [FK_DiscordMessages_ReplyTo] FOREIGN KEY ([ReplyToMessageId]) 
+        REFERENCES [dbo].[DiscordMessages]([MessageId]),
+    CONSTRAINT [FK_DiscordMessages_Thread] FOREIGN KEY ([ThreadId]) 
+        REFERENCES [dbo].[DiscordMessages]([MessageId])
 );
