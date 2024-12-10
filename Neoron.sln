@@ -2,7 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{181BC054-F4BD-4471-9C8D-EEB8583BB7E9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{181BC054-F4BD-4471-9C8D-EEB8583BB7E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4F9CE客-E255-47A0-A183-61F17C2E6F6C}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Neoron.Domain", "Source\Neoron.Domain\Neoron.Domain.sqlproj", "{EFA67FD2-F0CD-4FC0-BBA6-8AEE0FE533CD}"
 EndProject
