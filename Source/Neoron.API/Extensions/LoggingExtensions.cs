@@ -1,5 +1,6 @@
 using System.Globalization;
 using Serilog;
+using Serilog.Enrichers;
 
 namespace Neoron.API.Extensions
 {

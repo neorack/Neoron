@@ -16,13 +16,13 @@ namespace Neoron.API.Controllers
         ILogger<DiscordMessageController> logger) : ControllerBase
     {
         private static readonly Action<ILogger, long, Exception?> LogRetrieveMessage =
-            LoggerMessage.Define<long>(LogLevel.Information, 0, "Retrieving message with ID: {MessageId}.");
+            LoggerMessage.Define<long>(LogLevel.Information, 0, "Retrieving message with ID: {Id}.");
 
         private static readonly Action<ILogger, long, Exception?> LogMessageNotFound =
-            LoggerMessage.Define<long>(LogLevel.Warning, 1, "Message with ID {MessageId} not found.");
+            LoggerMessage.Define<long>(LogLevel.Warning, 1, "Message with ID {Id} not found.");
 
         private static readonly Action<ILogger, long, Exception> LogErrorRetrieving =
-            LoggerMessage.Define<long>(LogLevel.Error, 2, "Error retrieving message {MessageId}.");
+            LoggerMessage.Define<long>(LogLevel.Error, 2, "Error retrieving message {Id}.");
 
         private readonly IDiscordMessageRepository repository = repository;
         private readonly ILogger<DiscordMessageController> logger = logger;
@@ -102,7 +102,7 @@ namespace Neoron.API.Controllers
 
             return CreatedAtAction(
                 nameof(GetById),
-                new { id = result.MessageId },
+                new { id = result.Id },
                 MessageResponse.FromEntity(result));
         }
 

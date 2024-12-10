@@ -10,7 +10,7 @@ namespace Neoron.API.DTOs
         /// <summary>
         /// Gets or sets the unique identifier of the message.
         /// </summary>
-        public long MessageId { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the channel identifier where the message was sent.
@@ -83,7 +83,7 @@ namespace Neoron.API.DTOs
 
             return new MessageResponse
             {
-                MessageId = entity.MessageId,
+                Id = entity.Id,
                 ChannelId = entity.ChannelId,
                 GuildId = entity.GuildId,
                 AuthorId = entity.AuthorId,

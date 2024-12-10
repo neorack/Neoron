@@ -49,17 +49,17 @@ namespace Neoron.API.Repositories
             using var activity = Activity.Current?.Source.StartActivity("AddMessage");
             try
             {
-                LogMessages.LogAddingMessage(logger, entity.MessageId, entity.ChannelId);
+                LogMessages.LogAddingMessage(logger, entity.Id, entity.ChannelId);
 
                 context.DiscordMessages.Add(entity);
                 await context.SaveChangesAsync().ConfigureAwait(false);
 
-                LogMessages.LogAddedMessage(logger, entity.MessageId);
+                LogMessages.LogAddedMessage(logger, entity.Id);
                 return entity;
             }
             catch (Exception ex)
             {
-                LogMessages.LogAddMessageError(logger, ex, entity.MessageId);
+                LogMessages.LogAddMessageError(logger, ex, entity.Id);
                 throw;
             }
         }
@@ -69,7 +69,7 @@ namespace Neoron.API.Repositories
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            LogMessages.LogUpdatingMessage(logger, entity.MessageId);
+            LogMessages.LogUpdatingMessage(logger, entity.Id);
 
             const int maxRetries = 3;
             var retryCount = 0;
@@ -80,19 +80,19 @@ namespace Neoron.API.Repositories
                 {
                     context.Entry(entity).State = EntityState.Modified;
                     await context.SaveChangesAsync().ConfigureAwait(false);
-                    LogMessages.LogUpdatedMessage(logger, entity.MessageId);
+                    LogMessages.LogUpdatedMessage(logger, entity.Id);
                     return;
                 }
                 catch (DbUpdateConcurrencyException) when (retryCount < maxRetries - 1)
                 {
-                    LogMessages.LogUpdateRetry(logger, entity.MessageId);
+                    LogMessages.LogUpdateRetry(logger, entity.Id);
                     await Task.Delay(100 * (retryCount + 1)).ConfigureAwait(false);
                     retryCount++;
                     await context.Entry(entity).ReloadAsync().ConfigureAwait(false);
                 }
             }
 
-            LogMessages.LogUpdateError(logger, entity.MessageId);
+            LogMessages.LogUpdateError(logger, entity.Id);
             throw new DbUpdateConcurrencyException("Failed to update after maximum retries");
         }
 
@@ -104,11 +104,11 @@ namespace Neoron.API.Repositories
                 var message = await GetByIdAsync(id).ConfigureAwait(false);
                 if (message != null)
                 {
-                    LogMessages.LogDeletingMessage(logger, message.MessageId);
+                    LogMessages.LogDeletingMessage(logger, message.Id);
                     message.IsDeleted = true;
                     message.DeletedAt = DateTimeOffset.UtcNow;
                     await UpdateAsync(message).ConfigureAwait(false);
-                    LogMessages.LogDeletedMessage(logger, message.MessageId);
+                    LogMessages.LogDeletedMessage(logger, message.Id);
                 }
             }
             catch (Exception ex)
@@ -225,7 +225,7 @@ namespace Neoron.API.Repositories
             try
             {
                 var messages = await context.DiscordMessages
-                    .Where(m => messageIds.Contains(m.MessageId))
+                    .Where(m => messageIds.Contains(m.Id))
                     .ToListAsync()
                     .ConfigureAwait(false);
 
@@ -248,6 +248,7 @@ namespace Neoron.API.Repositories
             }
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<long>> FindExistingMessagesAsync(IEnumerable<long> messageIds)
         {
             return await context.DiscordMessages
@@ -257,6 +258,7 @@ namespace Neoron.API.Repositories
                 .ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<DiscordMessage>> GetByGroupIdAsync(long groupId, int skip = 0, int take = 100)
         {
             return await context.DiscordMessages
@@ -268,6 +270,7 @@ namespace Neoron.API.Repositories
                 .ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
         public async Task<int> UpdateGroupAssignmentAsync(IEnumerable<long> messageIds, long groupId)
         {
             var messages = await context.DiscordMessages
@@ -283,6 +286,7 @@ namespace Neoron.API.Repositories
             return await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<ChannelGroup>> GetChannelGroupsAsync(long guildId)
         {
             return await context.ChannelGroups
@@ -291,6 +295,7 @@ namespace Neoron.API.Repositories
                 .ConfigureAwait(false);
         }
 
+        /// <inheritdoc/>
         public async Task<ChannelGroup> CreateChannelGroupAsync(ChannelGroup group)
         {
             context.ChannelGroups.Add(group);
@@ -298,20 +303,30 @@ namespace Neoron.API.Repositories
             return group;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> UpdateChannelGroupAsync(ChannelGroup group)
         {
+            ArgumentNullException.ThrowIfNull(group);
+
             var existing = await context.ChannelGroups.FindAsync(group.Id).ConfigureAwait(false);
-            if (existing == null) return false;
-            
+            if (existing == null)
+            {
+                return false;
+            }
+
             context.Entry(existing).CurrentValues.SetValues(group);
             await context.SaveChangesAsync().ConfigureAwait(false);
             return true;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> DeleteChannelGroupAsync(long groupId)
         {
             var group = await context.ChannelGroups.FindAsync(groupId).ConfigureAwait(false);
-            if (group == null) return false;
+            if (group == null)
+            {
+                return false;
+            }
 
             context.ChannelGroups.Remove(group);
             await context.SaveChangesAsync().ConfigureAwait(false);

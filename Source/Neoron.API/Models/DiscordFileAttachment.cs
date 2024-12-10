@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -63,17 +64,9 @@ namespace Neoron.API.Models
         public string? ErrorMessage { get; set; }
 
         /// <summary>
-        /// Navigation property to the associated message.
+        /// Gets or sets the navigation property to the associated message.
         /// </summary>
         [ForeignKey(nameof(MessageId))]
         public virtual DiscordMessage? Message { get; set; }
-    }
-
-    public enum AttachmentStatus
-    {
-        Pending = 0,
-        Processing = 1,
-        Completed = 2,
-        Failed = 3
     }
 }
