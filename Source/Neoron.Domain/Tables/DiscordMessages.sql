@@ -22,7 +22,7 @@ CREATE TABLE [dbo].[DiscordMessages]
     CONSTRAINT [FK_DiscordMessages_Thread] FOREIGN KEY ([ThreadId]) 
         REFERENCES [dbo].[DiscordMessages]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_DiscordMessages_Group] FOREIGN KEY ([GroupId])
-        REFERENCES [dbo].[ChannelGroups]([Id])
+        REFERENCES [dbo].[ChannelGroups]([Id]) ON DELETE NO ACTION
 );
 
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_MessageId] ON [dbo].[DiscordMessages]([MessageId]);
