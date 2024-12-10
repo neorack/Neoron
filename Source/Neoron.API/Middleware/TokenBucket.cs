@@ -33,6 +33,7 @@ namespace Neoron.API.Middleware
         /// </summary>
         /// <param name="maxTokens">The maximum number of tokens.</param>
         /// <param name="refillRate">The rate at which tokens are refilled per second.</param>
+        /// <param name="burstSize">The maximum number of tokens that can be accumulated.</param>
         public TokenBucket(int maxTokens, double refillRate, int burstSize)
         {
             if (maxTokens <= 0)

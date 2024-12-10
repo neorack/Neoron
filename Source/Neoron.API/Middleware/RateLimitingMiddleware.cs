@@ -13,7 +13,6 @@ namespace Neoron.API.Middleware
     /// </summary>
     public class RateLimitingMiddleware : IDisposable
     {
-
         private readonly RequestDelegate next;
         private readonly ILogger<RateLimitingMiddleware> logger;
         private readonly RateLimitingOptions options;
@@ -79,9 +78,13 @@ namespace Neoron.API.Middleware
         /// Performs periodic cleanup of middleware resources.
         /// </summary>
         /// <param name="state">The state object (unused).</param>
-        protected void Cleanup(object? state) =>
+        protected void Cleanup(object? state)
+        {
             // Log cleanup activity
-            logger.LogDebug("Performing periodic rate limiting cleanup");// Could implement additional cleanup logic here if needed// For example: clearing any cached data, updating metrics, etc.
+            logger.LogDebug("Performing periodic rate limiting cleanup");
+            // Could implement additional cleanup logic here if needed
+            // For example: clearing any cached data, updating metrics, etc.
+        }
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.

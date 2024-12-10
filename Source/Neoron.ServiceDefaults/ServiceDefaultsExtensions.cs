@@ -27,8 +27,8 @@ namespace Microsoft.Extensions.Hosting
         public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder)
             where TBuilder : IHostApplicationBuilder
         {
-            _ = builder.ConfigureOpenTelemetry();
-            _ = builder.AddDefaultHealthChecks();
+            builder.ConfigureOpenTelemetry();
+            builder.AddDefaultHealthChecks();
             builder.Services.AddServiceDiscovery();
             builder.Services.ConfigureHttpClientDefaults(http =>
             {
