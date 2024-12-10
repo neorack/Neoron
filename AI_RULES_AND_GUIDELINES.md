@@ -1,60 +1,93 @@
-# AI Rules and Guidelines for the Neoron project
+# AI Rules and Guidelines for the Neoron Project
 
-This document outlines the rules, best practices, and guidelines that AI must follow when assisting with the development of the Neoron project.
+This document outlines the rules, best practices, and guidelines that AI must follow when assisting with the development of the Neoron project. These guidelines ensure consistency, quality, and maintainability of the codebase.
 
-## 1. Memlog System
+## 1. Version Control and Documentation
 
-- Always create/verify the 'memlog' folder when starting any project.
-- The memlog folder must contain: tasks.log, changelog.md, stability_checklist.md, and url_debug_checklist.md.
-- Verify and update these files before providing any responses or taking any actions.
-- Use these logs to track user progress, system state, and persistent data between conversations.
+### 1.1 Memlog System
+- Always create/verify the 'memlog' folder when starting any project
+- Required files in memlog folder:
+  - tasks.log: Track ongoing and completed tasks
+  - changelog.md: Document all code changes
+  - stability_checklist.md: Track system stability and known issues
+  - url_debug_checklist.md: Document API endpoints and their status
+- Verify and update these files before any actions
+- Use logs to maintain context between conversations
 
-## 2. Task Breakdown and Execution
+### 1.2 Git Practices
+- Write clear, descriptive commit messages
+- Follow conventional commits format (feat:, fix:, docs:, etc.)
+- Keep commits atomic and focused
+- Branch naming convention: feature/, bugfix/, hotfix/
 
-- Break down all user instructions into clear, numbered steps.
-- Include both actions and reasoning for each step.
-- Flag potential issues before they arise.
-- Verify the completion of each step before proceeding to the next.
-- If errors occur, document them, return to previous steps, and retry as needed.
+## 2. Development Workflow
 
-## 3. Credential Management
+### 2.1 Task Management
+- Break down user instructions into clear, numbered steps
+- Document both actions and reasoning for each step
+- Flag potential issues proactively
+- Verify completion before proceeding
+- Document errors and recovery steps in tasks.log
 
-- Explain the purpose of each credential when requesting from users.
-- Guide users to obtain any missing credentials.
-- Always test the validity of credentials before using them.
-- Never store credentials in plaintext; use environment variables.
-- Implement proper refresh procedures for expiring credentials.
-- Provide guidance on secure credential storage methods.
+### 2.2 Code Review Process
+- Review all changes against coding standards
+- Verify test coverage for new code
+- Check for security implications
+- Ensure proper error handling
+- Validate documentation updates
 
-## 4. Code Structure and Organization
+### 2.3 Credential Management
+- Document credential purpose and usage
+- Guide users through credential acquisition
+- Validate credentials before use
+- Use environment variables or secure vaults
+- Implement token refresh mechanisms
+- Never store sensitive data in code or logs
 
-- Keep files small and modular.
-- Split large components into smaller, manageable parts.
-- Move constants, configurations, and long strings to separate files.
-- Use descriptive names for files, functions, and variables.
-- Document all file dependencies and maintain a clean project structure.
+## 3. Code Quality Standards
 
-## 5. Error Handling and Reporting
+### 3.1 Code Structure
+- Maximum file size: 300 lines
+- Maximum method size: 20 lines
+- Maximum class size: 200 lines
+- Use meaningful namespaces
+- Follow SOLID principles
+- Implement interface segregation
+- Use dependency injection
 
-- Implement detailed and actionable error reporting.
-- Log errors with context and timestamps.
-- Provide users with clear steps for error recovery.
-- Track error history to identify patterns.
-- Implement escalation procedures for unresolved issues.
-- Ensure all systems have robust error handling mechanisms.
+### 3.2 Naming Conventions
+- PascalCase for classes and public members
+- camelCase for private members and parameters
+- Use descriptive, intention-revealing names
+- Prefix interfaces with 'I'
+- Avoid abbreviations
 
-## 6. Third-Party Services Integration
+### 3.3 Error Handling
+- Use custom exception types
+- Include stack traces and context
+- Log errors with correlation IDs
+- Implement retry mechanisms
+- Document recovery procedures
+- Use structured logging
 
-- Verify that the user has completed all setup requirements for each service.
-- Check all necessary permissions and settings.
-- Test service connections before using them in workflows.
-- Document version requirements and service dependencies.
-- Prepare contingency plans for potential service outages or failures.
+## 4. Integration and Dependencies
 
-## 7. Dependencies and Libraries
+### 4.1 Third-Party Services
+- Verify setup requirements
+- Document required permissions
+- Test connections thoroughly
+- Version compatibility matrix
+- Implement circuit breakers
+- Monitor service health
+- Fallback strategies
 
-- Always use the most stable versions of dependencies to ensure compatibility.
-- Regularly update libraries, avoiding changes that might disrupt functionality.
+### 4.2 Package Management
+- Use explicit version numbers
+- Document breaking changes
+- Maintain dependency tree
+- Regular security audits
+- Update strategy documentation
+- Lock file maintenance
 
 ## 8. Code Documentation
 
