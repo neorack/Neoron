@@ -9,9 +9,11 @@ namespace Neoron.API;
 
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static int Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        try
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
 // Use bootstrap logger during startup
 Log.Logger = new LoggerConfiguration()
@@ -119,15 +121,16 @@ try
     app.MapHealthChecks("/health");
     app.MapControllers();
 
-    await app.RunAsync();
+    app.Run();
+    return 0;
 }
 catch (Exception ex)
 {
     Log.Fatal(ex, "Application start-up failed");
-        }
-        finally
-        {
-            Log.CloseAndFlush();
-        }
-    }
+    return 1;
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 }

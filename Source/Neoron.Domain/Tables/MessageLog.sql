@@ -40,7 +40,7 @@ GO
 
 CREATE INDEX [IX_MessageLog_Status] ON [dbo].[MessageLog] ([Status], [SentAt])
 INCLUDE ([SenderId], [ReceiverId], [GroupId], [Content])
-WHERE [Status] NOT IN ('Read', 'Failed')
+WHERE [Status] != 'Read' AND [Status] != 'Failed'
 GO
 
 CREATE INDEX [IX_MessageLog_SenderReceiver] ON [dbo].[MessageLog] ([SenderId], [ReceiverId], [SentAt])
