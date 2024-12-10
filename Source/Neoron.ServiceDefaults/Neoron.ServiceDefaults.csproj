@@ -6,6 +6,11 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <Version>1.0.0</Version>
     <WarningsNotAsErrors>NU1902</WarningsNotAsErrors>
+    <AssemblyTitle>Neoron.ServiceDefaults</AssemblyTitle>
+    <Company>Neoron.ServiceDefaults</Company>
+    <Product>Neoron.ServiceDefaults</Product>
+    <Description>Service defaults for Neoron application</Description>
+    <Copyright>Copyright © Neoron.ServiceDefaults 2024</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
