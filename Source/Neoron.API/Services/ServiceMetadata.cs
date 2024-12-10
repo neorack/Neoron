@@ -1,4 +1,4 @@
-using Neoron.API.Interfaces;
+using Neoron.ServiceDefaults.Interfaces;
 
 namespace Neoron.API.Services
 {
