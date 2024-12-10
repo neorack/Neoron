@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Neoron.API\Neoron.API.csproj" />
+    <ProjectReference Include="..\..\src\Neoron.API\Neoron.API.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,6 +10,9 @@ using Xunit;
 
 namespace Neoron.API.Tests.Controllers;
 
+using Neoron.API.Tests.Fixtures;
+using Neoron.API.Tests.Helpers;
+
 [Collection("TestApi")]
 [Trait("Category", TestCategories.Controllers)]
 public class DiscordMessageControllerTests
