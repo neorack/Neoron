@@ -17,7 +17,7 @@ CREATE TABLE [dbo].[Person]
     [DateOfBirth] DATE NULL,
     [GenderId] TINYINT NULL,
     CONSTRAINT [FK_Person_Gender] FOREIGN KEY ([GenderId]) REFERENCES [dbo].[RefGender]([Id]) ON DELETE NO ACTION,
-    [TimeZone] NVARCHAR(100) NULL,                      -- For global user base
+    [TimeZone] NVARCHAR(100) NULL CHECK ([TimeZone] LIKE '%/%'),  -- Must be valid IANA timezone format (Region/City)
     [PreferredLanguage] NCHAR(5) NULL CHECK (LEN([PreferredLanguage]) = 5),  -- ISO language code (xx-XX format)
     [LastLoginAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -44,7 +44,8 @@ CREATE TABLE [dbo].[PersonRelationship]
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT [FK_PersonRelationship_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_PersonRelationship_RelatedPerson] FOREIGN KEY ([RelatedPersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
+    CONSTRAINT [FK_PersonRelationship_RelatedPerson] FOREIGN KEY ([RelatedPersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [UQ_PersonRelationship_Unique] UNIQUE ([PersonId], [RelatedPersonId], [RelationType])
 )
 GO
 
@@ -202,7 +203,7 @@ CREATE TABLE [dbo].[PersonInfluence]
     [MetricType] NVARCHAR(50) NOT NULL CHECK ([MetricType] IN ('NetworkSize', 'MessageReach', 'IdeologicalInfluence', 'GroupInfluence', 'Overall')),
     [Score] DECIMAL(10,2) NOT NULL,
     [CalculatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    [ValidUntil] DATETIME2 NULL,
+    [ValidUntil] DATETIME2 NULL CHECK ([ValidUntil] IS NULL OR [ValidUntil] > [CalculatedAt]),
     CONSTRAINT [FK_PersonInfluence_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
