@@ -32,7 +32,6 @@ CREATE TABLE [dbo].[DiscordMessage]
     [Version] ROWVERSION NOT NULL,
     [LastSyncedAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
     [GroupId] BIGINT NULL,
-    CONSTRAINT [UQ_DiscordMessage_GuildChannel] UNIQUE ([GuildId], [ChannelId], [MessageId]),
     CONSTRAINT [FK_DiscordMessage_ReplyTo] FOREIGN KEY ([ReplyToMessageId]) 
         REFERENCES [dbo].[DiscordMessage]([MessageId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_DiscordMessage_Thread] FOREIGN KEY ([ThreadId]) 
@@ -44,8 +43,6 @@ CREATE TABLE [dbo].[DiscordMessage]
 );
 GO
 
-CREATE NONCLUSTERED INDEX [IX_DiscordMessage_MessageId] ON [dbo].[DiscordMessage]([MessageId]);
-GO
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_ChannelId] ON [dbo].[DiscordMessage]([ChannelId]);
 GO
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GuildId] ON [dbo].[DiscordMessage]([GuildId]);
