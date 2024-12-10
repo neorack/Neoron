@@ -1,7 +1,6 @@
 using Neoron.API.Interfaces;
 using Neoron.API.Models;
 using Neoron.API.Logging;
-using Neoron.API.Middleware;
 using Microsoft.Extensions.Options;
 
 namespace Neoron.API.Services
@@ -62,5 +61,41 @@ namespace Neoron.API.Services
         }
 
         public bool IsRateLimited() => !_tokenBucket.ConsumeToken();
+
+        public async Task<(int staged, int duplicates)> StageMessagesAsync(IEnumerable<DiscordMessage> messages, bool checkDuplicates = true, CancellationToken cancellationToken = default)
+        {
+            // Implementation needed
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> ProcessStagedMessagesAsync(int? batchSize = null, CancellationToken cancellationToken = default)
+        {
+            // Implementation needed
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> StageAttachmentsAsync(long messageId, IEnumerable<DiscordFileAttachment> files, CancellationToken cancellationToken = default)
+        {
+            // Implementation needed
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> ProcessStagedAttachmentsAsync(int? batchSize = null, CancellationToken cancellationToken = default)
+        {
+            // Implementation needed
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> SyncMessagesAsync(long guildId, long channelId, long? afterMessageId = null, CancellationToken cancellationToken = default)
+        {
+            // Implementation needed
+            throw new NotImplementedException();
+        }
+
+        public async Task<long?> GetSyncCheckpointAsync(long guildId, long channelId)
+        {
+            // Implementation needed
+            throw new NotImplementedException();
+        }
     }
 }

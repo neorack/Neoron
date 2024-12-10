@@ -247,5 +247,75 @@ namespace Neoron.API.Repositories
                 throw;
             }
         }
+
+        public async Task<IEnumerable<long>> FindExistingMessagesAsync(IEnumerable<long> messageIds)
+        {
+            return await context.DiscordMessages
+                .Where(m => messageIds.Contains(m.Id))
+                .Select(m => m.Id)
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<DiscordMessage>> GetByGroupIdAsync(long groupId, int skip = 0, int take = 100)
+        {
+            return await context.DiscordMessages
+                .Where(m => m.GroupId == groupId)
+                .OrderByDescending(m => m.CreatedAt)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<int> UpdateGroupAssignmentAsync(IEnumerable<long> messageIds, long groupId)
+        {
+            var messages = await context.DiscordMessages
+                .Where(m => messageIds.Contains(m.Id))
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            foreach (var message in messages)
+            {
+                message.GroupId = groupId;
+            }
+
+            return await context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<ChannelGroup>> GetChannelGroupsAsync(long guildId)
+        {
+            return await context.ChannelGroups
+                .Where(g => g.GuildId == guildId)
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<ChannelGroup> CreateChannelGroupAsync(ChannelGroup group)
+        {
+            context.ChannelGroups.Add(group);
+            await context.SaveChangesAsync().ConfigureAwait(false);
+            return group;
+        }
+
+        public async Task<bool> UpdateChannelGroupAsync(ChannelGroup group)
+        {
+            var existing = await context.ChannelGroups.FindAsync(group.Id).ConfigureAwait(false);
+            if (existing == null) return false;
+            
+            context.Entry(existing).CurrentValues.SetValues(group);
+            await context.SaveChangesAsync().ConfigureAwait(false);
+            return true;
+        }
+
+        public async Task<bool> DeleteChannelGroupAsync(long groupId)
+        {
+            var group = await context.ChannelGroups.FindAsync(groupId).ConfigureAwait(false);
+            if (group == null) return false;
+
+            context.ChannelGroups.Remove(group);
+            await context.SaveChangesAsync().ConfigureAwait(false);
+            return true;
+        }
     }
 }
