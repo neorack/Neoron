@@ -16,9 +16,7 @@ GO
 
 CREATE TABLE [dbo].[DiscordMessage]
 (
-    [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    [MessageId] BIGINT NOT NULL,
-    CONSTRAINT [UQ_DiscordMessage_MessageId] UNIQUE ([MessageId]),
+    [MessageId] BIGINT NOT NULL PRIMARY KEY,
     [ChannelId] BIGINT NOT NULL,
     [GuildId] BIGINT NOT NULL,
     [AuthorId] BIGINT NOT NULL,
