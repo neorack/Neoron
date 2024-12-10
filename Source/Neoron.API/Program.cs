@@ -125,4 +125,3 @@ finally
 {
     Log.CloseAndFlush();
 }
-}
