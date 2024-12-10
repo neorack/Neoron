@@ -1,253 +1,91 @@
-# Project Guidelines
+# Neoron Project Guidelines
+
+This document outlines the coding standards, architectural principles, and workflow for the Neoron project. Adherence to these guidelines ensures code quality, maintainability, and consistency across the project.
 
 ## Code Style
 
-- Follow Microsoft's C# coding conventions
-- Use meaningful and descriptive names for variables, methods, and classes
-- Keep methods focused and concise
-- Document public APIs with XML comments
-- Use async/await consistently for asynchronous operations
+- **C# Coding Conventions:** Adhere to the latest Microsoft C# coding conventions.  Use the [official Microsoft style guide](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/index) as a reference.
+- **Meaningful Names:** Use descriptive and meaningful names for variables, methods, classes, and namespaces.  Avoid abbreviations unless widely understood within the project.
+- **Method Size:** Keep methods focused and concise.  Large methods should be broken down into smaller, more manageable units.
+- **Documentation:** Document public APIs with comprehensive XML comments.  Comments should clearly explain the purpose, parameters, return values, and potential exceptions of each method.
+- **Asynchronous Operations:** Use `async` and `await` consistently for asynchronous operations.  Avoid blocking the main thread.
+- **Readability:** Prioritize code readability. Use consistent indentation, spacing, and formatting to enhance clarity.
 
 ## Architecture
 
-- Follow Clean Architecture principles
-- Keep controllers thin, business logic in services
-- Use dependency injection
-- Follow SOLID principles
-- Use repository pattern for data access
+- **Clean Architecture:** Follow the principles of Clean Architecture.  Separate concerns into distinct layers (e.g., Presentation, Application, Domain, Infrastructure).
+- **Thin Controllers:** Keep controllers thin and focused on handling requests and responses.  Complex logic should be delegated to services.
+- **Dependency Injection:** Utilize dependency injection extensively.  This promotes testability, maintainability, and reduces coupling between components.
+- **SOLID Principles:** Adhere to the SOLID principles (Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion).
+- **Repository Pattern:** Employ the repository pattern for data access.  This decouples the application logic from the specific data storage mechanism.
 
 ## Testing
 
-- Write unit tests for business logic
-- Write integration tests for repositories and APIs
-- Use meaningful test names that describe the scenario
-- Follow Arrange-Act-Assert pattern
-- Mock external dependencies
+- **Unit Tests:** Write comprehensive unit tests for all business logic and services.  Isolate units of code and test their behavior in isolation.
+- **Integration Tests:** Write integration tests to verify the interaction between different components (e.g., repositories and controllers).  Use tools like Testcontainers to simulate external dependencies.
+- **Test Naming:** Use descriptive and meaningful names for tests.  Test names should clearly indicate the scenario being tested.
+- **Arrange-Act-Assert:** Follow the Arrange-Act-Assert pattern for writing tests.  This pattern improves test readability and maintainability.
+- **Mocking:** Mock external dependencies (e.g., databases, external APIs) in unit tests to isolate the code under test.
 
 ## Git Workflow
 
-- Use feature branches
-- Write meaningful commit messages
-- Keep commits focused and atomic
-- Squash commits before merging
-- Use pull requests for code review
+- **Feature Branches:** Use feature branches for development.  This allows for parallel development and easier merging of changes.
+- **Meaningful Commit Messages:** Write concise and informative commit messages.  Each commit should describe the changes made and the reason for the changes.
+- **Atomic Commits:** Keep commits focused and atomic.  Each commit should represent a single, logical change.
+- **Pull Requests:** Use pull requests for code review before merging changes into the main branch.
+- **Squashing:** Squash commits before merging to maintain a clean commit history.
 
 ## API Design
 
-- Follow REST principles
-- Use proper HTTP methods and status codes
-- Version APIs appropriately
-- Validate inputs
-- Handle errors consistently
+- **REST Principles:** Adhere to RESTful principles for API design.  Use appropriate HTTP methods (GET, POST, PUT, DELETE) and status codes.
+- **Versioning:** Version APIs appropriately to manage compatibility between different versions.
+- **Input Validation:** Validate all inputs to prevent unexpected behavior and security vulnerabilities.
+- **Error Handling:** Implement consistent error handling to provide informative error responses to clients.
 
 ## Security
 
-- Validate all inputs
-- Use HTTPS
-- Implement rate limiting
-- Follow OWASP security guidelines
-- Keep dependencies updated
+- **Input Validation:** Validate all inputs to prevent injection attacks and other security vulnerabilities.
+- **HTTPS:** Use HTTPS for all API communication to ensure secure data transmission.
+- **Rate Limiting:** Implement rate limiting to prevent abuse and denial-of-service attacks.
+- **Authentication:** Implement robust authentication mechanisms (e.g., JWT).
+- **Authorization:** Implement authorization mechanisms to control access to resources based on user roles and permissions.
+- **OWASP:** Follow OWASP security guidelines to mitigate potential security risks.
 
 ## Performance
 
-- Use async operations for I/O
-- Implement caching where appropriate
-- Monitor and optimize database queries
-- Consider pagination for large datasets
-- Profile and benchmark critical paths
+- **Asynchronous Operations:** Use `async` and `await` for I/O-bound operations to improve responsiveness.
+- **Caching:** Implement caching where appropriate to reduce database load and improve performance.
+- **Database Optimization:** Optimize database queries and indexes to improve query performance.
+- **Pagination:** Use pagination for large datasets to improve performance and prevent excessive data transfer.
+- **Profiling:** Profile and benchmark critical paths to identify performance bottlenecks.
 
 ## Documentation
 
-- Keep README up to date
-- Document setup and deployment steps
-- Document API endpoints
-- Include examples where helpful
-- Document configuration options
-# Project Guidelines and Development Tasks
+- **README:** Keep the README file up-to-date with project information, setup instructions, and usage examples.
+- **API Documentation:** Generate comprehensive API documentation to help developers understand the available endpoints and their usage.
+- **Setup Guide:** Provide clear and concise instructions for setting up the development environment.
+- **Deployment Guide:** Provide clear and concise instructions for deploying the application to production.
+- **Security Documentation:** Document security considerations and best practices.
 
-## Project Overview
-Neoron is a .NET-based system for:
-- Discord message processing and storage
-- User relationship and ideology tracking
-- Group and activity management
-- Influence metrics calculation
+## Code Review Process
 
-## Architecture
-- Clean layered architecture with repository pattern
-- SQL Server database with EF Core
-- OpenTelemetry for observability
-- Azure AD authentication
-- Rate limiting and validation
+- **Pull Request Reviews:** Conduct thorough code reviews on all pull requests.
+- **Review Criteria:** Review code for adherence to coding standards, security best practices, and performance considerations.
+- **Feedback:** Provide constructive feedback to improve code quality and maintainability.
 
-## Current Status (December 2024)
-- Core database schema implemented
-- Basic Discord message handling
-- Initial test infrastructure
-- Basic rate limiting
+## Project Status Tracking
 
-## Immediate Tasks (High Priority)
-1. Controller Testing
-   - Complete MessageController test coverage
-   - Add authentication test scenarios
-   - Implement performance tests
-   - Add concurrency tests
+- Use `status-tracking.md` to track the project's progress and identify tasks that need attention.
 
-2. Security Implementation
-   - Complete Azure AD integration
-   - Add role-based authorization
-   - Implement API key validation
-   - Add input sanitization
+## Task Management
 
-3. Message Processing
-   - Add message search capabilities
-   - Implement thread handling
-   - Add message history tracking
-   - Enhance validation rules
+- Use `tasks.md` to manage and track tasks related to the project.
 
-## Medium Priority Tasks
-1. Infrastructure
-   - Set up Redis caching
-   - Configure monitoring dashboards
-   - Add custom metrics
-   - Implement alert rules
+## Other Important Considerations
 
-2. User Management
-   - Implement user profile endpoints
-   - Add relationship management
-   - Add ideology tracking
-   - Implement influence calculations
+- **Error Handling:** Implement robust error handling to provide informative error responses to clients.
+- **Logging:** Implement appropriate logging to track application behavior and diagnose issues.
+- **Monitoring:** Implement monitoring to track application performance and identify potential issues.
+- **Continuous Integration/Continuous Deployment (CI/CD):** Implement CI/CD pipelines to automate the build, test, and deployment process.
 
-3. Documentation
-   - API documentation
-   - Deployment guide
-   - Database migration guide
-   - Security documentation
 
-## Low Priority Tasks
-1. Administrative Features
-   - Admin dashboard
-   - User management interface
-   - System configuration UI
-   - Analytics dashboard
-
-2. Integration Features
-   - Webhook support
-   - External API integrations
-   - Batch processing
-   - Export capabilities
-
-## Development Standards
-1. Code Quality
-   - All new code must have tests
-   - Maintain >80% test coverage
-   - Follow StyleCop rules
-   - Use static analysis
-
-2. Security
-   - Input validation on all endpoints
-   - Proper error handling
-   - Rate limiting
-   - Audit logging
-
-3. Performance
-   - Response time <200ms
-   - Efficient database queries
-   - Proper caching
-   - Regular performance testing
-
-## Success Criteria
-- All critical paths tested
-- Security compliance verified
-- Performance targets met
-- Documentation complete
-
-## Next Steps
-1. Complete controller test implementation
-2. Finish security integration
-3. Add message search functionality
-4. Implement caching
-# Project Guidelines
-
-## Code Organization
-
-### Architecture
-- Follow clean layered architecture principles
-- Use repository pattern for data access
-- Implement dependency injection
-- Follow SOLID principles
-
-### Project Structure
-- Keep related files in appropriate namespaces
-- Group by feature when possible
-- Maintain clear separation of concerns
-
-## Coding Standards
-
-### General
-- Use C# latest language features appropriately
-- Follow Microsoft's C# coding conventions
-- Use async/await consistently
-- Implement proper exception handling
-- Use cancellation tokens for async operations
-
-### Documentation
-- Provide XML documentation for public APIs
-- Keep documentation up-to-date with changes
-- Include examples in complex scenarios
-- Document non-obvious implementation details
-
-### Testing
-- Write unit tests for business logic
-- Create integration tests for data access
-- Test error scenarios
-- Use meaningful test names
-- Follow Arrange-Act-Assert pattern
-
-## Database
-- Use Entity Framework Core best practices
-- Implement proper indexing strategies
-- Use appropriate data types
-- Include foreign key relationships
-- Implement soft delete where appropriate
-
-## Security
-- Validate all input data
-- Implement proper authentication/authorization
-- Use parameterized queries
-- Implement rate limiting
-- Follow OWASP security guidelines
-
-## Performance
-- Use async operations appropriately
-- Implement caching where beneficial
-- Use pagination for large datasets
-- Optimize database queries
-- Monitor and log performance metrics
-
-## Source Control
-- Write meaningful commit messages
-- Keep commits focused and atomic
-- Use feature branches
-- Review code before merging
-- Keep main branch stable
-
-## Deployment
-- Use continuous integration
-- Implement automated testing
-- Follow semantic versioning
-- Document deployment procedures
-- Maintain deployment scripts
-
-## Monitoring
-- Implement structured logging
-- Set up appropriate alerting
-- Monitor application health
-- Track key metrics
-- Use proper logging levels
-
-## Review Process
-- Conduct code reviews
-- Use pull requests
-- Check for security issues
-- Verify test coverage
-- Ensure documentation is updated
