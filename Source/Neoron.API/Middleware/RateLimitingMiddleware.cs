@@ -19,6 +19,7 @@ namespace Neoron.API.Middleware
         private readonly ILogger<RateLimitingMiddleware> logger = default!;
         private readonly RateLimitingOptions options = default!;
         private readonly TokenBucket tokenBucket;
+        private readonly Timer cleanupTimer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RateLimitingMiddleware"/> class.
@@ -38,7 +39,7 @@ namespace Neoron.API.Middleware
             tokenBucket = new TokenBucket(options.MaxTokens, options.TokenRefillRate);
 
             // Start the cleanup timer
-            Timer cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, CleanupInterval);
+            cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, CleanupInterval);
         }
 
         /// <summary>
@@ -71,12 +72,16 @@ namespace Neoron.API.Middleware
         }
 
         /// <summary>
-        /// Cleans up the middleware state.
+        /// Performs periodic cleanup of middleware resources.
         /// </summary>
-        /// <param name="state">The state object.</param>
+        /// <param name="state">The state object (unused).</param>
         protected void Cleanup(object? state)
         {
-            // Perform any necessary cleanup
+            // Log cleanup activity
+            logger.LogDebug("Performing periodic rate limiting cleanup");
+            
+            // Could implement additional cleanup logic here if needed
+            // For example: clearing any cached data, updating metrics, etc.
         }
 
         /// <summary>
@@ -88,6 +93,7 @@ namespace Neoron.API.Middleware
             if (disposing)
             {
                 tokenBucket.Dispose();
+                cleanupTimer.Dispose();
             }
         }
 
