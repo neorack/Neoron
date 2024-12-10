@@ -9,8 +9,7 @@ namespace Neoron.API;
 
 public class Program
 {
-    [STAThread]
-    public static async Task<int> Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -120,12 +119,11 @@ try
     app.MapHealthChecks("/health");
     app.MapControllers();
 
-    app.Run();
+    await app.RunAsync();
 }
 catch (Exception ex)
 {
     Log.Fatal(ex, "Application start-up failed");
-    return 1;
         }
         finally
         {
