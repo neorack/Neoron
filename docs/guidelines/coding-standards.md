@@ -6,6 +6,13 @@
 - Maintainable Code: Clear structure, well-documented, easily testable
 - Follow SOLID principles and Clean Architecture
 
+## Version Control
+- Use conventional commits (feat:, fix:, docs:)
+- One logical change per commit
+- Branch naming: feature/, bugfix/, hotfix/
+- Use pull requests for code review
+- Squash commits before merging
+
 ## Code Style and Organization
 - Follow Microsoft's C# coding conventions
 - Use meaningful and descriptive names
@@ -40,6 +47,9 @@
 - Keep dependencies updated
 - Use proper authentication
 - Implement authorization
+- Secure credential management
+- Data encryption
+- Authorization checks
 
 ## Performance Guidelines
 - Use async operations for I/O
@@ -48,3 +58,24 @@
 - Use pagination for large datasets
 - Profile critical paths
 - Monitor performance metrics
+- Resource monitoring
+- Scalability planning
+
+## Monitoring
+- Health checks
+- Performance metrics
+- Error tracking
+- Usage analytics
+- System alerts
+- Structured logging
+- Configure alerting
+- Set up dashboards
+
+## Change Management
+- Impact analysis
+- Rollback procedures
+- Dependency tracking
+- Breaking change notices
+- Migration guides
+- Document deployment procedures
+- Maintain deployment scripts
