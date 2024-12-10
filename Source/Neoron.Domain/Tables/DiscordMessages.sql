@@ -35,29 +35,29 @@ CREATE TABLE [dbo].[DiscordMessage]
     [LastSyncedAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
     [GroupId] BIGINT NULL,
     CONSTRAINT [UQ_DiscordMessage_GuildChannel] UNIQUE ([GuildId], [ChannelId], [MessageId]),
-    CONSTRAINT [FK_DiscordMessages_ReplyTo] FOREIGN KEY ([ReplyToMessageId]) 
-        REFERENCES [dbo].[DiscordMessages]([MessageId]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_DiscordMessages_Thread] FOREIGN KEY ([ThreadId]) 
-        REFERENCES [dbo].[DiscordMessages]([MessageId]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_DiscordMessages_Group] FOREIGN KEY ([GroupId])
+    CONSTRAINT [FK_DiscordMessage_ReplyTo] FOREIGN KEY ([ReplyToMessageId]) 
+        REFERENCES [dbo].[DiscordMessage]([MessageId]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_DiscordMessage_Thread] FOREIGN KEY ([ThreadId]) 
+        REFERENCES [dbo].[DiscordMessage]([MessageId]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_DiscordMessage_Group] FOREIGN KEY ([GroupId])
         REFERENCES [dbo].[ChannelGroups]([Id]) ON DELETE NO ACTION,
-    CONSTRAINT [CK_DiscordMessages_ThreadId] CHECK ([ThreadId] != [MessageId]),
-    CONSTRAINT [CK_DiscordMessages_ReplyTo] CHECK ([ReplyToMessageId] != [MessageId])
+    CONSTRAINT [CK_DiscordMessage_ThreadId] CHECK ([ThreadId] != [MessageId]),
+    CONSTRAINT [CK_DiscordMessage_ReplyTo] CHECK ([ReplyToMessageId] != [MessageId])
 );
 GO
 
-CREATE NONCLUSTERED INDEX [IX_DiscordMessages_MessageId] ON [dbo].[DiscordMessages]([MessageId]);
+CREATE NONCLUSTERED INDEX [IX_DiscordMessage_MessageId] ON [dbo].[DiscordMessage]([MessageId]);
 GO
-CREATE NONCLUSTERED INDEX [IX_DiscordMessages_ChannelId] ON [dbo].[DiscordMessages]([ChannelId]);
+CREATE NONCLUSTERED INDEX [IX_DiscordMessage_ChannelId] ON [dbo].[DiscordMessage]([ChannelId]);
 GO
-CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GuildId] ON [dbo].[DiscordMessages]([GuildId]);
+CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GuildId] ON [dbo].[DiscordMessage]([GuildId]);
 GO
-CREATE NONCLUSTERED INDEX [IX_DiscordMessages_AuthorId] ON [dbo].[DiscordMessages]([AuthorId]);
+CREATE NONCLUSTERED INDEX [IX_DiscordMessage_AuthorId] ON [dbo].[DiscordMessage]([AuthorId]);
 GO
-CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GroupId] ON [dbo].[DiscordMessages]([GroupId]);
+CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GroupId] ON [dbo].[DiscordMessage]([GroupId]);
 GO
 
-CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GuildChannel] 
-ON [dbo].[DiscordMessages]([GuildId], [ChannelId])
+CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GuildChannel] 
+ON [dbo].[DiscordMessage]([GuildId], [ChannelId])
 INCLUDE ([MessageId], [Content], [CreatedAt]);
 GO
