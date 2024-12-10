@@ -77,21 +77,25 @@ namespace Neoron.API.Models
         /// <summary>
         /// Gets or sets the message being replied to.
         /// </summary>
+        [ForeignKey(nameof(ReplyToMessageId))]
         public virtual DiscordMessage? ReplyToMessage { get; set; }
 
         /// <summary>
         /// Gets or sets the parent thread message.
         /// </summary>
+        [ForeignKey(nameof(ThreadId))]
         public virtual DiscordMessage? ThreadParent { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of replies to this message.
         /// </summary>
+        [InverseProperty(nameof(ReplyToMessage))]
         public virtual ICollection<DiscordMessage>? Replies { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of messages in this thread.
         /// </summary>
+        [InverseProperty(nameof(ThreadParent))]
         public virtual ICollection<DiscordMessage>? ThreadMessages { get; set; }
 
         /// <summary>

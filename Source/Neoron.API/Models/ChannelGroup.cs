@@ -42,14 +42,14 @@ namespace Neoron.API.Models
         public DateTimeOffset LastActiveAt { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of channel IDs in this group.
+        /// Gets or sets the channels in this group.
         /// </summary>
-        public required ICollection<long> ChannelIds { get; set; }
+        public virtual ICollection<GroupChannel>? Channels { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of participant user IDs.
+        /// Gets or sets the participants in this group.
         /// </summary>
-        public required ICollection<long> ParticipantIds { get; set; }
+        public virtual ICollection<GroupParticipant>? Participants { get; set; }
 
         /// <summary>
         /// Gets or sets the messages in this group.
