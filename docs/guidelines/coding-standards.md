@@ -5,6 +5,8 @@
 - Defensive Programming: Validate inputs, handle errors gracefully
 - Maintainable Code: Clear structure, well-documented, easily testable
 - Follow SOLID principles and Clean Architecture
+- Use meaningful and descriptive names
+- Keep code focused and concise
 
 ## Code Organization
 ### Size Guidelines
