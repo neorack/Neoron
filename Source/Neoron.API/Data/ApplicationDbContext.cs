@@ -58,6 +58,11 @@ namespace Neoron.API.Data
         public DbSet<SyncCheckpoint> SyncCheckpoints { get; set; } = null!;
 
         /// <summary>
+        /// Gets or sets the user tokens.
+        /// </summary>
+        public DbSet<UserToken> UserTokens { get; set; } = null!;
+
+        /// <summary>
         /// Asynchronously saves all changes made in this context to the database.
         /// </summary>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
