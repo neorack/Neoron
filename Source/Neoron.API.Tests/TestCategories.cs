@@ -1,4 +1,4 @@
-namespace Neoron.API.Tests.Infrastructure;
+namespace Neoron.API.Tests;
 
 public static class TestCategories
 {

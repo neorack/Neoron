@@ -6,6 +6,7 @@
     <TestSessionTimeout>180000</TestSessionTimeout>
     <DisableAppDomain>true</DisableAppDomain>
     <TreatNoTestsAsError>true</TreatNoTestsAsError>
+    <CollectSourceInformation>true</CollectSourceInformation>
   </RunConfiguration>
 
   <LoggerRunSettings>
