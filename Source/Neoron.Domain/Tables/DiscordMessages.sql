@@ -1,6 +1,6 @@
 CREATE TABLE [dbo].[DiscordMessages]
 (
-    [Id] BIGINT NOT NULL PRIMARY KEY,
+    [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     [MessageId] BIGINT NOT NULL UNIQUE,
     [ChannelId] BIGINT NOT NULL,
     [GuildId] BIGINT NOT NULL,
@@ -18,9 +18,9 @@ CREATE TABLE [dbo].[DiscordMessages]
     [LastSyncedAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
     [GroupId] BIGINT NULL,
     CONSTRAINT [FK_DiscordMessages_ReplyTo] FOREIGN KEY ([ReplyToMessageId]) 
-        REFERENCES [dbo].[DiscordMessages]([Id]),
+        REFERENCES [dbo].[DiscordMessages]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_DiscordMessages_Thread] FOREIGN KEY ([ThreadId]) 
-        REFERENCES [dbo].[DiscordMessages]([Id]),
+        REFERENCES [dbo].[DiscordMessages]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_DiscordMessages_Group] FOREIGN KEY ([GroupId])
         REFERENCES [dbo].[ChannelGroups]([Id])
 );
