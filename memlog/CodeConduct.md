@@ -21,11 +21,13 @@ This document outlines the coding standards, architectural principles, and workf
 
 ## Testing
 
-- **Unit Tests:** Write comprehensive unit tests for all business logic and services.  Isolate units of code and test their behavior in isolation.
-- **Integration Tests:** Write integration tests to verify the interaction between different components (e.g., repositories and controllers).  Use tools like Testcontainers to simulate external dependencies.
-- **Test Naming:** Use descriptive and meaningful names for tests.  Test names should clearly indicate the scenario being tested.
-- **Arrange-Act-Assert:** Follow the Arrange-Act-Assert pattern for writing tests.  This pattern improves test readability and maintainability.
-- **Mocking:** Mock external dependencies (e.g., databases, external APIs) in unit tests to isolate the code under test.
+- **Unit Tests:** Write comprehensive unit tests for all business logic and services. Isolate units of code and test their behavior in isolation. ✓
+- **Integration Tests:** Write integration tests to verify the interaction between different components (e.g., repositories and controllers). Use tools like Testcontainers to simulate external dependencies. ✓
+- **Test Naming:** Use descriptive and meaningful names for tests. Test names should clearly indicate the scenario being tested. ✓
+- **Arrange-Act-Assert:** Follow the Arrange-Act-Assert pattern for writing tests. This pattern improves test readability and maintainability. ✓
+- **Mocking:** Mock external dependencies (e.g., databases, external APIs) in unit tests to isolate the code under test. ✓
+- **Edge Cases:** Include tests for edge cases, error conditions, and boundary scenarios. ✓
+- **Performance Tests:** Include tests for performance-critical paths and concurrent operations. ✓
 
 ## Git Workflow
 

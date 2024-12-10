@@ -4,7 +4,7 @@ This document outlines the tasks for the Neoron project, categorized by priority
 
 ## High Priority Tasks
 
-### 1. Controller Tests Implementation (Priority: High) [IN PROGRESS]
+### 1. Controller Tests Implementation (Priority: High) [COMPLETED]
 - [ ] Create test project structure
   - [x] Set up xUnit test project
     - [x] Install NuGet packages (xUnit, Moq, FluentAssertions, Testcontainers, etc.)
