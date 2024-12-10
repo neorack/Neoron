@@ -34,6 +34,7 @@ namespace Neoron.API.Models
         /// <summary>
         /// Validates the options.
         /// </summary>
+        /// <param name="validationContext">The validation context containing information about the validation operation.</param>
         /// <returns>An enumerable of validation results.</returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

@@ -2,7 +2,7 @@
 
 ## High Priority Tasks
 
-### 1. Controller Tests Implementation (Priority: High)
+### 1. Controller Tests Implementation (Priority: High) [IN PROGRESS]
 - [ ] Create test project structure
   - [x] Set up xUnit test project
     - [x] Install NuGet packages (xUnit, Moq, FluentAssertions)
@@ -11,7 +11,7 @@
   - [x] Configure test dependencies ⚠️ HIGH PRIORITY
     - [x] Set up WebApplicationFactory
     - [x] Configure test database context (using TestContainers)
-    - [ ] Add mock service providers
+    - [ ] Add mock service providers [STARTED]
   - [ ] Add test utilities and helpers
     - [ ] Authentication test helpers
     - [ ] Database seeding utilities
@@ -129,7 +129,7 @@
 
 ## Timeline
 
-### Week 1-2: Controller Tests
+### Week 1-2: Controller Tests [CURRENT]
 - Week 1:
   - Setup test infrastructure
   - Configure TestContainers

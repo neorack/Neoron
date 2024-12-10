@@ -1,57 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Neoron.API.Data;
 using Neoron.API.Interfaces;
+using Neoron.API.Logging;
 using Neoron.API.Models;
 
 namespace Neoron.API.Repositories
 {
-    public static partial class LogMessages
-    {
-        [LoggerMessage(Level = LogLevel.Information, Message = "Adding message {MessageId} for channel {ChannelId}")]
-        public static partial void LogAddingMessage(ILogger logger, long messageId, long channelId);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Successfully added message {MessageId}")]
-        public static partial void LogAddedMessage(ILogger logger, long messageId);
-
-        [LoggerMessage(Level = LogLevel.Error, Message = "Failed to add message {MessageId}")]
-        public static partial void LogAddMessageError(ILogger logger, Exception ex, long messageId);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Updating message {MessageId}")]
-        public static partial void LogUpdatingMessage(ILogger logger, long messageId);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Successfully updated message {MessageId}")]
-        public static partial void LogUpdatedMessage(ILogger logger, long messageId);
-
-        [LoggerMessage(Level = LogLevel.Warning, Message = "Concurrency conflict when updating message {MessageId}, retrying...")]
-        public static partial void LogUpdateRetry(ILogger logger, long messageId);
-
-        [LoggerMessage(Level = LogLevel.Error, Message = "Failed to update message {MessageId} after maximum retries")]
-        public static partial void LogUpdateError(ILogger logger, long messageId);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Deleting message {MessageId}")]
-        public static partial void LogDeletingMessage(ILogger logger, long messageId);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Successfully deleted message {MessageId}")]
-        public static partial void LogDeletedMessage(ILogger logger, long messageId);
-
-        [LoggerMessage(Level = LogLevel.Error, Message = "Failed to delete message with id {Id}")]
-        public static partial void LogDeleteError(ILogger logger, Exception ex, object id);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Adding a range of messages")]
-        public static partial void LogAddingRange(ILogger logger);
-
-        [LoggerMessage(Level = LogLevel.Information, Message = "Successfully added a range of messages")]
-        public static partial void LogAddedRange(ILogger logger);
-
-        [LoggerMessage(Level = LogLevel.Error, Message = "Failed to add a range of messages")]
-        public static partial void LogAddRangeError(ILogger logger, Exception ex);
-    }
     /// <summary>
     /// Repository for managing Discord messages.
     /// </summary>
@@ -74,37 +29,24 @@ namespace Neoron.API.Repositories
             this.logger = logger;
         }
 
-        /// <summary>
-        /// Gets all Discord messages asynchronously.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a collection of Discord messages.</returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<DiscordMessage>> GetAllAsync()
         {
-            var messages = await context.DiscordMessages.ToListAsync().ConfigureAwait(false);
-            return messages;
+            return await context.DiscordMessages.ToListAsync().ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Gets a Discord message by its identifier asynchronously.
-        /// </summary>
-        /// <param name="id">The identifier of the message.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the Discord message if found; otherwise, null.</returns>
+        /// <inheritdoc/>
         public async Task<DiscordMessage?> GetByIdAsync(object id)
         {
-            var message = await context.DiscordMessages.FindAsync(id).ConfigureAwait(false);
-            return message;
+            return await context.DiscordMessages.FindAsync(id).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Adds a new Discord message asynchronously.
-        /// </summary>
-        /// <param name="entity">The Discord message to add.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the added Discord message.</returns>
+        /// <inheritdoc/>
         public async Task<DiscordMessage> AddAsync(DiscordMessage entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
-            using var activity = System.Diagnostics.Activity.Current?.Source.StartActivity("AddMessage");
+            using var activity = Activity.Current?.Source.StartActivity("AddMessage");
             try
             {
                 LogMessages.LogAddingMessage(logger, entity.MessageId, entity.ChannelId);
@@ -122,11 +64,7 @@ namespace Neoron.API.Repositories
             }
         }
 
-        /// <summary>
-        /// Updates an existing Discord message asynchronously.
-        /// </summary>
-        /// <param name="entity">The Discord message to update.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task UpdateAsync(DiscordMessage entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
@@ -158,11 +96,7 @@ namespace Neoron.API.Repositories
             throw new DbUpdateConcurrencyException("Failed to update after maximum retries");
         }
 
-        /// <summary>
-        /// Deletes a Discord message by its identifier asynchronously.
-        /// </summary>
-        /// <param name="id">The identifier of the message to delete.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task DeleteAsync(object id)
         {
             try
@@ -184,83 +118,55 @@ namespace Neoron.API.Repositories
             }
         }
 
-        /// <summary>
-        /// Gets Discord messages by channel identifier asynchronously.
-        /// </summary>
-        /// <param name="channelId">The channel identifier.</param>
-        /// <param name="skip">The number of messages to skip.</param>
-        /// <param name="take">The number of messages to take.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a collection of Discord messages.</returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<DiscordMessage>> GetByChannelIdAsync(long channelId, int skip = 0, int take = 100)
         {
-            var messages = await context.DiscordMessages
+            return await context.DiscordMessages
                 .Where(m => m.ChannelId == channelId)
                 .OrderByDescending(m => m.CreatedAt)
                 .Skip(skip)
                 .Take(take)
-                .ToListAsync().ConfigureAwait(false);
-            return messages;
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Gets Discord messages by guild identifier asynchronously.
-        /// </summary>
-        /// <param name="guildId">The guild identifier.</param>
-        /// <param name="skip">The number of messages to skip.</param>
-        /// <param name="take">The number of messages to take.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a collection of Discord messages.</returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<DiscordMessage>> GetByGuildIdAsync(long guildId, int skip = 0, int take = 100)
         {
-            var messages = await context.DiscordMessages
+            return await context.DiscordMessages
                 .Where(m => m.GuildId == guildId)
                 .OrderByDescending(m => m.CreatedAt)
                 .Skip(skip)
                 .Take(take)
-                .ToListAsync().ConfigureAwait(false);
-            return messages;
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Gets Discord messages by author identifier asynchronously.
-        /// </summary>
-        /// <param name="authorId">The author identifier.</param>
-        /// <param name="skip">The number of messages to skip.</param>
-        /// <param name="take">The number of messages to take.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a collection of Discord messages.</returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<DiscordMessage>> GetByAuthorIdAsync(long authorId, int skip = 0, int take = 100)
         {
-            var messages = await context.DiscordMessages
+            return await context.DiscordMessages
                 .Where(m => m.AuthorId == authorId)
                 .OrderByDescending(m => m.CreatedAt)
                 .Skip(skip)
                 .Take(take)
-                .ToListAsync().ConfigureAwait(false);
-            return messages;
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Gets thread messages by thread identifier asynchronously.
-        /// </summary>
-        /// <param name="threadId">The thread identifier.</param>
-        /// <param name="skip">The number of messages to skip.</param>
-        /// <param name="take">The number of messages to take.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a collection of Discord messages.</returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<DiscordMessage>> GetThreadMessagesAsync(long threadId, int skip = 0, int take = 100)
         {
-            var messages = await context.DiscordMessages
+            return await context.DiscordMessages
                 .Where(m => m.ThreadId == threadId)
                 .OrderByDescending(m => m.CreatedAt)
                 .Skip(skip)
                 .Take(take)
-                .ToListAsync().ConfigureAwait(false);
-            return messages;
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Adds a range of Discord messages asynchronously.
-        /// </summary>
-        /// <param name="messages">The collection of Discord messages to add.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of state entries written to the database.</returns>
+        /// <inheritdoc/>
         public async Task<int> AddRangeAsync(IEnumerable<DiscordMessage> messages)
         {
             ArgumentNullException.ThrowIfNull(messages);
@@ -285,11 +191,7 @@ namespace Neoron.API.Repositories
             }
         }
 
-        /// <summary>
-        /// Updates a range of Discord messages asynchronously.
-        /// </summary>
-        /// <param name="messages">The collection of Discord messages to update.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of state entries written to the database.</returns>
+        /// <inheritdoc/>
         public async Task<int> UpdateRangeAsync(IEnumerable<DiscordMessage> messages)
         {
             ArgumentNullException.ThrowIfNull(messages);
@@ -314,11 +216,7 @@ namespace Neoron.API.Repositories
             }
         }
 
-        /// <summary>
-        /// Deletes a range of Discord messages by their identifiers asynchronously.
-        /// </summary>
-        /// <param name="messageIds">The collection of message identifiers to delete.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the number of state entries written to the database.</returns>
+        /// <inheritdoc/>
         public async Task<int> DeleteRangeAsync(IEnumerable<long> messageIds)
         {
             ArgumentNullException.ThrowIfNull(messageIds);
@@ -326,9 +224,10 @@ namespace Neoron.API.Repositories
             await using var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false);
             try
             {
-                var messages = await context.DiscordMessages.ConfigureAwait(false)
+                var messages = await context.DiscordMessages
                     .Where(m => messageIds.Contains(m.MessageId))
-                    .ToListAsync().ConfigureAwait(false);
+                    .ToListAsync()
+                    .ConfigureAwait(false);
 
                 foreach (var message in messages)
                 {

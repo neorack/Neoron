@@ -1,9 +1,4 @@
-using System;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Neoron.API.Extensions;
 using Neoron.API.Models;
 
 namespace Neoron.API.Middleware
@@ -13,10 +8,22 @@ namespace Neoron.API.Middleware
     /// </summary>
     public class RateLimitingMiddleware : IDisposable
     {
+        private static readonly Action<ILogger, string, Exception?> LogRateLimitExceeded =
+            LoggerMessage.Define<string>(
+                LogLevel.Warning,
+                new EventId(1, "RateLimitExceeded"),
+                "Rate limit exceeded for IP: {IpAddress}");
+
+        private static readonly Action<ILogger, Exception?> LogCleanup =
+            LoggerMessage.Define(
+                LogLevel.Debug,
+                new EventId(2, "Cleanup"),
+                "Performing periodic rate limiting cleanup");
+
         private readonly RequestDelegate next;
         private readonly ILogger<RateLimitingMiddleware> logger;
         private readonly RateLimitingOptions options;
-        private readonly ITokenBucket tokenBucket;
+        private readonly TokenBucket tokenBucket;
         private readonly Timer cleanupTimer;
 
         /// <summary>
@@ -25,7 +32,10 @@ namespace Neoron.API.Middleware
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger instance.</param>
         /// <param name="options">The rate limiting options.</param>
-        public RateLimitingMiddleware(RequestDelegate next, ILogger<RateLimitingMiddleware> logger, IOptions<RateLimitingOptions> options)
+        public RateLimitingMiddleware(
+            RequestDelegate next,
+            ILogger<RateLimitingMiddleware> logger,
+            IOptions<RateLimitingOptions> options)
         {
             ArgumentNullException.ThrowIfNull(next);
             ArgumentNullException.ThrowIfNull(logger);
@@ -34,10 +44,13 @@ namespace Neoron.API.Middleware
             this.next = next;
             this.logger = logger;
             this.options = options.Value;
-            tokenBucket = new TokenBucket(options.MaxTokens, options.TokenRefillRate, options.BurstSize);
+            tokenBucket = new TokenBucket(
+                this.options.MaxTokens,
+                this.options.TokenRefillRate,
+                this.options.BurstSize);
 
             // Start the cleanup timer
-            cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, options.Value.CleanupInterval);
+            cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, this.options.CleanupInterval);
         }
 
         /// <summary>
@@ -50,15 +63,19 @@ namespace Neoron.API.Middleware
             ArgumentNullException.ThrowIfNull(context);
 
             // Add rate limit headers
-            context.Response.Headers.Append("X-RateLimit-Limit", options.MaxTokens.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            context.Response.Headers.Append(
+                "X-RateLimit-Limit",
+                options.MaxTokens.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
             if (!tokenBucket.ConsumeToken())
             {
                 context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                 context.Response.Headers.Append("Retry-After", "1");
                 await context.Response.WriteAsync("Too Many Requests").ConfigureAwait(false);
-                logger.LogWarning("Rate limit exceeded for IP: {IpAddress}",
-                    context.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+                LogRateLimitExceeded(
+                    logger,
+                    context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    null);
                 return;
             }
 
@@ -80,8 +97,8 @@ namespace Neoron.API.Middleware
         /// <param name="state">The state object (unused).</param>
         protected void Cleanup(object? state)
         {
-            // Log cleanup activity
-            logger.LogDebug("Performing periodic rate limiting cleanup");
+            LogCleanup(logger, null);
+
             // Could implement additional cleanup logic here if needed
             // For example: clearing any cached data, updating metrics, etc.
         }
@@ -89,7 +106,7 @@ namespace Neoron.API.Middleware
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -98,6 +115,5 @@ namespace Neoron.API.Middleware
                 cleanupTimer.Dispose();
             }
         }
-
     }
 }

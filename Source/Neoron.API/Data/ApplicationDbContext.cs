@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Neoron.API.Models;
 
@@ -57,17 +55,17 @@ namespace Neoron.API.Data
         {
             ArgumentNullException.ThrowIfNull(modelBuilder);
 
-            modelBuilder.Entity<DiscordMessage>(entity =>
+            _ = modelBuilder.Entity<DiscordMessage>(entity =>
             {
-                entity.HasKey(e => e.MessageId)
+                _ = entity.HasKey(e => e.MessageId)
                     .IsClustered();
 
-                entity.HasOne(d => d.ReplyToMessage)
+                _ = entity.HasOne(d => d.ReplyToMessage)
                     .WithMany(p => p.Replies)
                     .HasForeignKey(d => d.ReplyToMessageId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(d => d.ThreadParent)
+                _ = entity.HasOne(d => d.ThreadParent)
                     .WithMany(p => p.ThreadMessages)
                     .HasForeignKey(d => d.ThreadId)
                     .OnDelete(DeleteBehavior.Restrict);

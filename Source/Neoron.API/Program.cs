@@ -1,12 +1,7 @@
-using System;
-
+using System.Globalization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-
 using Serilog;
 using Serilog.Events;
 
@@ -28,8 +23,11 @@ namespace Neoron.API
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
+                .WriteTo.File(
+                    path: "logs/log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    formatProvider: CultureInfo.InvariantCulture)
                 .CreateBootstrapLogger();
 
             try
@@ -39,12 +37,18 @@ namespace Neoron.API
                 var builder = WebApplication.CreateBuilder(args);
 
                 // Add enhanced Serilog configuration
-                builder.Host.UseSerilog((context, services, configuration) => configuration
-                    .ReadFrom.Configuration(context.Configuration)
-                    .ReadFrom.Services(services)
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console()
-                    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day));
+                builder.Host.UseSerilog((context, services, configuration) =>
+                {
+                    configuration
+                        .ReadFrom.Configuration(context.Configuration)
+                        .ReadFrom.Services(services)
+                        .Enrich.FromLogContext()
+                        .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
+                        .WriteTo.File(
+                            path: "logs/log-.txt",
+                            rollingInterval: RollingInterval.Day,
+                            formatProvider: CultureInfo.InvariantCulture);
+                });
 
                 Log.Information("Configuring application services...");
 
@@ -57,7 +61,13 @@ namespace Neoron.API
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Neoron API", Version = "v1" });
+                    c.SwaggerDoc(
+                        name: "v1",
+                        info: new OpenApiInfo
+                        {
+                            Title = "Neoron API",
+                            Version = "v1",
+                        });
                 });
 
                 // Add health checks
@@ -71,21 +81,24 @@ namespace Neoron.API
                 if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger();
-                    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Neoron API v1"));
+                    app.UseSwaggerUI(c =>
+                    {
+                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Neoron API v1");
+                    });
                     app.UseDeveloperExceptionPage();
                 }
 
                 // Add diagnostic middleware
                 app.Use(async (context, next) =>
                 {
-                    Log.Debug("Processing request: {Method} {Path}",
+                    Log.Debug(
+                        messageTemplate: "Processing request: {Method} {Path}",
                         context.Request.Method,
                         context.Request.Path);
                     await next().ConfigureAwait(false);
                 });
 
                 app.UseHttpsRedirection();
-
                 app.UseAuthentication();
                 app.UseAuthorization();
 
@@ -111,7 +124,6 @@ namespace Neoron.API
                 });
 
                 app.MapHealthChecks("/health");
-
                 app.MapControllers();
 
                 app.Run();

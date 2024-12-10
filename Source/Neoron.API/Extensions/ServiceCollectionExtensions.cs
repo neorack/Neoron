@@ -18,10 +18,10 @@ namespace Neoron.API.Extensions
         /// <returns>The updated IServiceCollection.</returns>
         public static IServiceCollection AddDiscordServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            _ = services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IDiscordMessageRepository, DiscordMessageRepository>();
+            _ = services.AddScoped<IDiscordMessageRepository, DiscordMessageRepository>();
 
             return services;
         }

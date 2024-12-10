@@ -1,6 +1,3 @@
-using System;
-using Microsoft.Extensions.Logging;
-using Serilog.Events;
 using LoggerMessage = Microsoft.Extensions.Logging.LoggerMessage;
 
 namespace Neoron.API.Extensions
@@ -26,9 +23,6 @@ namespace Neoron.API.Extensions
         /// <param name="logger">The logger instance.</param>
         /// <param name="clientId">The client ID.</param>
         /// <param name="ex">The exception that occurred.</param>
-        public static void FailedToAddMessage(ILogger logger, string? clientId, Exception ex)
-        {
-            FailedToAddMessageDelegate(logger, clientId, ex);
-        }
+        public static void FailedToAddMessage(ILogger logger, string? clientId, Exception ex) => FailedToAddMessageDelegate(logger, clientId, ex);
     }
 }

@@ -1,7 +1,17 @@
-using Aspire.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-var builder = DistributedApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.Neoron_API>("neoron-api");
+// Add services
+builder.Services.AddServiceDiscovery();
 
-builder.Build().Run();
+// Build and run
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapDefaultEndpoints();
+}
+
+await app.RunAsync().ConfigureAwait(false);

@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Neoron.API.Models;
 
 namespace Neoron.API.Models
 {

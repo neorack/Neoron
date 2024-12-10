@@ -1,20 +1,5 @@
-using System;
-using System.Threading;
-
 namespace Neoron.API.Middleware
 {
-    /// <summary>
-    /// Represents a token bucket rate limiter.
-    /// </summary>
-    public interface ITokenBucket : IDisposable
-    {
-        /// <summary>
-        /// Attempts to consume a token from the bucket.
-        /// </summary>
-        /// <returns>True if a token was successfully consumed, false if no tokens are available.</returns>
-        bool ConsumeToken();
-    }
-
     /// <summary>
     /// Implements a token bucket rate limiter.
     /// </summary>
@@ -37,12 +22,19 @@ namespace Neoron.API.Middleware
         public TokenBucket(int maxTokens, double refillRate, int burstSize)
         {
             if (maxTokens <= 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(maxTokens), "Max tokens must be greater than 0");
+            }
+
             if (refillRate <= 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(refillRate), "Refill rate must be greater than 0");
+            }
 
             if (burstSize < maxTokens)
+            {
                 throw new ArgumentOutOfRangeException(nameof(burstSize), "Burst size must be greater than or equal to max tokens");
+            }
 
             this.maxTokens = maxTokens;
             this.refillRate = refillRate;
@@ -65,6 +57,7 @@ namespace Neoron.API.Middleware
                     tokens--;
                     return true;
                 }
+
                 return false;
             }
         }
@@ -97,7 +90,7 @@ namespace Neoron.API.Middleware
                 var now = DateTime.UtcNow;
                 var timePassed = (now - lastRefillTime).TotalSeconds;
                 var tokensToAdd = timePassed * refillRate;
-                
+
                 tokens = Math.Min(tokens + tokensToAdd, burstSize);
                 lastRefillTime = now;
             }

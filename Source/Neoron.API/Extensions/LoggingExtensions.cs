@@ -1,6 +1,5 @@
 using System.Globalization;
 using Serilog;
-using Serilog.Exceptions;
 
 namespace Neoron.API.Extensions
 {
@@ -19,7 +18,7 @@ namespace Neoron.API.Extensions
             return hostBuilder
                 .UseSerilog((context, configuration) =>
                 {
-                    configuration
+                    _ = configuration
                         .ReadFrom.Configuration(context.Configuration)
                         .Enrich.FromLogContext()
                         .Enrich.WithMachineName()
