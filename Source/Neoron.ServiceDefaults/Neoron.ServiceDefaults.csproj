@@ -21,10 +21,4 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.7.0" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="obj\**\*.AssemblyAttributes.cs" />
-    <Compile Remove="obj\**\*.AssemblyInfo.cs" />
-  </ItemGroup>
-
 </Project>
