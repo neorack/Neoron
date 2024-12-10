@@ -15,9 +15,9 @@ namespace Neoron.API.Middleware
     {
         private static readonly TimeSpan CleanupInterval = TimeSpan.FromHours(1);
 
-        private readonly RequestDelegate next;
-        private readonly ILogger<RateLimitingMiddleware> logger;
-        private readonly RateLimitingOptions options;
+        private readonly RequestDelegate next = default!;
+        private readonly ILogger<RateLimitingMiddleware> logger = default!;
+        private readonly RateLimitingOptions options = default!;
         private readonly TokenBucket tokenBucket;
 
         /// <summary>
@@ -32,13 +32,13 @@ namespace Neoron.API.Middleware
             ArgumentNullException.ThrowIfNull(logger);
             ArgumentNullException.ThrowIfNull(options);
 
-            next = next;
-            logger = logger;
-            options = options.Value;
+            this.next = next;
+            this.logger = logger;
+            this.options = options.Value;
             tokenBucket = new TokenBucket(options.MaxTokens, options.TokenRefillRate);
 
             // Start the cleanup timer
-            var cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, CleanupInterval);
+            Timer cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, CleanupInterval);
         }
 
         /// <summary>

@@ -21,8 +21,8 @@ namespace Neoron.API.Middleware
         /// <param name="refillRate">The rate at which tokens are refilled per second.</param>
         public TokenBucket(int maxTokens, double refillRate)
         {
-            this.maxTokens = maxTokens;
-            this.refillRate = refillRate;
+            maxTokens = maxTokens;
+            refillRate = refillRate;
             this.tokens = maxTokens;
             this.refillTimer = new Timer(RefillTokens, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
