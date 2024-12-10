@@ -86,13 +86,13 @@ namespace Neoron.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<int> SyncMessagesAsync(long guildId, long channelId, long? afterMessageId = null, CancellationToken cancellationToken = default)
+        public async Task<(int synced, int failed)> SyncMessagesAsync(long guildId, long channelId, long? fromMessageId = null, CancellationToken cancellationToken = default)
         {
             // Implementation needed
             throw new NotImplementedException();
         }
 
-        public async Task<long?> GetSyncCheckpointAsync(long guildId, long channelId)
+        public async Task<SyncCheckpoint?> GetSyncCheckpointAsync(long guildId, long channelId)
         {
             // Implementation needed
             throw new NotImplementedException();
