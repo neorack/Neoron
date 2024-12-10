@@ -18,6 +18,12 @@ namespace Neoron.API.Models
         public double TokenRefillRate { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum burst size allowed.
+        /// </summary>
+        /// <remarks>Must be greater than or equal to MaxTokens.</remarks>
+        public int BurstSize { get; set; }
+
+        /// <summary>
         /// Gets or sets the interval for cleanup operations.
         /// </summary>
         /// <remarks>Defaults to 1 hour if not specified.</remarks>
@@ -41,6 +47,13 @@ namespace Neoron.API.Models
                 yield return new ValidationResult(
                     "TokenRefillRate must be greater than 0",
                     new[] { nameof(TokenRefillRate) });
+            }
+
+            if (BurstSize < MaxTokens)
+            {
+                yield return new ValidationResult(
+                    "BurstSize must be greater than or equal to MaxTokens",
+                    new[] { nameof(BurstSize) });
             }
 
             if (CleanupInterval <= TimeSpan.Zero)

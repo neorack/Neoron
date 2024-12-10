@@ -19,25 +19,32 @@ namespace Neoron.API.Middleware
     {
         private readonly double maxTokens;
         private readonly double refillRate;
+        private readonly double burstSize;
         private readonly object lockObject = new();
         private readonly Timer refillTimer;
         private double tokens;
+        private DateTime lastRefillTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenBucket"/> class.
         /// </summary>
         /// <param name="maxTokens">The maximum number of tokens.</param>
         /// <param name="refillRate">The rate at which tokens are refilled per second.</param>
-        public TokenBucket(int maxTokens, double refillRate)
+        public TokenBucket(int maxTokens, double refillRate, int burstSize)
         {
             if (maxTokens <= 0)
                 throw new ArgumentOutOfRangeException(nameof(maxTokens), "Max tokens must be greater than 0");
             if (refillRate <= 0)
                 throw new ArgumentOutOfRangeException(nameof(refillRate), "Refill rate must be greater than 0");
 
+            if (burstSize < maxTokens)
+                throw new ArgumentOutOfRangeException(nameof(burstSize), "Burst size must be greater than or equal to max tokens");
+
             this.maxTokens = maxTokens;
             this.refillRate = refillRate;
+            this.burstSize = burstSize;
             tokens = maxTokens;
+            lastRefillTime = DateTime.UtcNow;
             refillTimer = new Timer(RefillTokens, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
 
@@ -83,7 +90,12 @@ namespace Neoron.API.Middleware
         {
             lock (lockObject)
             {
-                tokens = Math.Min(tokens + refillRate, maxTokens);
+                var now = DateTime.UtcNow;
+                var timePassed = (now - lastRefillTime).TotalSeconds;
+                var tokensToAdd = timePassed * refillRate;
+                
+                tokens = Math.Min(tokens + tokensToAdd, burstSize);
+                lastRefillTime = now;
             }
         }
     }

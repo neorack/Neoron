@@ -35,7 +35,7 @@ namespace Neoron.API.Middleware
             this.next = next;
             this.logger = logger;
             this.options = options.Value;
-            tokenBucket = new TokenBucket(options.MaxTokens, options.TokenRefillRate);
+            tokenBucket = new TokenBucket(options.MaxTokens, options.TokenRefillRate, options.BurstSize);
 
             // Start the cleanup timer
             cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, options.Value.CleanupInterval);
@@ -50,11 +50,16 @@ namespace Neoron.API.Middleware
         {
             ArgumentNullException.ThrowIfNull(context);
 
+            // Add rate limit headers
+            context.Response.Headers.Add("X-RateLimit-Limit", options.MaxTokens.ToString());
+            
             if (!tokenBucket.ConsumeToken())
             {
                 context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                context.Response.Headers.Add("Retry-After", "1");
                 await context.Response.WriteAsync("Too Many Requests").ConfigureAwait(false);
-                LoggingMessages.FailedToAddMessage(logger, context.Connection.RemoteIpAddress?.ToString(), new InvalidOperationException("Rate limit exceeded"));
+                logger.LogWarning("Rate limit exceeded for IP: {IpAddress}", 
+                    context.Connection.RemoteIpAddress?.ToString() ?? "unknown");
                 return;
             }
 
