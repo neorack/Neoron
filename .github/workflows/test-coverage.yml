@@ -1,0 +1,43 @@
+name: Test Coverage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore
+      
+    - name: Test with coverage
+      run: pwsh ./run-tests.ps1
+      
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: TestResults/CoverageReport
+        
+    - name: Check coverage threshold
+      run: |
+        $xml = [xml](Get-Content ./TestResults/coverage.cobertura.xml)
+        $coverage = [math]::Round(([decimal]$xml.coverage.'line-rate' * 100), 2)
+        if ($coverage -lt 80) {
+          Write-Error "Coverage ($coverage%) is below minimum threshold (80%)"
+          exit 1
+        }
