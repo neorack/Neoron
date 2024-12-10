@@ -5,15 +5,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 
-namespace Neoron.API;
-
-public static class Program
-{
-    public static int Main(string[] args)
-    {
-        try
-        {
-            var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // Use bootstrap logger during startup
 Log.Logger = new LoggerConfiguration()
