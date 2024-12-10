@@ -32,6 +32,7 @@ jobs:
       with:
         name: coverage-report
         path: TestResults/CoverageReport
+        retention-days: 14
         
     - name: Check coverage threshold
       run: |

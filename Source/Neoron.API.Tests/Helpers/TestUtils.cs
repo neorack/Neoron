@@ -139,4 +139,46 @@ public static class TestUtils
             Assert.Contains(expectedMessage, exception.Message);
         }
     }
+
+    public static class TestDataSeeder
+    {
+        public static async Task SeedTestMessages(ApplicationDbContext context, int count = 10)
+        {
+            var messages = Enumerable.Range(1, count)
+                .Select(i => new DiscordMessageBuilder()
+                    .WithMessageId(GenerateRandomId())
+                    .WithContent($"Test Message {i}")
+                    .WithCreatedAt(DateTimeOffset.UtcNow.AddMinutes(-i))
+                    .Build())
+                .ToList();
+
+            await context.DiscordMessages.AddRangeAsync(messages);
+            await context.SaveChangesAsync();
+        }
+
+        public static async Task SeedTestThreads(ApplicationDbContext context, int threadCount = 3, int messagesPerThread = 5)
+        {
+            for (int i = 0; i < threadCount; i++)
+            {
+                var parentMsg = new DiscordMessageBuilder()
+                    .WithMessageId(GenerateRandomId())
+                    .WithContent($"Thread Parent {i}")
+                    .Build();
+
+                await context.DiscordMessages.AddAsync(parentMsg);
+                await context.SaveChangesAsync();
+
+                var threadMessages = Enumerable.Range(1, messagesPerThread)
+                    .Select(j => new DiscordMessageBuilder()
+                        .WithMessageId(GenerateRandomId())
+                        .WithContent($"Thread Reply {j}")
+                        .InThread(parentMsg.MessageId)
+                        .Build())
+                    .ToList();
+
+                await context.DiscordMessages.AddRangeAsync(threadMessages);
+                await context.SaveChangesAsync();
+            }
+        }
+    }
 }

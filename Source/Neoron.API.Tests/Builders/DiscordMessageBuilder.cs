@@ -11,6 +11,11 @@ public class DiscordMessageBuilder
     private string _content = "Test message";
     private int _messageType = 0;
     private DateTimeOffset _createdAt = DateTimeOffset.UtcNow;
+    private long? _replyToMessageId;
+    private long? _threadId;
+    private List<DiscordFileAttachment> _attachments = new();
+    private bool _isDeleted;
+    private DateTimeOffset? _deletedAt;
 
     public DiscordMessageBuilder WithMessageId(long messageId)
     {
@@ -75,6 +80,31 @@ public class DiscordMessageBuilder
             MessageType = _messageType,
             CreatedAt = _createdAt
         };
+    }
+
+    public DiscordMessageBuilder AsReplyTo(long replyToMessageId)
+    {
+        _replyToMessageId = replyToMessageId;
+        return this;
+    }
+
+    public DiscordMessageBuilder InThread(long threadId)
+    {
+        _threadId = threadId;
+        return this;
+    }
+
+    public DiscordMessageBuilder WithAttachments(params DiscordFileAttachment[] attachments)
+    {
+        _attachments = attachments.ToList();
+        return this;
+    }
+
+    public DiscordMessageBuilder AsDeleted()
+    {
+        _isDeleted = true;
+        _deletedAt = DateTimeOffset.UtcNow;
+        return this;
     }
 
     public static DiscordMessageBuilder Create()
