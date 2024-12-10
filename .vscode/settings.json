@@ -21,5 +21,19 @@
         "**/obj": true,
         "**/node_modules": true,
         "**/.git": true
-    }
+    },
+    "terminal.integrated.shellIntegration.enabled": true,
+    "dotnet.codeLens.enableReferencesCodeLens": true,
+    "dotnet.codeLens.enableTestsCodeLens": true,
+    "terminal.integrated.shellIntegration.decorationsEnabled": "both",
+    "terminal.integrated.shellIntegration.history": 100,
+    "terminal.integrated.shellIntegration.showCommandGuide": true,
+    "mssql.intelliSense.enableErrorChecking": true,
+    "mssql.intelliSense.enableIntelliSense": true,
+    "mssql.intelliSense.enableQuickInfo": true,
+    "mssql.intelliSense.enableSuggestions": true,
+    "editor.inlineSuggest.edits.experimental.useMixedLinesDiff": "whenPossible",
+    "editor.inlineSuggest.enabled": true,
+    "editor.inlineSuggest.edits.experimental.enabled": true
+    
 }
