@@ -28,7 +28,7 @@ namespace Neoron.API.Extensions
                             outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
                             formatProvider: CultureInfo.InvariantCulture)
                         .WriteTo.File(
-                            "logs/myapp.txt", 
+                            "logs/myapp.txt",
                             rollingInterval: RollingInterval.Day,
                             formatProvider: CultureInfo.InvariantCulture);
                 });
