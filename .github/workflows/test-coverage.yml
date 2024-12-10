@@ -42,3 +42,19 @@ jobs:
           Write-Error "Coverage ($coverage%) is below minimum threshold (80%)"
           exit 1
         }
+
+    - name: Run Performance Tests
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        dotnet test --filter Category=Performance `
+          --settings ./test.runsettings `
+          --logger "console;verbosity=detailed" `
+          --results-directory "./TestResults/Performance"
+
+    - name: Upload Performance Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-results
+        path: TestResults/Performance
+        retention-days: 14

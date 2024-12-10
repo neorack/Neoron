@@ -207,4 +207,23 @@ public static class TestUtils
             return response;
         }
     }
+
+    public static class PerformanceMetrics
+    {
+        public static async Task<(TimeSpan Duration, long MemoryUsed)> MeasureOperation(
+            Func<Task> operation)
+        {
+            GC.Collect();
+            var initialMemory = GC.GetTotalMemory(true);
+            var sw = Stopwatch.StartNew();
+            
+            await operation();
+            
+            sw.Stop();
+            GC.Collect();
+            var finalMemory = GC.GetTotalMemory(true);
+            
+            return (sw.Elapsed, finalMemory - initialMemory);
+        }
+    }
 }

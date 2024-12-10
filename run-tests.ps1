@@ -39,3 +39,34 @@ if ($coverage -lt $minCoverage) {
     Write-Host "Coverage below minimum threshold of $minCoverage%" -ForegroundColor Red
     exit 1
 }
+
+function Generate-PerformanceReport {
+    param (
+        [string]$ResultsPath
+    )
+    
+    $results = Get-ChildItem -Path $ResultsPath -Filter "*.trx" | 
+        ForEach-Object { 
+            [xml](Get-Content $_.FullName)
+        }
+    
+    $performanceTests = $results.TestRun.Results.UnitTestResult | 
+        Where-Object { $_.TestCategory -eq "Performance" }
+    
+    $report = @{
+        TotalTests = $performanceTests.Count
+        PassedTests = ($performanceTests | Where-Object { $_.outcome -eq "Passed" }).Count
+        FailedTests = ($performanceTests | Where-Object { $_.outcome -eq "Failed" }).Count
+        AverageDuration = ($performanceTests.duration | Measure-Object -Average).Average
+    }
+    
+    return $report
+}
+
+# Generate performance report
+$perfReport = Generate-PerformanceReport -ResultsPath "./TestResults/Performance"
+Write-Host "`nPerformance Test Results:" -ForegroundColor Cyan
+Write-Host "Total Tests: $($perfReport.TotalTests)"
+Write-Host "Passed: $($perfReport.PassedTests)"
+Write-Host "Failed: $($perfReport.FailedTests)"
+Write-Host "Average Duration: $($perfReport.AverageDuration)ms"
