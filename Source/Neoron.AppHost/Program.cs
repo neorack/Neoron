@@ -1,17 +1,34 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Neoron.AppHost;
+using Neoron.ServiceDefaults;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace Neoron.AppHost;
 
-// Add services
-builder.Services.AddServiceDiscovery();
-
-// Build and run
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+/// <summary>
+/// The main entry point for the application host.
+/// </summary>
+public class Program
 {
-    app.MapDefaultEndpoints();
-}
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    /// <param name="args">Command line arguments.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public static async Task Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-await app.RunAsync().ConfigureAwait(false);
+        // Add service defaults from ServiceDefaults project
+        builder.AddServiceDefaults();
+
+        // Add hosted service
+        builder.Services.AddHostedService<ApiHostedService>();
+
+        var app = builder.Build();
+
+        app.MapDefaultEndpoints();
+
+        await app.RunAsync().ConfigureAwait(false);
+    }
+}

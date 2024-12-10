@@ -7,26 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.1" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience.Polly" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Identity.Web" Version="2.15.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.0.0" />
-    <PackageReference Include="Serilog.Exceptions" Version="8.0.0" />
-    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
-    <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
-    <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Microsoft.Identity.Web.TokenAcquisition" Version="2.15.5" />
+    <PackageReference Include="Microsoft.Identity.Web.TokenCache" Version="2.15.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Neoron.ServiceDefaults\Neoron.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\Neoron.API.Validation\Neoron.API.Validation.csproj" />
-    <ProjectReference Include="..\Neoron.API.DTOs\Neoron.API.DTOs.csproj" />
-    <ProjectReference Include="..\Neoron.API.Interfaces\Neoron.API.Interfaces.csproj" />
-    <ProjectReference Include="..\Neoron.API.Repositories\Neoron.API.Repositories.csproj" />
   </ItemGroup>
 
 </Project>
