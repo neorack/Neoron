@@ -3,21 +3,34 @@ using Microsoft.Extensions.Hosting;
 using Neoron.AppHost;
 using Neoron.ServiceDefaults;
 
-var builder = WebApplication.CreateBuilder(args);
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
 
-// Add service defaults
-builder.AddServiceDefaults();
+    // Add service defaults
+    builder.AddServiceDefaults();
 
-// Add the API service
-builder.Services.AddHostedService<ApiHostedService>();
+    // Add logging configuration
+    builder.Logging.ClearProviders();
+    builder.Logging.AddConsole();
+    builder.Logging.AddDebug();
 
-// Configure API project
-var apiBuilder = builder.AddProject<Projects.Neoron_API>("api");
-apiBuilder.WithReference(builder.AddProject<Projects.Neoron_ServiceDefaults>("servicedefaults"));
+    // Add the API service
+    builder.Services.AddHostedService<ApiHostedService>();
 
-var app = builder.Build();
+    // Configure API project
+    var apiBuilder = builder.AddProject<Projects.Neoron_API>("api");
+    apiBuilder.WithReference(builder.AddProject<Projects.Neoron_ServiceDefaults>("servicedefaults"));
 
-// Map default health check and metrics endpoints
-app.MapDefaultEndpoints();
+    var app = builder.Build();
 
-await app.RunAsync();
+    // Map default health check and metrics endpoints
+    app.MapDefaultEndpoints();
+
+    await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Application startup failed: {ex}");
+    throw;
+}

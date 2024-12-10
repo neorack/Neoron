@@ -38,10 +38,23 @@ internal sealed class ApiHostedService : BackgroundService
         {
             RunningLog(_logger, null);
             
-            // Register application start
+            // Register application start with error handling
             _appLifetime.ApplicationStarted.Register(() =>
             {
-                _logger.LogInformation("Application has started");
+                try
+                {
+                    _logger.LogInformation("Application has started");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error in application startup registration");
+                }
+            });
+
+            // Add cancellation token handling
+            stoppingToken.Register(() =>
+            {
+                _logger.LogInformation("Cancellation requested");
             });
 
             return Task.CompletedTask;
