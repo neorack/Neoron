@@ -9,8 +9,6 @@ using Neoron.API.Data;
 using Neoron.API.Interfaces;
 using Neoron.API.Models;
 
-namespace Neoron.API.Repositories
-{
     public static partial class LogMessages
     {
         [LoggerMessage(Level = LogLevel.Information, Message = "Adding message {MessageId} for channel {ChannelId}")]
