@@ -10,6 +10,7 @@ namespace Neoron.API.Middleware
         private readonly double burstSize;
         private readonly object lockObject = new();
         private readonly Timer refillTimer;
+        private readonly ILogger<TokenBucket> logger;
         private double tokens;
         private DateTime lastRefillTime;
 
@@ -19,7 +20,7 @@ namespace Neoron.API.Middleware
         /// <param name="maxTokens">The maximum number of tokens.</param>
         /// <param name="refillRate">The rate at which tokens are refilled per second.</param>
         /// <param name="burstSize">The maximum number of tokens that can be accumulated.</param>
-        public TokenBucket(int maxTokens, double refillRate, int burstSize)
+        public TokenBucket(int maxTokens, double refillRate, int burstSize, ILogger<TokenBucket> logger)
         {
             if (maxTokens <= 0)
             {
@@ -39,6 +40,7 @@ namespace Neoron.API.Middleware
             this.maxTokens = maxTokens;
             this.refillRate = refillRate;
             this.burstSize = burstSize;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             tokens = maxTokens;
             lastRefillTime = DateTime.UtcNow;
             refillTimer = new Timer(RefillTokens, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
@@ -81,7 +83,7 @@ namespace Neoron.API.Middleware
                     catch (Exception ex)
                     {
                         // Log error on final retry before failing open
-                        _logger?.LogError(ex, "Final retry attempt failed in TokenBucket");
+                        logger.LogError(ex, "Final retry attempt failed in TokenBucket");
                         return true;
                     }
                 }
