@@ -20,7 +20,8 @@ dotnet test `
 dotnet reportgenerator `
     -reports:"./TestResults/coverage.cobertura.xml" `
     -targetdir:"./TestResults/CoverageReport" `
-    -reporttypes:"Html;Cobertura;Badges" `
+    -reporttypes:"Html;Cobertura;Badges;SonarQube" `
+    -classfilters:"+*;-*.Migrations.*" `
     -title:"Neoron API Coverage Report" `
     -verbosity:"Info" `
     -tag:"$((Get-Date).ToString('yyyy-MM-dd_HH-mm-ss'))"
