@@ -70,5 +70,50 @@ namespace Neoron.API.Interfaces
         /// <param name="messageIds">Collection of message IDs to check</param>
         /// <returns>Collection of existing message IDs</returns>
         Task<IEnumerable<long>> FindExistingMessagesAsync(IEnumerable<long> messageIds);
+
+        /// <summary>
+        /// Gets messages by group identifier asynchronously.
+        /// </summary>
+        /// <param name="groupId">The group identifier.</param>
+        /// <param name="skip">The number of messages to skip.</param>
+        /// <param name="take">The number of messages to take.</param>
+        /// <returns>A collection of Discord messages.</returns>
+        Task<IEnumerable<DiscordMessage>> GetByGroupIdAsync(long groupId, int skip = 0, int take = 100);
+
+        /// <summary>
+        /// Updates group assignments for messages.
+        /// </summary>
+        /// <param name="messageIds">The message IDs to update.</param>
+        /// <param name="groupId">The group ID to assign.</param>
+        /// <returns>The number of messages updated.</returns>
+        Task<int> UpdateGroupAssignmentAsync(IEnumerable<long> messageIds, long groupId);
+
+        /// <summary>
+        /// Gets channel groups for a guild.
+        /// </summary>
+        /// <param name="guildId">The guild ID.</param>
+        /// <returns>Collection of channel groups.</returns>
+        Task<IEnumerable<ChannelGroup>> GetChannelGroupsAsync(long guildId);
+
+        /// <summary>
+        /// Creates a new channel group.
+        /// </summary>
+        /// <param name="group">The group to create.</param>
+        /// <returns>The created group.</returns>
+        Task<ChannelGroup> CreateChannelGroupAsync(ChannelGroup group);
+
+        /// <summary>
+        /// Updates an existing channel group.
+        /// </summary>
+        /// <param name="group">The group to update.</param>
+        /// <returns>True if updated, false if not found.</returns>
+        Task<bool> UpdateChannelGroupAsync(ChannelGroup group);
+
+        /// <summary>
+        /// Deletes a channel group.
+        /// </summary>
+        /// <param name="groupId">The group ID to delete.</param>
+        /// <returns>True if deleted, false if not found.</returns>
+        Task<bool> DeleteChannelGroupAsync(long groupId);
     }
 }

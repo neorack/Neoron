@@ -109,5 +109,16 @@ namespace Neoron.API.Models
         /// Gets or sets the previous versions of this message.
         /// </summary>
         public virtual ICollection<MessageHistory>? History { get; set; }
+
+        /// <summary>
+        /// Gets or sets the channel group this message belongs to.
+        /// </summary>
+        public long? GroupId { get; set; }
+
+        /// <summary>
+        /// Navigation property to the associated channel group.
+        /// </summary>
+        [ForeignKey(nameof(GroupId))]
+        public virtual ChannelGroup? Group { get; set; }
     }
 }
