@@ -35,7 +35,7 @@ INCLUDE ([SenderId], [MessageType], [Content], [SentAt])
 WHERE [GroupId] IS NOT NULL
 GO
 
-CREATE INDEX [IX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
+CREATE CLUSTERED INDEX [IX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
 GO
 
 CREATE INDEX [IX_MessageLog_Status] ON [dbo].[MessageLog] ([Status], [SentAt])
