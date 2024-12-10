@@ -1,3 +1,5 @@
+using Neoron.API.Interfaces;
+
 namespace Neoron.API.Services
 {
     public class ServiceMetadata : IServiceMetadata
