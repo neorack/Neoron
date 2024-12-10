@@ -22,29 +22,36 @@ CREATE TABLE [dbo].[MessageLog]
 )
 GO
 
+CREATE CLUSTERED INDEX [CIX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
+INCLUDE ([SenderId], [ReceiverId], [GroupId], [MessageType], [Status])
+WITH (DATA_COMPRESSION = PAGE)
+GO
+
 CREATE INDEX [IX_MessageLog_SenderId] ON [dbo].[MessageLog] ([SenderId])
 INCLUDE ([MessageType], [SentAt], [Status])
+WITH (DATA_COMPRESSION = PAGE)
 GO
 
 CREATE INDEX [IX_MessageLog_ReceiverId] ON [dbo].[MessageLog] ([ReceiverId]) 
 INCLUDE ([SenderId], [MessageType], [Content], [SentAt]) 
 WHERE [ReceiverId] IS NOT NULL
+WITH (DATA_COMPRESSION = PAGE)
 GO
 
 CREATE INDEX [IX_MessageLog_GroupId] ON [dbo].[MessageLog] ([GroupId])
 INCLUDE ([SenderId], [MessageType], [Content], [SentAt])
 WHERE [GroupId] IS NOT NULL
-GO
-
-CREATE CLUSTERED INDEX [CIX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
+WITH (DATA_COMPRESSION = PAGE)
 GO
 
 CREATE INDEX [IX_MessageLog_Status] ON [dbo].[MessageLog] ([Status], [SentAt])
 INCLUDE ([SenderId], [ReceiverId], [GroupId], [Content])
 WHERE [Status] != 'Read' AND [Status] != 'Failed'
+WITH (DATA_COMPRESSION = PAGE)
 GO
 
 CREATE INDEX [IX_MessageLog_SenderReceiver] ON [dbo].[MessageLog] ([SenderId], [ReceiverId], [SentAt])
 INCLUDE ([MessageType], [Content], [Status])
 WHERE [ReceiverId] IS NOT NULL
+WITH (DATA_COMPRESSION = PAGE)
 GO
