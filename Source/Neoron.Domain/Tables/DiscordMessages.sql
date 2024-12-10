@@ -5,7 +5,8 @@ CREATE TABLE [dbo].[ChannelGroups]
     [Name] NVARCHAR(100) NOT NULL,
     [Description] NVARCHAR(500) NULL,
     [CreatedAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
-    [LastActiveAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET())
+    [LastActiveAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
+    CONSTRAINT [UQ_ChannelGroups_GuildName] UNIQUE ([GuildId], [Name])
 );
 GO
 
@@ -39,7 +40,8 @@ CREATE TABLE [dbo].[DiscordMessages]
         REFERENCES [dbo].[DiscordMessages]([MessageId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_DiscordMessages_Group] FOREIGN KEY ([GroupId])
         REFERENCES [dbo].[ChannelGroups]([Id]) ON DELETE NO ACTION,
-    CONSTRAINT [CK_DiscordMessages_ThreadId] CHECK ([ThreadId] != [MessageId])
+    CONSTRAINT [CK_DiscordMessages_ThreadId] CHECK ([ThreadId] != [MessageId]),
+    CONSTRAINT [CK_DiscordMessages_ReplyTo] CHECK ([ReplyToMessageId] != [MessageId])
 );
 GO
 
@@ -52,4 +54,9 @@ GO
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_AuthorId] ON [dbo].[DiscordMessages]([AuthorId]);
 GO
 CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GroupId] ON [dbo].[DiscordMessages]([GroupId]);
+GO
+
+CREATE NONCLUSTERED INDEX [IX_DiscordMessages_GuildChannel] 
+ON [dbo].[DiscordMessages]([GuildId], [ChannelId])
+INCLUDE ([MessageId], [Content], [CreatedAt]);
 GO
