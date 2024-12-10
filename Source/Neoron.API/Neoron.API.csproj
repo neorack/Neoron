@@ -8,11 +8,11 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <OutputPath>$(SolutionDir)artifacts\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>$(SolutionDir)artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>NU1902;CS5001</WarningsNotAsErrors>
+    <WarningsNotAsErrors>NU1902</WarningsNotAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
