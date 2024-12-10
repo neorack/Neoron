@@ -17,6 +17,9 @@
     <LangVersion>latest</LangVersion>
     <IsTestProject>$(MSBuildProjectName.Contains('Tests'))</IsTestProject>
     <IsPackable>!$(IsTestProject)</IsPackable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +32,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**\*.AssemblyAttributes.cs" />
+    <Compile Remove="obj\**\*.AssemblyInfo.cs" />
   </ItemGroup>
 
   <PropertyGroup>
