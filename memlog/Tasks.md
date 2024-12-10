@@ -1,6 +1,6 @@
-# Neoron Implementation Tasks
+# Development Tasks
 
-This document outlines the tasks for the Neoron project, categorized by priority and status.  Refer to `status-tracking.md` for overall project progress and `roadmap.md` for future plans.
+This document tracks specific development tasks and their status. For high-level project status, see `status-tracking.md`. For implementation verification, see `Implementation-Checklist.md`.
 
 ## High Priority Tasks
 
