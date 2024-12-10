@@ -93,5 +93,21 @@ namespace Neoron.API.Models
         /// Gets or sets the collection of messages in this thread.
         /// </summary>
         public virtual ICollection<DiscordMessage>? ThreadMessages { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version number for optimistic concurrency.
+        /// </summary>
+        [Timestamp]
+        public byte[] Version { get; set; } = Array.Empty<byte>();
+
+        /// <summary>
+        /// Gets or sets when this message was last synced.
+        /// </summary>
+        public DateTimeOffset LastSyncedAt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the previous versions of this message.
+        /// </summary>
+        public virtual ICollection<MessageHistory>? History { get; set; }
     }
 }

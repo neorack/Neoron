@@ -43,5 +43,23 @@ namespace Neoron.API.Interfaces
         /// </summary>
         /// <returns>True if currently rate limited, false otherwise</returns>
         bool IsRateLimited();
+
+        /// <summary>
+        /// Synchronizes messages from a specific checkpoint.
+        /// </summary>
+        /// <param name="guildId">The guild ID to sync</param>
+        /// <param name="channelId">The channel ID to sync</param>
+        /// <param name="fromMessageId">Optional message ID to start from</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Number of messages synchronized</returns>
+        Task<int> SyncMessagesAsync(long guildId, long channelId, long? fromMessageId = null, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Gets the latest sync checkpoint for a channel.
+        /// </summary>
+        /// <param name="guildId">The guild ID</param>
+        /// <param name="channelId">The channel ID</param>
+        /// <returns>The sync checkpoint or null if none exists</returns>
+        Task<SyncCheckpoint?> GetSyncCheckpointAsync(long guildId, long channelId);
     }
 }
