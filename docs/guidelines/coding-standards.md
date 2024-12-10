@@ -1,4 +1,4 @@
-# Development Standards
+# Development Standards & Guidelines
 
 ## Core Principles
 - Reliability First: Every change must improve system stability
@@ -7,6 +7,7 @@
 - Follow SOLID principles and Clean Architecture
 - Use meaningful and descriptive names
 - Keep code focused and concise
+- Prioritize system stability in all changes
 
 ## Code Organization
 ### Size Guidelines
