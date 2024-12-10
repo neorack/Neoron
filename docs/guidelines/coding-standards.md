@@ -1,5 +1,10 @@
 # Development Standards
 
+## Core Principles
+- Reliability First: Every change must improve system stability
+- Defensive Programming: Validate inputs, handle errors gracefully
+- Maintainable Code: Clear structure, well-documented, easily testable
+
 ## Code Style and Organization
 - Follow Microsoft's C# coding conventions
 - Use meaningful and descriptive names
