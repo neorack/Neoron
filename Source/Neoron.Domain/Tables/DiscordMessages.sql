@@ -32,12 +32,14 @@ CREATE TABLE [dbo].[DiscordMessages]
     [Version] ROWVERSION NOT NULL,
     [LastSyncedAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
     [GroupId] BIGINT NULL,
+    CONSTRAINT [UQ_DiscordMessages_GuildChannel] UNIQUE ([GuildId], [ChannelId], [MessageId]),
     CONSTRAINT [FK_DiscordMessages_ReplyTo] FOREIGN KEY ([ReplyToMessageId]) 
         REFERENCES [dbo].[DiscordMessages]([MessageId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_DiscordMessages_Thread] FOREIGN KEY ([ThreadId]) 
         REFERENCES [dbo].[DiscordMessages]([MessageId]) ON DELETE NO ACTION,
     CONSTRAINT [FK_DiscordMessages_Group] FOREIGN KEY ([GroupId])
-        REFERENCES [dbo].[ChannelGroups]([Id]) ON DELETE NO ACTION
+        REFERENCES [dbo].[ChannelGroups]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [CK_DiscordMessages_ThreadId] CHECK ([ThreadId] != [MessageId])
 );
 GO
 
