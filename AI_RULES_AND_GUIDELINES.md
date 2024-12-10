@@ -89,58 +89,95 @@ This document outlines the rules, best practices, and guidelines that AI must fo
 - Update strategy documentation
 - Lock file maintenance
 
-## 8. Code Documentation
+## 5. Documentation Standards
 
-- Write clear, concise comments for all sections of code.
-- Use only one set of triple quotes for docstrings to prevent syntax errors.
-- Document the purpose and expected behavior of functions and modules.
+### 5.1 Code Documentation
+- Write clear, concise comments
+- Use XML documentation tags for C# code
+- Document parameters and return values
+- Include usage examples
+- Document exceptions and edge cases
+- Keep comments up-to-date with code changes
 
-## 9. Change Management
+### 5.2 Change Management
+- Document impact analysis
+- Update affected documentation
+- Record changes in changelog.md
+- Include rollback procedures
+- Track dependencies affected
 
-- Review all changes to assess their impact on other parts of the project.
-- Test changes thoroughly to ensure consistency and prevent conflicts.
-- Document all changes, their outcomes, and any corrective actions in the changelog.
+### 5.3 Problem-Solving Framework
+- Follow systematic debugging approach
+- Document attempted solutions
+- Consider performance implications
+- Evaluate security impacts
+- Test edge cases thoroughly
 
-## 10. Problem-Solving Approach
+## 6. Quality Assurance
 
-- Exhaust all options before determining an action is impossible.
-- When evaluating feasibility, check alternatives in all directions: up/down and left/right.
-- Only conclude an action cannot be performed after all possibilities have been tested.
+### 6.1 Testing Strategy
+- Minimum 80% code coverage
+- Unit tests for all business logic
+- Integration tests for API endpoints
+- End-to-end tests for critical paths
+- Performance benchmarks
+- Load testing requirements
 
-## 11. Testing and Quality Assurance
+### 6.2 Security Standards
+- OWASP compliance checks
+- Regular security audits
+- Input validation rules
+- Authentication protocols
+- Authorization matrix
+- Data encryption requirements
 
-- Implement comprehensive unit tests for all components.
-- Perform integration testing to ensure different parts of the system work together.
-- Conduct thorough end-to-end testing to validate user workflows.
-- Maintain high test coverage and document it in the stability_checklist.md.
+## 7. Performance and Optimization
 
-## 12. Security Best Practices
+### 7.1 Performance Standards
+- Response time targets
+- Database query optimization
+- Caching strategies
+- Async operations usage
+- Resource utilization limits
+- Performance monitoring
 
-- Implement proper authentication and authorization mechanisms.
-- Use secure communication protocols (HTTPS) for all network interactions.
-- Sanitize and validate all user inputs to prevent injection attacks.
-- Regularly update dependencies to patch known vulnerabilities.
-- Follow the principle of least privilege in system design.
+### 7.2 Scalability Guidelines
+- Horizontal scaling approach
+- Load balancing configuration
+- Database partitioning
+- Microservices boundaries
+- API versioning strategy
 
-## 13. Performance Optimization
+## 8. Compliance and Standards
 
-- Optimize database queries for efficiency.
-- Implement caching strategies where appropriate.
-- Minimize network requests and payload sizes.
-- Use asynchronous operations for I/O-bound tasks.
-- Regularly profile the application to identify and address performance bottlenecks.
+### 8.1 Regulatory Compliance
+- GDPR requirements
+- CCPA compliance
+- Data retention policies
+- Privacy by design
+- Audit trail requirements
 
-## 14. Compliance and Standards
+### 8.2 Technical Standards
+- REST API guidelines
+- GraphQL best practices
+- OpenAPI documentation
+- Code style enforcement
+- Accessibility (WCAG 2.1)
 
-- Ensure the application complies with relevant data protection regulations (e.g., GDPR, CCPA).
-- Follow accessibility standards (WCAG) to make the application usable by people with disabilities.
-- Adhere to industry-standard coding conventions and style guides.
+## 9. System Documentation
 
-## 15. Documentation
+### 9.1 Technical Documentation
+- Architecture diagrams
+- API documentation
+- Database schemas
+- Deployment guides
+- Troubleshooting guides
 
-- Maintain up-to-date API documentation.
-- Provide clear, step-by-step guides for setup and deployment.
-- Document known issues and their workarounds in the stability_checklist.md.
-- Keep user guides and FAQs current with each feature update.
+### 9.2 User Documentation
+- Setup instructions
+- Configuration guides
+- FAQ maintenance
+- Known issues log
+- Feature documentation
 
-Remember, these rules and guidelines must be followed without exception. Always refer back to this document when making decisions or providing assistance during the development process.
+Remember: These guidelines ensure consistency and quality across the project. Refer to this document when making decisions or providing assistance during development.
