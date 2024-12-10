@@ -3,6 +3,8 @@
     <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
     <SourceProjectsPath>$(SolutionDir)src</SourceProjectsPath>
     <TestProjectsPath>$(SolutionDir)tests</TestProjectsPath>
+    <BaseOutputPath>$(SolutionDir)artifacts\$(MSBuildProjectName)</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(SolutionDir)artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <AnalysisMode>All</AnalysisMode>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
