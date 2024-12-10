@@ -377,4 +377,5 @@ MigrationBackup/
 FodyWeavers.xsd
 .aider*
 .env
+.venv/
 .vscode/settings.local.json
