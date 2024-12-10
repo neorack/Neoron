@@ -3,32 +3,21 @@ using Microsoft.Extensions.Hosting;
 using Neoron.AppHost;
 using Neoron.ServiceDefaults;
 
-namespace Neoron.AppHost;
+var builder = WebApplication.CreateBuilder(args);
 
-/// <summary>
-/// The main entry point for the application host.
-/// </summary>
-public class Program
-{
-    /// <summary>
-    /// The main entry point for the application.
-    /// </summary>
-    /// <param name="args">Command line arguments.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public static async Task Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+// Add service defaults
+builder.AddServiceDefaults();
 
-        // Add service defaults from ServiceDefaults project
-        builder.AddServiceDefaults();
+// Add the API service
+builder.Services.AddHostedService<ApiHostedService>();
 
-        // Add hosted service
-        builder.Services.AddHostedService<ApiHostedService>();
+// Configure API project
+var apiBuilder = builder.AddProject<Projects.Neoron_API>("api");
+apiBuilder.WithReference(builder.AddProject<Projects.Neoron_ServiceDefaults>("servicedefaults"));
 
-        var app = builder.Build();
+var app = builder.Build();
 
-        app.MapDefaultEndpoints();
+// Map default health check and metrics endpoints
+app.MapDefaultEndpoints();
 
-        await app.RunAsync().ConfigureAwait(false);
-    }
-}
+await app.RunAsync();
