@@ -8,9 +8,9 @@ namespace Neoron.API.Models
     public class DiscordMessage
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the message.
+        /// Gets or sets the unique identifier.
         /// </summary>
-        public long MessageId { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the channel identifier where the message was sent.

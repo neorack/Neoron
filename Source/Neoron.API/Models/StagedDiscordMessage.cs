@@ -8,10 +8,10 @@ namespace Neoron.API.Models
     public class StagedDiscordMessage
     {
         /// <summary>
-        /// Gets or sets the staging record ID.
+        /// Gets or sets the unique identifier.
         /// </summary>
         [Key]
-        public long StagingId { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the Discord message data.

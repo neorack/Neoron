@@ -9,13 +9,13 @@ namespace Neoron.API.Models
     public class DiscordFileAttachment
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the attachment.
+        /// Gets or sets the unique identifier.
         /// </summary>
         [Key]
-        public long AttachmentId { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the message ID this attachment belongs to.
+        /// Gets or sets the parent message identifier.
         /// </summary>
         public long MessageId { get; set; }
 

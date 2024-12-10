@@ -9,13 +9,13 @@ namespace Neoron.API.Models
     public class MessageHistory
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the history record.
+        /// Gets or sets the unique identifier.
         /// </summary>
         [Key]
-        public long HistoryId { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the message ID this history belongs to.
+        /// Gets or sets the parent message identifier.
         /// </summary>
         public long MessageId { get; set; }
 

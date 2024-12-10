@@ -8,10 +8,10 @@ namespace Neoron.API.Models
     public class ChannelGroup
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the group.
+        /// Gets or sets the unique identifier.
         /// </summary>
         [Key]
-        public long GroupId { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the guild ID this group belongs to.
