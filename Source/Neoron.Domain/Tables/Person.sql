@@ -53,8 +53,8 @@ CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedBy] UNIQUEIDENTIFIER NULL,
     [IsActive] BIT NOT NULL DEFAULT 1,
-    CONSTRAINT [FK_Group_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_Group_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id])
+    CONSTRAINT [FK_UserGroup_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_UserGroup_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id])
 )
 GO
 
@@ -174,20 +174,6 @@ CREATE TABLE [dbo].[PersonTag]
 )
 GO
 
--- Activity/Event logging
-CREATE TABLE [dbo].[ActivityLog]
-(
-    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
-    [PersonId] UNIQUEIDENTIFIER NOT NULL,
-    [ActivityType] NVARCHAR(50) NOT NULL CHECK ([ActivityType] IN ('Login', 'Message', 'GroupJoin', 'IdeologyChange', 'RelationshipChange', 'ProfileUpdate', 'Other')),
-    [Description] NVARCHAR(MAX) NULL,
-    [Metadata] NVARCHAR(MAX) NULL,                      -- JSON data for flexible storage
-    [IpAddress] NVARCHAR(45) NULL,                      -- IPv6 compatible
-    [UserAgent] NVARCHAR(500) NULL,
-    [OccurredAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    CONSTRAINT [FK_ActivityLog_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id])
-)
-GO
 
 -- Influence/Reach metrics
 CREATE TABLE [dbo].[PersonInfluence]
