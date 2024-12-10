@@ -2,7 +2,7 @@ CREATE TABLE [dbo].[ActivityLog]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
-    [ActivityType] NVARCHAR(50) NOT NULL CHECK ([ActivityType] IN ('Login', 'Message', 'GroupJoin', 'IdeologyChange', 'RelationshipChange', 'ProfileUpdate', 'Other')),
+    [ActivityType] NVARCHAR(50) NOT NULL CONSTRAINT [CK_ActivityLog_ActivityType] CHECK ([ActivityType] IN ('Login', 'Message', 'GroupJoin', 'IdeologyChange', 'RelationshipChange', 'ProfileUpdate', 'Other')),
     [Description] NVARCHAR(MAX) NULL,
     [Metadata] NVARCHAR(MAX) NULL,
     [IpAddress] NVARCHAR(45) NULL,

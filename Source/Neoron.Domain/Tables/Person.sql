@@ -17,8 +17,8 @@ CREATE TABLE [dbo].[Person]
     [DateOfBirth] DATE NULL,
     [GenderId] TINYINT NULL,
     CONSTRAINT [FK_Person_Gender] FOREIGN KEY ([GenderId]) REFERENCES [dbo].[RefGender]([Id]) ON DELETE NO ACTION,
-    [TimeZone] NVARCHAR(100) NULL CHECK ([TimeZone] LIKE '%/%'),  -- Must be valid IANA timezone format (Region/City)
-    [PreferredLanguage] NCHAR(5) NULL CHECK (LEN([PreferredLanguage]) = 5),  -- ISO language code (xx-XX format)
+    [TimeZone] NVARCHAR(100) NULL CONSTRAINT [CK_Person_TimeZone] CHECK ([TimeZone] LIKE '%/%'),  -- Must be valid IANA timezone format (Region/City)
+    [PreferredLanguage] NCHAR(5) NULL CONSTRAINT [CK_Person_PreferredLanguage] CHECK (LEN([PreferredLanguage]) = 5),  -- ISO language code (xx-XX format)
     [LastLoginAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [CreatedBy] UNIQUEIDENTIFIER NULL,
@@ -38,9 +38,9 @@ CREATE TABLE [dbo].[PersonRelationship]
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
     [RelatedPersonId] UNIQUEIDENTIFIER NOT NULL,
     [RelationType] NVARCHAR(50) NOT NULL,               -- Friend, Family, Colleague, etc.
-    [Strength] TINYINT NULL CHECK ([Strength] BETWEEN 1 AND 100), -- Optional relationship strength 1-100
+    [Strength] TINYINT NULL CONSTRAINT [CK_PersonRelationship_Strength] CHECK ([Strength] BETWEEN 1 AND 100), -- Optional relationship strength 1-100
     [StartDate] DATE NULL,
-    [EndDate] DATE NULL CHECK ([EndDate] IS NULL OR [EndDate] >= [StartDate]),
+    [EndDate] DATE NULL CONSTRAINT [CK_PersonRelationship_EndDate] CHECK ([EndDate] IS NULL OR [EndDate] >= [StartDate]),
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT [FK_PersonRelationship_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
@@ -55,7 +55,7 @@ CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [Name] NVARCHAR(200) NOT NULL UNIQUE,
     [Description] NVARCHAR(MAX) NULL,
-    [Type] NVARCHAR(50) NOT NULL CHECK ([Type] IN ('Social', 'Professional', 'Interest', 'Project', 'Other')),
+    [Type] NVARCHAR(50) NOT NULL CONSTRAINT [CK_UserGroup_Type] CHECK ([Type] IN ('Social', 'Professional', 'Interest', 'Project', 'Other')),
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [CreatedBy] UNIQUEIDENTIFIER NULL,
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -72,7 +72,7 @@ CREATE TABLE [dbo].[PersonGroup]
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     [PersonId] UNIQUEIDENTIFIER NOT NULL,
     [GroupId] UNIQUEIDENTIFIER NOT NULL,
-    [Role] NVARCHAR(50) NOT NULL CHECK ([Role] IN ('Member', 'Admin', 'Moderator', 'Owner')),
+    [Role] NVARCHAR(50) NOT NULL CONSTRAINT [CK_PersonGroup_Role] CHECK ([Role] IN ('Member', 'Admin', 'Moderator', 'Owner')),
     [JoinedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ExpiresAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
