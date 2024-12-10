@@ -11,3 +11,12 @@ CREATE TABLE [dbo].[ActivityLog]
     CONSTRAINT [FK_ActivityLog_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id])
 )
 GO
+
+CREATE INDEX [IX_ActivityLog_PersonId] ON [dbo].[ActivityLog] ([PersonId])
+GO
+
+CREATE INDEX [IX_ActivityLog_ActivityType] ON [dbo].[ActivityLog] ([ActivityType])
+GO
+
+CREATE INDEX [IX_ActivityLog_OccurredAt] ON [dbo].[ActivityLog] ([OccurredAt])
+GO

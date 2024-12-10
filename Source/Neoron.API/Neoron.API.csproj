@@ -10,6 +10,7 @@
     <IntermediateOutputPath>$(SolutionDir)artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsNotAsErrors>NU1902</WarningsNotAsErrors>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
   <ItemGroup>
