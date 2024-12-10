@@ -1,3 +1,18 @@
+CREATE TABLE [dbo].[ChannelGroups]
+(
+    [Id] BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [GuildId] BIGINT NOT NULL,
+    [Name] NVARCHAR(100) NOT NULL,
+    [Description] NVARCHAR(500) NULL,
+    [CreatedAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
+    [LastActiveAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
+    CONSTRAINT [UQ_ChannelGroups_GuildName] UNIQUE ([GuildId], [Name])
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_ChannelGroups_GuildId] ON [dbo].[ChannelGroups]([GuildId])
+GO
+
 CREATE TABLE [dbo].[DiscordMessage]
 (
     [MessageId] BIGINT NOT NULL PRIMARY KEY,
@@ -30,23 +45,23 @@ GO
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_ChannelId] 
 ON [dbo].[DiscordMessage]([ChannelId])
 INCLUDE ([MessageId], [Content], [CreatedAt])
-WHERE [IsDeleted] = 0;
+WHERE [IsDeleted] = 0
 GO
 
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GuildId] 
 ON [dbo].[DiscordMessage]([GuildId])
 INCLUDE ([MessageId], [ChannelId], [CreatedAt])
-WHERE [IsDeleted] = 0;
+WHERE [IsDeleted] = 0
 GO
 
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_AuthorId] 
 ON [dbo].[DiscordMessage]([AuthorId])
 INCLUDE ([MessageId], [Content], [CreatedAt])
-WHERE [IsDeleted] = 0;
+WHERE [IsDeleted] = 0
 GO
 
 CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GroupId] 
 ON [dbo].[DiscordMessage]([GroupId])
 INCLUDE ([MessageId], [Content], [CreatedAt])
-WHERE [IsDeleted] = 0;
+WHERE [IsDeleted] = 0
 GO
