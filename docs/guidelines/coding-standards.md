@@ -6,24 +6,13 @@
 - Maintainable Code: Clear structure, well-documented, easily testable
 - Follow SOLID principles and Clean Architecture
 
-## Version Control
-- Use conventional commits (feat:, fix:, docs:)
-- One logical change per commit
-- Branch naming: feature/, bugfix/, hotfix/
-- Use pull requests for code review
-- Squash commits before merging
+## Code Organization
+### Size Guidelines
+- Methods: ≤20 lines
+- Classes: ≤200 lines
+- Files: ≤300 lines
 
-## Code Style and Organization
-- Follow Microsoft's C# coding conventions
-- Use meaningful and descriptive names
-- Keep methods focused (≤20 lines)
-- Keep classes concise (≤200 lines)
-- Keep files manageable (≤300 lines)
-- Document public APIs with XML comments
-- Use async/await consistently
-- Follow SOLID principles
-
-## Architecture
+### Architecture
 - Follow Clean Architecture principles
 - Keep controllers thin, business logic in services
 - Use dependency injection
@@ -31,7 +20,14 @@
 - Group by feature when possible
 - Maintain clear separation of concerns
 
-## Database Guidelines
+### Style
+- Follow Microsoft's C# coding conventions
+- Use meaningful and descriptive names
+- Document public APIs with XML comments
+- Use async/await consistently
+- Follow SOLID principles
+
+## Database
 - Follow Entity Framework Core best practices
 - Implement proper indexing strategies
 - Use appropriate data types
@@ -39,7 +35,7 @@
 - Implement soft delete where appropriate
 - Optimize query performance
 
-## Security Requirements
+## Security
 - Validate all inputs
 - Use HTTPS everywhere
 - Implement rate limiting
@@ -51,7 +47,7 @@
 - Data encryption
 - Authorization checks
 
-## Performance Guidelines
+## Performance
 - Use async operations for I/O
 - Implement strategic caching
 - Optimize database queries
@@ -61,7 +57,17 @@
 - Resource monitoring
 - Scalability planning
 
-## Monitoring
+## Testing
+- 80% minimum code coverage
+- Unit tests for business logic
+- Integration tests for APIs
+- Performance benchmarks
+- Load testing for critical paths
+- Follow Arrange-Act-Assert pattern
+- Mock external dependencies
+- Test error scenarios
+
+## Monitoring & Observability
 - Health checks
 - Performance metrics
 - Error tracking
@@ -70,6 +76,13 @@
 - Structured logging
 - Configure alerting
 - Set up dashboards
+
+## Version Control
+- Use conventional commits (feat:, fix:, docs:)
+- One logical change per commit
+- Branch naming: feature/, bugfix/, hotfix/
+- Use pull requests for code review
+- Squash commits before merging
 
 ## Change Management
 - Impact analysis
