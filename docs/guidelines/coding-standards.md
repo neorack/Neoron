@@ -4,6 +4,7 @@
 - Reliability First: Every change must improve system stability
 - Defensive Programming: Validate inputs, handle errors gracefully
 - Maintainable Code: Clear structure, well-documented, easily testable
+- Follow SOLID principles and Clean Architecture
 
 ## Code Style and Organization
 - Follow Microsoft's C# coding conventions

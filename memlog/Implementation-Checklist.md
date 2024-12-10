@@ -1,17 +1,8 @@
-# Discord Message Implementation Checklist
+# Implementation Checklist
 
-## Checklist Management Guidelines
-- [ ] Create checklist at project initiation
-- [ ] Break down features into trackable items
-- [ ] Prioritize items (High/Medium/Low)
-- [ ] Add estimated completion dates
-- [ ] Review and update weekly
-- [ ] Track dependencies between items
-- [ ] Document completion criteria
-- [ ] Note blockers and risks
+See status-tracking.md for current progress details and roadmap.md for future plans.
 
-## Status Overview
-See status-tracking.md for current progress details
+## Active Development Items
 
 ## Architecture (100% Complete)
 - [x] Clean layered architecture
