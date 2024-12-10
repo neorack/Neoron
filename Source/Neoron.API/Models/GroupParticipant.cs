@@ -21,7 +21,19 @@ namespace Neoron.API.Models
         /// <summary>
         /// Gets or sets when this participant joined the group.
         /// </summary>
+        [Required]
         public DateTimeOffset JoinedAt { get; set; }
+
+        /// <summary>
+        /// Gets or sets when this participant was last active.
+        /// </summary>
+        public DateTimeOffset? LastActiveAt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the participant's role in the group.
+        /// </summary>
+        [Required]
+        public GroupRole Role { get; set; } = GroupRole.Member;
 
         /// <summary>
         /// Navigation property to the associated group.
@@ -30,3 +42,9 @@ namespace Neoron.API.Models
         public virtual ChannelGroup? Group { get; set; }
     }
 }
+    public enum GroupRole
+    {
+        Member = 0,
+        Moderator = 1,
+        Admin = 2
+    }

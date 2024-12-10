@@ -38,7 +38,7 @@ namespace Neoron.API.Tests.Integration
             await _messageRepository.AddAsync(message);
 
             // Act
-            var syncedCount = await _ingestionService.SyncMessagesAsync(guildId, channelId);
+            var (synced, failed) = await _ingestionService.SyncMessagesAsync(guildId, channelId);
 
             // Assert
             syncedCount.Should().Be(0); // Should not count deleted messages
@@ -106,7 +106,8 @@ namespace Neoron.API.Tests.Integration
             var syncedCount = await _ingestionService.SyncMessagesAsync(guildId, channelId);
 
             // Assert
-            syncedCount.Should().Be(1500);
+            synced.Should().Be(1500);
+            failed.Should().Be(0);
             var checkpoint = await _ingestionService.GetSyncCheckpointAsync(guildId, channelId);
             checkpoint.Should().NotBeNull();
             checkpoint!.LastMessageId.Should().Be(messages.Max(m => m.Id));

@@ -72,12 +72,16 @@ namespace Neoron.API.Middleware
                     catch (Exception ex) when (retryCount < maxRetries - 1)
                     {
                         retryCount++;
-                        Thread.Sleep(retryDelayMs * retryCount); // Exponential backoff
+                        // Exponential backoff with jitter
+                        var delay = retryDelayMs * Math.Pow(2, retryCount - 1);
+                        var jitter = Random.Shared.Next(0, 50); // Add 0-50ms random jitter
+                        Thread.Sleep((int)delay + jitter);
                         continue;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // On final retry, fail open to avoid blocking operations
+                        // Log error on final retry before failing open
+                        _logger?.LogError(ex, "Final retry attempt failed in TokenBucket");
                         return true;
                     }
                 }

@@ -52,7 +52,7 @@ namespace Neoron.API.Interfaces
         /// <param name="fromMessageId">Optional message ID to start from</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Number of messages synchronized</returns>
-        Task<int> SyncMessagesAsync(long guildId, long channelId, long? fromMessageId = null, CancellationToken cancellationToken = default);
+        Task<(int synced, int failed)> SyncMessagesAsync(long guildId, long channelId, long? fromMessageId = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets the latest sync checkpoint for a channel.
