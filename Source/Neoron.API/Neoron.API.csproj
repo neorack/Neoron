@@ -11,7 +11,7 @@
     <OutputPath>$(SolutionDir)artifacts\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>$(SolutionDir)artifacts\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>NU1902</WarningsNotAsErrors>
+    <WarningsNotAsErrors>NU1902;CS5001</WarningsNotAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

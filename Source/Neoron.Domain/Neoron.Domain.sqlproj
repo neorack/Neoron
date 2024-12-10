@@ -3,14 +3,17 @@
     <TargetFramework>net8.0</TargetFramework>
     <SqlServerVersion>Sql160</SqlServerVersion>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <DisableImplicitFolderItems>true</DisableImplicitFolderItems>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Tables" />
-    <Folder Include="Indexes" />
-  </ItemGroup>
-  <ItemGroup>
-    <Build Include="Tables\*.sql" />
-    <Build Include="Indexes\*.sql" />
+    <None Include="Tables\*.sql" />
+    <None Include="Indexes\*.sql" />
+    <Build Include="Tables\ActivityLog.sql" />
+    <Build Include="Tables\DiscordMessage.sql" />
+    <Build Include="Tables\Ideology.sql" />
+    <Build Include="Tables\MessageLog.sql" />
+    <Build Include="Tables\Person.sql" />
   </ItemGroup>
 </Project>
