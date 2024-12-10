@@ -111,4 +111,21 @@ public class DiscordMessageBuilder
     {
         return new DiscordMessageBuilder();
     }
+
+    public DiscordMessageBuilder WithRandomData()
+    {
+        return this
+            .WithMessageId(TestUtils.GenerateRandomId())
+            .WithChannelId(TestUtils.GenerateRandomId())
+            .WithGuildId(TestUtils.GenerateRandomId())
+            .WithAuthorId(TestUtils.GenerateRandomId())
+            .WithContent(TestUtils.GenerateRandomString(50))
+            .WithCreatedAt(DateTimeOffset.UtcNow);
+    }
+
+    public static IEnumerable<DiscordMessage> CreateMany(int count)
+    {
+        return Enumerable.Range(0, count)
+            .Select(_ => new DiscordMessageBuilder().WithRandomData().Build());
+    }
 }

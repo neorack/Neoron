@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace Neoron.API.Tests.Helpers;
 
 public static class TestUtils
@@ -179,6 +181,30 @@ public static class TestUtils
                 await context.DiscordMessages.AddRangeAsync(threadMessages);
                 await context.SaveChangesAsync();
             }
+        }
+    }
+
+    public static class HttpClientExtensions
+    {
+        public static async Task<T> GetAndDeserializeAsync<T>(
+            this HttpClient client, 
+            string requestUri,
+            HttpStatusCode expectedStatus = HttpStatusCode.OK)
+        {
+            var response = await client.GetAsync(requestUri);
+            response.StatusCode.Should().Be(expectedStatus);
+            return await response.Content.ReadFromJsonAsync<T>();
+        }
+
+        public static async Task<HttpResponseMessage> PostAndVerifyAsync<T>(
+            this HttpClient client,
+            string requestUri,
+            T content,
+            HttpStatusCode expectedStatus = HttpStatusCode.Created)
+        {
+            var response = await client.PostAsJsonAsync(requestUri, content);
+            response.StatusCode.Should().Be(expectedStatus);
+            return response;
         }
     }
 }
