@@ -5,15 +5,19 @@
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <EnableDefaultItems>false</EnableDefaultItems>
     <DisableImplicitFolderItems>true</DisableImplicitFolderItems>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Tables\*.sql" />
-    <None Include="Indexes\*.sql" />
+    <!-- Explicitly include all SQL files -->
     <Build Include="Tables\ActivityLog.sql" />
     <Build Include="Tables\DiscordMessage.sql" />
     <Build Include="Tables\Ideology.sql" />
     <Build Include="Tables\MessageLog.sql" />
     <Build Include="Tables\Person.sql" />
+    <Build Include="Tables\ChannelGroups.sql" />
+    <!-- Reference files that shouldn't be built -->
+    <None Include="README.md" />
+    <None Include=".editorconfig" />
   </ItemGroup>
 </Project>

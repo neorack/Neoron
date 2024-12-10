@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="StyleCop Rules" Description="Custom ruleset for Neoron project" ToolsVersion="14.0">
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1633" Action="None" /> <!-- File header -->
+    <Rule Id="SA1200" Action="None" /> <!-- Using directives placement -->
+    <Rule Id="SA1101" Action="None" /> <!-- Prefix local calls with this -->
+  </Rules>
+</RuleSet>
