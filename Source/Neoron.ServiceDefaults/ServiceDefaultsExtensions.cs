@@ -32,6 +32,7 @@ namespace Microsoft.Extensions.Hosting
             builder.Services.AddServiceDiscovery();
             builder.Services.ConfigureHttpClientDefaults(http =>
             {
+
                 // Turn on resilience by default
                 http.AddStandardResilienceHandler();
                 // Turn on service discovery by default
@@ -73,6 +74,7 @@ namespace Microsoft.Extensions.Hosting
                 {
                     tracing.AddSource(builder.Environment.ApplicationName)
                         .AddAspNetCoreInstrumentation()
+
                         // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                         //.AddGrpcClientInstrumentation()
                         .AddHttpClientInstrumentation();
@@ -140,6 +142,7 @@ namespace Microsoft.Extensions.Hosting
             {
                 builder.Services.AddOpenTelemetry().UseOtlpExporter();
             }
+
 
             // Uncomment the following lines to enable the Azure Monitor exporter (requires the Azure.Monitor.OpenTelemetry.AspNetCore package)
             // if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
