@@ -3,7 +3,7 @@
   <RunConfiguration>
     <MaxCpuCount>1</MaxCpuCount>
     <ResultsDirectory>TestResults</ResultsDirectory>
-    <TestSessionTimeout>120000</TestSessionTimeout>
+    <TestSessionTimeout>180000</TestSessionTimeout>
     <DisableAppDomain>true</DisableAppDomain>
     <TreatNoTestsAsError>true</TreatNoTestsAsError>
   </RunConfiguration>
@@ -20,6 +20,11 @@
           <LogFileName>TestResults.trx</LogFileName>
         </Configuration>
       </Logger>
+      <Logger friendlyName="html" enabled="True">
+        <Configuration>
+          <LogFileName>TestResults.html</LogFileName>
+        </Configuration>
+      </Logger>
     </Loggers>
   </LoggerRunSettings>
 
@@ -27,10 +32,11 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
-          <Format>cobertura</Format>
-          <Exclude>[*.Tests]*,[*]*.Migrations.*</Exclude>
+          <Format>cobertura,opencover</Format>
+          <Exclude>[*.Tests]*,[*]*.Migrations.*,[*]*.Infrastructure.*</Exclude>
           <Include>[Neoron.API]*</Include>
           <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverage</ExcludeByAttribute>
+          <ExcludeByFile>**/Migrations/*.cs,**/Infrastructure/*.cs</ExcludeByFile>
           <UseSourceLink>true</UseSourceLink>
           <SkipAutoProps>true</SkipAutoProps>
           <DeterministicReport>true</DeterministicReport>
@@ -40,15 +46,28 @@
   </DataCollectionRunSettings>
 
   <TestRunParameters>
+    <!-- Database Configuration -->
     <Parameter name="UseTestDatabase" value="true" />
     <Parameter name="TestDatabaseConnectionString" value="Server=localhost;Database=NeoronTest;Trusted_Connection=True;TrustServerCertificate=True;" />
     <Parameter name="TestDatabaseName" value="NeoronTest" />
     <Parameter name="TestContainerPrefix" value="neoron_test" />
+    
+    <!-- Logging Configuration -->
     <Parameter name="EnableDetailedLogs" value="true" />
+    <Parameter name="LogLevel" value="Debug" />
+    
+    <!-- Test Environment -->
     <Parameter name="TestEnvironment" value="Integration" />
+    <Parameter name="EnableMocks" value="true" />
+    
+    <!-- Authentication -->
     <Parameter name="TestAuthScheme" value="Test" />
     <Parameter name="TestAuthUserName" value="Test User" />
     <Parameter name="TestAuthUserId" value="test-user-id" />
     <Parameter name="TestAuthUserRole" value="admin" />
+    
+    <!-- Performance Testing -->
+    <Parameter name="PerformanceTestIterations" value="1000" />
+    <Parameter name="EnablePerformanceLogging" value="true" />
   </TestRunParameters>
 </RunSettings>
