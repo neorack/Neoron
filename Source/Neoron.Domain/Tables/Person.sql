@@ -8,7 +8,7 @@ CREATE TABLE [dbo].[Person]
     [PreferredName] NVARCHAR(100) NULL,
     [DateOfBirth] DATE NULL,
     [GenderId] TINYINT NULL,
-    CONSTRAINT [FK_Person_Gender] FOREIGN KEY ([GenderId]) REFERENCES [dbo].[RefGender]([Id]),
+    CONSTRAINT [FK_Person_Gender] FOREIGN KEY ([GenderId]) REFERENCES [dbo].[RefGender]([Id]) ON DELETE NO ACTION,
     [TimeZone] NVARCHAR(100) NULL,                      -- For global user base
     [PreferredLanguage] NCHAR(5) NULL,                  -- ISO language code
     [LastLoginAt] DATETIME2 NULL,
@@ -24,7 +24,6 @@ CREATE TABLE [dbo].[Person]
     CONSTRAINT [FK_Person_DeletedBy] FOREIGN KEY ([DeletedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
-
 CREATE TABLE [dbo].[PersonRelationship]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -45,7 +44,7 @@ GO
 CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
-    [Name] NVARCHAR(200) NOT NULL,
+    [Name] NVARCHAR(200) NOT NULL UNIQUE,
     [Description] NVARCHAR(MAX) NULL,
     [Type] NVARCHAR(50) NOT NULL CHECK ([Type] IN ('Social', 'Professional', 'Interest', 'Project', 'Other')),
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -53,8 +52,8 @@ CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedBy] UNIQUEIDENTIFIER NULL,
     [IsActive] BIT NOT NULL DEFAULT 1,
-    CONSTRAINT [FK_UserGroup_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_UserGroup_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id])
+    CONSTRAINT [FK_UserGroup_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_UserGroup_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
 
@@ -69,7 +68,7 @@ CREATE TABLE [dbo].[PersonGroup]
     [ExpiresAt] DATETIME2 NULL,
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    CONSTRAINT [FK_PersonGroup_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
+    CONSTRAINT [FK_PersonGroup_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_PersonGroup_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[UserGroup]([Id]) ON DELETE CASCADE
 )
 GO
@@ -88,7 +87,7 @@ CREATE TABLE [dbo].[PersonContact]
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT [FK_PersonContact_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_PersonContact_ContactType] FOREIGN KEY ([ContactTypeId]) REFERENCES [dbo].[RefContactType]([Id])
+    CONSTRAINT [FK_PersonContact_ContactType] FOREIGN KEY ([ContactTypeId]) REFERENCES [dbo].[RefContactType]([Id]) ON DELETE NO ACTION
 )
 GO
 
@@ -153,8 +152,8 @@ CREATE TABLE [dbo].[Tag]
     [CreatedBy] UNIQUEIDENTIFIER NULL,
     [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [UpdatedBy] UNIQUEIDENTIFIER NULL,
-    CONSTRAINT [FK_Tag_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_Tag_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id])
+    CONSTRAINT [FK_Tag_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_Tag_UpdatedBy] FOREIGN KEY ([UpdatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
 
@@ -168,9 +167,9 @@ CREATE TABLE [dbo].[PersonTag]
     [Source] NVARCHAR(50) NOT NULL CHECK ([Source] IN ('Self', 'System', 'Peer', 'AI')),
     [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [CreatedBy] UNIQUEIDENTIFIER NULL,
-    CONSTRAINT [FK_PersonTag_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]),
-    CONSTRAINT [FK_PersonTag_Tag] FOREIGN KEY ([TagId]) REFERENCES [dbo].[Tag]([Id]),
-    CONSTRAINT [FK_PersonTag_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id])
+    CONSTRAINT [FK_PersonTag_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_PersonTag_Tag] FOREIGN KEY ([TagId]) REFERENCES [dbo].[Tag]([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_PersonTag_CreatedBy] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
 
@@ -184,7 +183,7 @@ CREATE TABLE [dbo].[PersonInfluence]
     [Score] DECIMAL(10,2) NOT NULL,
     [CalculatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ValidUntil] DATETIME2 NULL,
-    CONSTRAINT [FK_PersonInfluence_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id])
+    CONSTRAINT [FK_PersonInfluence_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION
 )
 GO
 
