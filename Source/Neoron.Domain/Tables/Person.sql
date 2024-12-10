@@ -25,6 +25,8 @@ CREATE TABLE [dbo].[Person]
 )
 GO
 
+GO
+
 CREATE TABLE [dbo].[PersonRelationship]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -42,6 +44,8 @@ CREATE TABLE [dbo].[PersonRelationship]
 GO
 
 -- Groups table
+GO
+
 CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -59,6 +63,8 @@ CREATE TABLE [dbo].[UserGroup] -- Renamed from Group to avoid reserved word
 GO
 
 -- Person-Group memberships
+GO
+
 CREATE TABLE [dbo].[PersonGroup]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -76,6 +82,8 @@ GO
 
 
 -- Person Contact Information
+GO
+
 CREATE TABLE [dbo].[PersonContact]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -144,6 +152,8 @@ CREATE TABLE [dbo].[PersonIdeology]
 GO
 
 -- Tags for flexible categorization
+GO
+
 CREATE TABLE [dbo].[Tag]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -159,6 +169,8 @@ CREATE TABLE [dbo].[Tag]
 GO
 
 -- Person-Tag associations
+GO
+
 CREATE TABLE [dbo].[PersonTag]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
@@ -176,6 +188,8 @@ GO
 
 
 -- Influence/Reach metrics
+GO
+
 CREATE TABLE [dbo].[PersonInfluence]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
