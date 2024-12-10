@@ -11,9 +11,7 @@
 - [ ] Note blockers and risks
 
 ## Status Overview
-- Started: 2024-12-08
-- Last Updated: 2024-12-15
-- Overall Progress: 65%
+See status-tracking.md for current progress details
 
 ## Architecture (100% Complete)
 - [x] Clean layered architecture
