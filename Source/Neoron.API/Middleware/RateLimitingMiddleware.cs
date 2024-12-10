@@ -13,7 +13,6 @@ namespace Neoron.API.Middleware
     /// </summary>
     public class RateLimitingMiddleware : IDisposable
     {
-        private static readonly TimeSpan CleanupInterval = TimeSpan.FromHours(1);
 
         private readonly RequestDelegate next = default!;
         private readonly ILogger<RateLimitingMiddleware> logger = default!;
@@ -39,7 +38,7 @@ namespace Neoron.API.Middleware
             tokenBucket = new TokenBucket(options.MaxTokens, options.TokenRefillRate);
 
             // Start the cleanup timer
-            cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, CleanupInterval);
+            cleanupTimer = new Timer(Cleanup, null, TimeSpan.Zero, options.Value.CleanupInterval);
         }
 
         /// <summary>

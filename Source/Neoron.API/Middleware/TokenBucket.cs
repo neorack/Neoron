@@ -6,11 +6,16 @@ namespace Neoron.API.Middleware
     /// <summary>
     /// Represents a token bucket rate limiter.
     /// </summary>
-    public class TokenBucket : IDisposable
+    public interface ITokenBucket : IDisposable
+    {
+        bool ConsumeToken();
+    }
+
+    public class TokenBucket : ITokenBucket
     {
         private readonly int maxTokens;
         private readonly double refillRate;
-        private readonly object lockObject = new object();
+        private readonly object lockObject = new();
         private readonly Timer refillTimer;
         private int tokens;
 
@@ -21,6 +26,11 @@ namespace Neoron.API.Middleware
         /// <param name="refillRate">The rate at which tokens are refilled per second.</param>
         public TokenBucket(int maxTokens, double refillRate)
         {
+            if (maxTokens <= 0)
+                throw new ArgumentOutOfRangeException(nameof(maxTokens), "Max tokens must be greater than 0");
+            if (refillRate <= 0)
+                throw new ArgumentOutOfRangeException(nameof(refillRate), "Refill rate must be greater than 0");
+
             this.maxTokens = maxTokens;
             this.refillRate = refillRate;
             tokens = maxTokens;
