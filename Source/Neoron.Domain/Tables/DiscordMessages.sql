@@ -8,6 +8,7 @@ CREATE TABLE [dbo].[ChannelGroups]
     [LastActiveAt] DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
     CONSTRAINT [UQ_ChannelGroups_GuildName] UNIQUE ([GuildId], [Name])
 );
+
 GO
 
 CREATE NONCLUSTERED INDEX [IX_ChannelGroups_GuildId] ON [dbo].[ChannelGroups]([GuildId]);
