@@ -64,4 +64,4 @@ CREATE NONCLUSTERED INDEX [IX_DiscordMessage_GroupId]
 ON [dbo].[DiscordMessage]([GroupId])
 INCLUDE ([MessageId], [Content], [CreatedAt])
 WHERE IsDeleted = 0
-GO
+GO;
