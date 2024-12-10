@@ -36,5 +36,12 @@ namespace Neoron.API.Interfaces
         /// Updates the status of staged attachments.
         /// </summary>
         Task UpdateAttachmentStatusAsync(IEnumerable<long> attachmentIds, AttachmentStatus status, string? errorMessage = null);
+
+        /// <summary>
+        /// Checks for duplicate messages in staging.
+        /// </summary>
+        /// <param name="messageIds">Collection of message IDs to check</param>
+        /// <returns>Collection of existing staging IDs</returns>
+        Task<IEnumerable<long>> FindDuplicateMessagesAsync(IEnumerable<long> messageIds);
     }
 }

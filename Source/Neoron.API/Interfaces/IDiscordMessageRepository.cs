@@ -63,5 +63,12 @@ namespace Neoron.API.Interfaces
         /// <param name="messageIds">The collection of message identifiers to delete.</param>
         /// <returns>The number of messages deleted.</returns>
         Task<int> DeleteRangeAsync(IEnumerable<long> messageIds);
+
+        /// <summary>
+        /// Checks if messages already exist in the repository.
+        /// </summary>
+        /// <param name="messageIds">Collection of message IDs to check</param>
+        /// <returns>Collection of existing message IDs</returns>
+        Task<IEnumerable<long>> FindExistingMessagesAsync(IEnumerable<long> messageIds);
     }
 }

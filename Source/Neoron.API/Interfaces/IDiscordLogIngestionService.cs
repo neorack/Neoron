@@ -8,9 +8,10 @@ namespace Neoron.API.Interfaces
         /// Stages a batch of Discord messages for processing.
         /// </summary>
         /// <param name="messages">Collection of messages to stage</param>
+        /// <param name="skipDuplicates">Whether to skip duplicate messages</param>
         /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>Number of successfully staged messages</returns>
-        Task<int> StageMessagesAsync(IEnumerable<DiscordMessage> messages, CancellationToken cancellationToken = default);
+        /// <returns>A tuple containing (number of staged messages, number of duplicates skipped)</returns>
+        Task<(int staged, int duplicates)> StageMessagesAsync(IEnumerable<DiscordMessage> messages, bool skipDuplicates = true, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Processes staged messages and commits them to the database.
