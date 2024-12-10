@@ -1,5 +1,7 @@
 using Aspire.Hosting;
 
+namespace Neoron.AppHost;
+
 public class Program
 {
     public static async Task<int> Main(string[] args)
