@@ -1,6 +1,7 @@
 CREATE TABLE [dbo].[MessageLog]
 (
-    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
+    [Id] UNIQUEIDENTIFIER NOT NULL DEFAULT NEWSEQUENTIALID(),
+    CONSTRAINT [PK_MessageLog] PRIMARY KEY NONCLUSTERED ([Id]),
     [SenderId] UNIQUEIDENTIFIER NOT NULL,
     [ReceiverId] UNIQUEIDENTIFIER NULL,
     [GroupId] UNIQUEIDENTIFIER NULL,
@@ -35,7 +36,7 @@ INCLUDE ([SenderId], [MessageType], [Content], [SentAt])
 WHERE [GroupId] IS NOT NULL
 GO
 
-CREATE CLUSTERED INDEX [IX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
+CREATE CLUSTERED INDEX [CIX_MessageLog_SentAt] ON [dbo].[MessageLog] ([SentAt])
 GO
 
 CREATE INDEX [IX_MessageLog_Status] ON [dbo].[MessageLog] ([Status], [SentAt])
