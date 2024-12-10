@@ -10,7 +10,7 @@ CREATE TABLE [dbo].[MessageLog]
     [SentAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [DeliveredAt] DATETIME2 NULL,
     [ReadAt] DATETIME2 NULL,
-    [Status] NVARCHAR(50) NOT NULL DEFAULT 'Sent' CHECK ([Status] IN ('Sent', 'Delivered', 'Read', 'Failed')),
+    [Status] NVARCHAR(50) NOT NULL DEFAULT 'Sent' CONSTRAINT [CK_MessageLog_Status] CHECK ([Status] IN ('Sent', 'Delivered', 'Read', 'Failed')),
     CONSTRAINT [FK_MessageLog_Sender] FOREIGN KEY ([SenderId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_MessageLog_Receiver] FOREIGN KEY ([ReceiverId]) REFERENCES [dbo].[Person]([Id]) ON DELETE NO ACTION,
     CONSTRAINT [FK_MessageLog_Group] FOREIGN KEY ([GroupId]) REFERENCES [dbo].[UserGroup]([Id]) ON DELETE CASCADE,
