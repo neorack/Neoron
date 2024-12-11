@@ -11,10 +11,18 @@ namespace Neoron.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class DiscordMessageController(
-        IDiscordMessageRepository repository,
-        ILogger<DiscordMessageController> logger) : ControllerBase
+    public class DiscordMessageController : ControllerBase
     {
+        private readonly IDiscordMessageRepository repository;
+        private readonly ILogger<DiscordMessageController> logger;
+
+        public DiscordMessageController(
+            IDiscordMessageRepository repository,
+            ILogger<DiscordMessageController> logger)
+        {
+            this.repository = repository;
+            this.logger = logger;
+        }
         private static readonly Action<ILogger, long, Exception?> LogRetrieveMessage =
             LoggerMessage.Define<long>(LogLevel.Information, 0, "Retrieving message with ID: {Id}.");
 
