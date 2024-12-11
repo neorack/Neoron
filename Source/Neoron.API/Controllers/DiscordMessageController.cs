@@ -28,15 +28,24 @@ namespace Neoron.API.Controllers
         private readonly ILogger<DiscordMessageController> logger = logger;
 
         /// <summary>
-        /// Gets a message by its ID.
+        /// Retrieves a specific Discord message by its unique identifier.
         /// </summary>
-        /// <param name="id">The Discord message ID.</param>
-        /// <returns>The message if found.</returns>
-        /// <response code="200">Returns the message.</response>
-        /// <response code="404">If the message is not found.</response>
+        /// <param name="id">The Discord message ID to retrieve.</param>
+        /// <returns>The message details if found.</returns>
+        /// <remarks>
+        /// This method:
+        /// - Validates the message ID
+        /// - Logs the retrieval attempt
+        /// - Returns a 404 if message not found
+        /// - Maps entity to DTO for response
+        /// </remarks>
+        /// <response code="200">Returns the message details</response>
+        /// <response code="404">If the message is not found</response>
+        /// <response code="500">If an unexpected error occurs</response>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(MessageResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<MessageResponse>> GetById(long id)
         {
             try
@@ -60,14 +69,27 @@ namespace Neoron.API.Controllers
         }
 
         /// <summary>
-        /// Gets messages from a specific channel.
+        /// Retrieves messages from a specific Discord channel with pagination support.
         /// </summary>
-        /// <param name="channelId">The Discord channel ID.</param>
-        /// <param name="skip">Number of messages to skip.</param>
-        /// <param name="take">Number of messages to take.</param>
-        /// <returns>A list of messages.</returns>
+        /// <param name="channelId">The Discord channel ID to fetch messages from.</param>
+        /// <param name="skip">Number of messages to skip for pagination (must be >= 0).</param>
+        /// <param name="take">Number of messages to return (between 1 and 100).</param>
+        /// <returns>A paginated list of messages from the channel.</returns>
+        /// <remarks>
+        /// This endpoint:
+        /// - Supports server-side pagination
+        /// - Orders messages by creation date descending
+        /// - Limits maximum page size to 100
+        /// - Filters out deleted messages
+        /// - Includes thread/reply relationships
+        /// </remarks>
+        /// <response code="200">Returns the list of messages</response>
+        /// <response code="400">If pagination parameters are invalid</response>
+        /// <response code="404">If the channel is not found</response>
         [HttpGet("channel/{channelId}")]
         [ProducesResponseType(typeof(IEnumerable<MessageResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<MessageResponse>>> GetByChannel(
             long channelId,
             [FromQuery] int skip = 0,
