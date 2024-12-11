@@ -1,11 +1,31 @@
+/*
+ * Core entity representing a Discord message in the system
+ * Handles message content, relationships, and tracking metadata
+ * 
+ * Key design decisions:
+ * - Uses soft delete pattern with IsDeleted flag
+ * - Tracks message history for audit purposes
+ * - Supports threaded conversations and replies
+ * - Uses optimistic concurrency with Version property
+ */
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Neoron.API.Models
 {
     /// <summary>
-    /// Represents a Discord message entity.
+    /// Represents a Discord message entity with full tracking and relationship support.
     /// </summary>
+    /// <remarks>
+    /// This entity maintains the complete lifecycle of a Discord message including:
+    /// - Creation and modification timestamps
+    /// - Soft deletion support
+    /// - Thread/reply relationships
+    /// - Channel and group organization
+    /// - Version tracking for concurrency
+    /// - History tracking for auditing
+    /// </remarks>
     public class DiscordMessage
     {
         /// <summary>
