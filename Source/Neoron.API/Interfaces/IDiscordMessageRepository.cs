@@ -139,39 +139,91 @@ namespace Neoron.API.Interfaces
         Task<IEnumerable<DiscordMessage>> GetByGroupIdAsync(long groupId, int skip = 0, int take = 100);
 
         /// <summary>
-        /// Updates group assignments for messages.
+        /// Bulk updates the group assignments for multiple messages.
         /// </summary>
-        /// <param name="messageIds">The message IDs to update.</param>
-        /// <param name="groupId">The group ID to assign.</param>
-        /// <returns>The number of messages updated.</returns>
+        /// <param name="messageIds">Collection of message IDs to update (must not be null)</param>
+        /// <param name="groupId">Target group ID to assign (use 0 to remove from groups)</param>
+        /// <returns>Number of messages successfully updated</returns>
+        /// <remarks>
+        /// Provides atomic group assignment with:
+        /// - Validation of message and group existence
+        /// - Maintenance of group constraints and limits
+        /// - Automatic audit logging of changes
+        /// - Support for batch operations
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">When messageIds is null</exception>
+        /// <exception cref="ArgumentException">When groupId is invalid</exception>
+        /// <exception cref="InvalidOperationException">When batch update fails</exception>
         Task<int> UpdateGroupAssignmentAsync(IEnumerable<long> messageIds, long groupId);
 
         /// <summary>
-        /// Gets channel groups for a guild.
+        /// Retrieves all channel groups associated with a specific guild.
         /// </summary>
-        /// <param name="guildId">The guild ID.</param>
-        /// <returns>Collection of channel groups.</returns>
+        /// <param name="guildId">The Discord guild identifier</param>
+        /// <returns>Collection of channel groups with their relationships loaded</returns>
+        /// <remarks>
+        /// Includes:
+        /// - Group metadata and settings
+        /// - Channel associations
+        /// - Member permissions
+        /// - Usage statistics
+        /// Results are cached for performance
+        /// </remarks>
+        /// <exception cref="ArgumentException">When guildId is invalid</exception>
+        /// <exception cref="InvalidOperationException">When guild access fails</exception>
         Task<IEnumerable<ChannelGroup>> GetChannelGroupsAsync(long guildId);
 
         /// <summary>
-        /// Creates a new channel group.
+        /// Creates a new channel group with specified configuration.
         /// </summary>
-        /// <param name="group">The group to create.</param>
-        /// <returns>The created group.</returns>
+        /// <param name="group">Channel group configuration (must not be null)</param>
+        /// <returns>The newly created channel group with generated ID</returns>
+        /// <remarks>
+        /// Enforces:
+        /// - Group naming conventions
+        /// - Permission requirements
+        /// - Channel limit validations
+        /// - Duplicate detection
+        /// Triggers audit logging
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">When group is null</exception>
+        /// <exception cref="ValidationException">When group configuration is invalid</exception>
+        /// <exception cref="InvalidOperationException">When creation fails</exception>
         Task<ChannelGroup> CreateChannelGroupAsync(ChannelGroup group);
 
         /// <summary>
-        /// Updates an existing channel group.
+        /// Updates configuration and settings for an existing channel group.
         /// </summary>
-        /// <param name="group">The group to update.</param>
-        /// <returns>True if updated, false if not found.</returns>
+        /// <param name="group">Updated group configuration (must not be null)</param>
+        /// <returns>True if group was found and updated, false if not found</returns>
+        /// <remarks>
+        /// Supports:
+        /// - Partial updates of properties
+        /// - Permission validation
+        /// - Optimistic concurrency
+        /// - Audit history tracking
+        /// Changes are atomic
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">When group is null</exception>
+        /// <exception cref="ValidationException">When updated configuration is invalid</exception>
+        /// <exception cref="ConcurrencyException">When version conflict occurs</exception>
         Task<bool> UpdateChannelGroupAsync(ChannelGroup group);
 
         /// <summary>
-        /// Deletes a channel group.
+        /// Performs a soft delete of a channel group.
         /// </summary>
-        /// <param name="groupId">The group ID to delete.</param>
-        /// <returns>True if deleted, false if not found.</returns>
+        /// <param name="groupId">The group identifier to delete</param>
+        /// <returns>True if group was found and deleted, false if not found</returns>
+        /// <remarks>
+        /// Implements soft delete:
+        /// - Marks group as inactive
+        /// - Preserves message associations
+        /// - Updates related statistics
+        /// - Maintains audit history
+        /// Deletion is reversible
+        /// </remarks>
+        /// <exception cref="ArgumentException">When groupId is invalid</exception>
+        /// <exception cref="InvalidOperationException">When deletion fails</exception>
         Task<bool> DeleteChannelGroupAsync(long groupId);
     }
 }
