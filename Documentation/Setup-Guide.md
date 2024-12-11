@@ -60,8 +60,10 @@ dotnet test --settings Source/Neoron.API.Tests/test.runsettings
 ### 1. Infrastructure Requirements
 - DigitalOcean Droplet
   - Ubuntu 22.04 LTS
-  - Basic: 2GB RAM / 2 vCPUs ($15/mo)
-  - Production: 4GB RAM / 2 vCPUs ($20/mo)
+  - Development: 2GB RAM / 2 vCPUs ($15/mo)
+  - Staging: 4GB RAM / 2 vCPUs ($20/mo)
+  - Production: 8GB RAM / 4 vCPUs ($40/mo)
+  - High-Traffic: 16GB RAM / 8 vCPUs ($80/mo)
 - DigitalOcean Managed Database
   - PostgreSQL 15
   - Basic: 1GB RAM / 1 vCPU ($15/mo)

@@ -1,5 +1,8 @@
 # Code Documentation Standards
 
+## Overview
+This document outlines the documentation standards for the Neoron project. Following these standards ensures consistency and maintainability across the codebase.
+
 ## General Principles
 
 1. **Purpose Over Implementation**
@@ -49,13 +52,17 @@
 4. **When to Comment**
 
    Always Comment:
-   - Public APIs
-   - Complex business logic
-   - Non-obvious design decisions
-   - Performance implications
-   - Threading/concurrency details
-   - Security considerations
-   - Workarounds or temporary solutions
+   - Public APIs and interfaces
+   - Complex business logic and algorithms
+   - Non-obvious design decisions and architectural choices
+   - Performance implications and optimizations
+   - Threading/concurrency details and synchronization
+   - Security considerations and validation
+   - Workarounds or temporary solutions (with ticket references)
+   - Database operations and transaction boundaries
+   - Retry logic and error handling strategies
+   - Cache invalidation strategies
+   - Rate limiting implementations
 
    Avoid Commenting:
    - Obvious implementations

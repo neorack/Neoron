@@ -142,8 +142,21 @@ FROM StagingMessages;
 
 ### Pre-Migration
 1. Check database size and growth
+   - Current database size
+   - Growth rate analysis
+   - Storage capacity planning
+   - Index fragmentation levels
 2. Verify backup status
+   - Latest successful backup
+   - Backup integrity verification
+   - Recovery time objectives (RTO)
+   - Recovery point objectives (RPO)
 3. Test migration in staging
+   - Full rehearsal in staging environment
+   - Performance impact analysis
+   - Data integrity verification
+   - Application compatibility testing
+   - Rollback procedure verification
 
 ### Post-Migration
 1. Verify data integrity
