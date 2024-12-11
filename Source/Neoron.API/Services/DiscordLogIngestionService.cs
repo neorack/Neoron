@@ -126,30 +126,86 @@ namespace Neoron.API.Services
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Processes previously staged messages in batches.
+        /// </summary>
+        /// <param name="batchSize">Optional override for default batch size</param>
+        /// <param name="cancellationToken">Token to cancel the operation</param>
+        /// <returns>Number of messages successfully processed</returns>
+        /// <remarks>
+        /// Uses configured batch size if none specified.
+        /// Maintains rate limiting constraints during processing.
+        /// Can resume interrupted operations.
+        /// </remarks>
         public async Task<int> ProcessStagedMessagesAsync(int? batchSize = null, CancellationToken cancellationToken = default)
         {
             // Implementation needed
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Stages file attachments for later processing.
+        /// </summary>
+        /// <param name="messageId">ID of the message owning the attachments</param>
+        /// <param name="files">Collection of file attachments to stage</param>
+        /// <param name="cancellationToken">Token to cancel the operation</param>
+        /// <returns>Number of attachments successfully staged</returns>
+        /// <remarks>
+        /// Attachments are processed separately from messages for better performance.
+        /// Large files are handled in chunks to manage memory usage.
+        /// </remarks>
         public async Task<int> StageAttachmentsAsync(long messageId, IEnumerable<DiscordFileAttachment> files, CancellationToken cancellationToken = default)
         {
             // Implementation needed
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Processes previously staged attachments in batches.
+        /// </summary>
+        /// <param name="batchSize">Optional override for default batch size</param>
+        /// <param name="cancellationToken">Token to cancel the operation</param>
+        /// <returns>Number of attachments successfully processed</returns>
+        /// <remarks>
+        /// Downloads and stores attachments according to configured storage strategy.
+        /// Handles rate limiting for external downloads.
+        /// Supports resuming interrupted operations.
+        /// </remarks>
         public async Task<int> ProcessStagedAttachmentsAsync(int? batchSize = null, CancellationToken cancellationToken = default)
         {
             // Implementation needed
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Synchronizes messages from a Discord channel.
+        /// </summary>
+        /// <param name="guildId">ID of the guild containing the channel</param>
+        /// <param name="channelId">ID of the channel to sync</param>
+        /// <param name="fromMessageId">Optional message ID to sync from</param>
+        /// <param name="cancellationToken">Token to cancel the operation</param>
+        /// <returns>Tuple containing count of synced and failed messages</returns>
+        /// <remarks>
+        /// Creates a sync checkpoint for resumable operations.
+        /// Handles rate limiting for Discord API calls.
+        /// Supports incremental syncs from last checkpoint.
+        /// </remarks>
         public async Task<(int synced, int failed)> SyncMessagesAsync(long guildId, long channelId, long? fromMessageId = null, CancellationToken cancellationToken = default)
         {
             // Implementation needed
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Retrieves the last sync checkpoint for a channel.
+        /// </summary>
+        /// <param name="guildId">ID of the guild containing the channel</param>
+        /// <param name="channelId">ID of the channel</param>
+        /// <returns>The last sync checkpoint or null if none exists</returns>
+        /// <remarks>
+        /// Used to support resumable sync operations.
+        /// Checkpoints include last synced message ID and timestamp.
+        /// </remarks>
         public async Task<SyncCheckpoint?> GetSyncCheckpointAsync(long guildId, long channelId)
         {
             // Implementation needed
