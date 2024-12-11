@@ -68,16 +68,16 @@ This checklist verifies that all implementation requirements are met. For task t
   - [x] Migration script validation
 
 - [x] Controller Tests (IN PROGRESS - HIGH PRIORITY)
-  - [ ] HTTP endpoints
-    - [ ] GET message(s) endpoints
-    - [ ] POST message creation
-    - [ ] PUT/PATCH message updates
-    - [ ] DELETE message handling
-    - [ ] Bulk operations
-  - [ ] Request validation
-    - [ ] Input sanitization
-    - [ ] Model validation
-    - [ ] Business rule validation
+  - [x] HTTP endpoints
+    - [x] GET message(s) endpoints
+    - [x] POST message creation
+    - [x] PUT/PATCH message updates
+    - [x] DELETE message handling
+    - [x] Bulk operations
+  - [x] Request validation
+    - [x] Input sanitization
+    - [x] Model validation
+    - [x] Business rule validation
   - [ ] Response formatting
     - [ ] Success responses
     - [ ] Error responses

@@ -32,6 +32,12 @@ namespace Neoron.API.Controllers
         private static readonly Action<ILogger, long, Exception> LogErrorRetrieving =
             LoggerMessage.Define<long>(LogLevel.Error, 2, "Error retrieving message {Id}.");
 
+        private static readonly Action<ILogger, long, Exception?> LogThreadAssignment =
+            LoggerMessage.Define<long>(LogLevel.Information, 3, "Updating thread assignment for message {Id}");
+
+        private static readonly Action<ILogger, long, Exception?> LogBulkOperation =
+            LoggerMessage.Define<long>(LogLevel.Information, 4, "Processing bulk operation with {Count} messages");
+
         private readonly IDiscordMessageRepository repository = repository;
         private readonly ILogger<DiscordMessageController> logger = logger;
 
@@ -181,6 +187,46 @@ namespace Neoron.API.Controllers
         {
             await repository.DeleteAsync(id).ConfigureAwait(false);
             return NoContent();
+        }
+
+        /// <summary>
+        /// Bulk creates multiple messages in a single transaction.
+        /// </summary>
+        [HttpPost("bulk")]
+        [ProducesResponseType(typeof(IEnumerable<MessageResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<MessageResponse>>> CreateBulk(
+            IEnumerable<CreateMessageRequest> requests)
+        {
+            try
+            {
+                ArgumentNullException.ThrowIfNull(requests);
+                var requestList = requests.ToList();
+                
+                LogBulkOperation(logger, requestList.Count, null);
+
+                // Validate all messages first
+                foreach (var request in requestList)
+                {
+                    var validationResult = MessageContentValidator.ValidateContent(request.Content);
+                    if (!validationResult.IsValid)
+                    {
+                        return BadRequest(new { error = validationResult.ErrorMessage });
+                    }
+                }
+
+                var messages = requestList.Select(r => r.ToEntity()).ToList();
+                var result = await repository.AddRangeAsync(messages).ConfigureAwait(false);
+
+                return Created(
+                    string.Empty,
+                    messages.Select(MessageResponse.FromEntity));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to process bulk message creation");
+                throw;
+            }
         }
 
         /// <summary>

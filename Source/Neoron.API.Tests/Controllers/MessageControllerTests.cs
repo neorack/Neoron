@@ -482,4 +482,60 @@ public class MessageControllerTests : IntegrationTestBase
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
+    [Fact]
+    public async Task BulkCreateMessages_WithValidData_ReturnsCreatedMessages()
+    {
+        // Arrange
+        var requests = Enumerable.Range(1, 5).Select(i => new CreateMessageRequest
+        {
+            MessageId = i,
+            ChannelId = 987654321,
+            GuildId = 11111111,
+            AuthorId = 22222222,
+            Content = $"Bulk message {i}",
+            MessageType = 0
+        }).ToList();
+
+        // Act
+        var response = await Client.PostAsJsonAsync("/api/messages/bulk", requests);
+        var result = await response.Content.ReadFromJsonAsync<IEnumerable<MessageResponse>>();
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        result.Should().NotBeNull();
+        result.Should().HaveCount(5);
+        
+        // Verify in database
+        var savedMessages = await DbContext.Messages.Where(m => requests.Select(r => r.MessageId).Contains(m.MessageId)).ToListAsync();
+        savedMessages.Should().HaveCount(5);
+    }
+
+    [Fact]
+    public async Task UpdateThreadAssignment_WithValidData_UpdatesMessageThread()
+    {
+        // Arrange
+        var threadMessage = DiscordMessageBuilder.Create()
+            .WithRandomData()
+            .Build();
+        var message = DiscordMessageBuilder.Create()
+            .WithRandomData()
+            .Build();
+            
+        await DbContext.Messages.AddRangeAsync(new[] { threadMessage, message });
+        await DbContext.SaveChangesAsync();
+
+        // Act
+        var response = await Client.PatchAsync(
+            $"/api/messages/{message.MessageId}/thread",
+            JsonContent.Create(threadMessage.MessageId));
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        
+        // Verify in database
+        var updatedMessage = await DbContext.Messages.FindAsync(message.MessageId);
+        updatedMessage.Should().NotBeNull();
+        updatedMessage!.ThreadId.Should().Be(threadMessage.MessageId);
+    }
 }
