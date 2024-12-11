@@ -448,5 +448,38 @@ public class MessageControllerTests : IntegrationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
+    [Fact]
+    public async Task UpdateMessage_WithConcurrentModification_ReturnsConflict()
+    {
+        // Arrange
+        var message = DiscordMessageBuilder.Create()
+            .WithRandomData()
+            .Build();
+        await DbContext.Messages.AddAsync(message);
+        await DbContext.SaveChangesAsync();
 
+        var request1 = new UpdateMessageRequest { Content = "Update 1" };
+        var request2 = new UpdateMessageRequest { Content = "Update 2" };
+
+        // Act
+        var response1 = await Client.PutAsJsonAsync($"/api/messages/{message.MessageId}", request1);
+        var response2 = await Client.PutAsJsonAsync($"/api/messages/{message.MessageId}", request2);
+
+        // Assert
+        response2.StatusCode.Should().Be(HttpStatusCode.Conflict);
+    }
+
+    [Fact]
+    public async Task GetMessages_WithInvalidAuthToken_ReturnsUnauthorized()
+    {
+        // Arrange
+        Client.DefaultRequestHeaders.Authorization = 
+            new AuthenticationHeaderValue("Bearer", "invalid-token");
+
+        // Act
+        var response = await Client.GetAsync("/api/messages/123");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
 }

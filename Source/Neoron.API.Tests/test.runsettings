@@ -85,5 +85,9 @@
     <Parameter name="PerformanceTestIterations" value="1000" />
     <Parameter name="EnablePerformanceLogging" value="true" />
     <Parameter name="PerformanceTestTimeout" value="300" />
+    <Parameter name="PerformanceTestDuration" value="300" />
+    <Parameter name="PerformanceTestConcurrentUsers" value="100" />
+    <Parameter name="PerformanceTestRampUpTime" value="30" />
+    <Parameter name="PerformanceTestThinkTime" value="1" />
   </TestRunParameters>
 </RunSettings>

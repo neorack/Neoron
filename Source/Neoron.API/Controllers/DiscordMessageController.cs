@@ -182,5 +182,46 @@ namespace Neoron.API.Controllers
             await repository.DeleteAsync(id).ConfigureAwait(false);
             return NoContent();
         }
+
+        /// <summary>
+        /// Bulk creates multiple messages in a single transaction.
+        /// </summary>
+        [HttpPost("bulk")]
+        [ProducesResponseType(typeof(IEnumerable<MessageResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<MessageResponse>>> CreateBulk(
+            IEnumerable<CreateMessageRequest> requests)
+        {
+            ArgumentNullException.ThrowIfNull(requests);
+
+            var messages = requests.Select(r => r.ToEntity()).ToList();
+            var result = await repository.AddRangeAsync(messages).ConfigureAwait(false);
+
+            return Created(
+                string.Empty,
+                messages.Select(MessageResponse.FromEntity));
+        }
+
+        /// <summary>
+        /// Updates message thread assignments.
+        /// </summary>
+        [HttpPatch("{id}/thread")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateThreadAssignment(
+            long id, 
+            [FromBody] long? threadId)
+        {
+            var message = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            if (message == null)
+            {
+                return NotFound();
+            }
+
+            message.ThreadId = threadId;
+            await repository.UpdateAsync(message).ConfigureAwait(false);
+
+            return NoContent();
+        }
     }
 }
