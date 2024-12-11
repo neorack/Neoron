@@ -4,13 +4,18 @@
 - Reliability First: Every change must improve system stability
 - Defensive Programming: Validate inputs, handle errors gracefully
 - Maintainable Code: Clear structure, well-documented, easily testable
+- Performance Conscious: Consider scalability and efficiency
+- Security-First Mindset: Protect data and system integrity
 
 ## Critical Requirements
 
 ### 1. Version Control
-- Use conventional commits (feat:, fix:, docs:)
+- Use conventional commits (feat:, fix:, docs:, test:, refactor:)
 - One logical change per commit
-- Branch naming: feature/, bugfix/, hotfix/
+- Branch naming: feature/, bugfix/, hotfix/, test/
+- Include issue/ticket references
+- Meaningful commit messages with context
+- Clean commit history (squash when needed)
 
 ### 2. Code Quality
 - Methods: ≤20 lines
@@ -28,11 +33,16 @@
 - Documented recovery procedures
 
 ### 4. Testing
-- 80% minimum code coverage
+- 90% minimum code coverage for new code
 - Unit tests for business logic
 - Integration tests for APIs
 - Performance benchmarks
 - Load testing for critical paths
+- Test data management
+- Mocking strategies
+- Edge case coverage
+- Concurrent operation testing
+- Security testing scenarios
 
 ### 5. Security
 - OWASP compliance
@@ -79,4 +89,27 @@
 - Ensure team expertise exists for chosen stack
 - Plan migration paths for outdated technologies
 
+### 11. API Design
+- Follow REST principles
+- Consistent endpoint naming
+- Proper HTTP method usage
+- Comprehensive error responses
+- API versioning strategy
+- Rate limiting implementation
+- Documentation with examples
+- Schema validation
+- Response formatting standards
+
+### 12. Database Management
+- Query optimization
+- Index strategy
+- Migration procedures
+- Backup policies
+- Data archival strategy
+- Connection management
+- Transaction handling
+- Concurrency control
+- Data validation rules
+
 Remember: Prioritize system stability and reliability in all changes.
+Follow these guidelines for all AI-assisted development tasks.
