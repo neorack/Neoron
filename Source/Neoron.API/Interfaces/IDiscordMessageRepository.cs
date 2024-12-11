@@ -77,9 +77,12 @@ namespace Neoron.API.Interfaces
         /// <param name="messages">Collection of messages to update</param>
         /// <returns>Number of messages successfully updated</returns>
         /// <remarks>
-        /// Uses optimistic concurrency with Version property.
-        /// Maintains audit history of changes.
-        /// Handles relationship updates.
+        /// Provides atomic updates with:
+        /// - Optimistic concurrency using Version property
+        /// - Automatic audit history tracking
+        /// - Relationship consistency maintenance
+        /// - Support for partial updates
+        /// - Batch size limits for performance
         /// </remarks>
         /// <exception cref="ArgumentNullException">When messages collection is null</exception>
         /// <exception cref="ConcurrencyException">When version conflicts occur</exception>
@@ -87,26 +90,52 @@ namespace Neoron.API.Interfaces
         Task<int> UpdateRangeAsync(IEnumerable<DiscordMessage> messages);
 
         /// <summary>
-        /// Deletes a range of Discord messages by their identifiers asynchronously.
+        /// Performs soft deletion of multiple messages in a single operation.
         /// </summary>
-        /// <param name="messageIds">The collection of message identifiers to delete.</param>
-        /// <returns>The number of messages deleted.</returns>
+        /// <param name="messageIds">Collection of message identifiers to delete</param>
+        /// <returns>Number of messages successfully marked as deleted</returns>
+        /// <remarks>
+        /// Implements soft delete pattern:
+        /// - Sets IsDeleted flag to true
+        /// - Updates DeletedAt timestamp
+        /// - Maintains referential integrity
+        /// - Preserves message history
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">When messageIds is null</exception>
+        /// <exception cref="InvalidOperationException">When deletion fails</exception>
         Task<int> DeleteRangeAsync(IEnumerable<long> messageIds);
 
         /// <summary>
-        /// Checks if messages already exist in the repository.
+        /// Identifies which messages from a collection already exist in storage.
         /// </summary>
         /// <param name="messageIds">Collection of message IDs to check</param>
         /// <returns>Collection of existing message IDs</returns>
+        /// <remarks>
+        /// Used for:
+        /// - Duplicate detection during imports
+        /// - Sync validation
+        /// - Integrity checks
+        /// Optimized for bulk operations
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">When messageIds is null</exception>
         Task<IEnumerable<long>> FindExistingMessagesAsync(IEnumerable<long> messageIds);
 
         /// <summary>
-        /// Gets messages by group identifier asynchronously.
+        /// Retrieves paginated messages belonging to a specific group.
         /// </summary>
-        /// <param name="groupId">The group identifier.</param>
-        /// <param name="skip">The number of messages to skip.</param>
-        /// <param name="take">The number of messages to take.</param>
-        /// <returns>A collection of Discord messages.</returns>
+        /// <param name="groupId">The group identifier</param>
+        /// <param name="skip">Number of messages to skip (must be >= 0)</param>
+        /// <param name="take">Number of messages to retrieve (1-1000)</param>
+        /// <returns>Collection of messages in the group</returns>
+        /// <remarks>
+        /// Supports organization features:
+        /// - Custom message grouping
+        /// - Efficient pagination
+        /// - Ordered by group-specific criteria
+        /// - Includes group metadata
+        /// </remarks>
+        /// <exception cref="ArgumentException">When pagination parameters are invalid</exception>
+        /// <exception cref="InvalidOperationException">When group access fails</exception>
         Task<IEnumerable<DiscordMessage>> GetByGroupIdAsync(long groupId, int skip = 0, int take = 100);
 
         /// <summary>
