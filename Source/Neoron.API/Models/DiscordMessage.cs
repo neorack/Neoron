@@ -7,6 +7,11 @@
  * - Tracks message history for audit purposes
  * - Supports threaded conversations and replies
  * - Uses optimistic concurrency with Version property
+ * - Implements content validation
+ * - Supports embedded content
+ * - Maintains audit trail
+ * - Handles group organization
+ * - Tracks sync status
  */
 
 using System.ComponentModel.DataAnnotations;

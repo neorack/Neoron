@@ -1,10 +1,30 @@
+/*
+ * Entity representing user authentication tokens
+ * Manages token lifecycle and validation
+ * 
+ * Key design decisions:
+ * - Implements token expiration
+ * - Tracks token usage
+ * - Supports token revocation
+ * - Records creation metadata
+ * - Uses secure token generation
+ */
+
 using System.ComponentModel.DataAnnotations;
 
 namespace Neoron.API.Models
 {
     /// <summary>
-    /// Represents a user's authentication token.
+    /// Represents a user's authentication token with full lifecycle management.
     /// </summary>
+    /// <remarks>
+    /// This entity:
+    /// - Manages token creation and expiration
+    /// - Tracks token usage timestamps
+    /// - Supports explicit token revocation
+    /// - Records token metadata
+    /// - Implements secure token patterns
+    /// </remarks>
     public class UserToken
     {
         /// <summary>
