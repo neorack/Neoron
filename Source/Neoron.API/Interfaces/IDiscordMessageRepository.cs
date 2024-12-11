@@ -8,12 +8,19 @@ namespace Neoron.API.Interfaces
     public interface IDiscordMessageRepository : IRepository<DiscordMessage>
     {
         /// <summary>
-        /// Gets Discord messages by channel identifier asynchronously.
+        /// Retrieves paginated Discord messages for a specific channel.
         /// </summary>
-        /// <param name="channelId">The channel identifier.</param>
-        /// <param name="skip">The number of messages to skip (must be >= 0).</param>
-        /// <param name="take">The number of messages to take (must be between 1 and 1000).</param>
-        /// <returns>A collection of Discord messages.</returns>
+        /// <remarks>
+        /// Messages are ordered by creation date descending.
+        /// Supports efficient pagination for large channels.
+        /// Includes soft-deleted messages if configured.
+        /// </remarks>
+        /// <param name="channelId">The Discord channel identifier</param>
+        /// <param name="skip">Number of messages to skip for pagination (must be >= 0)</param>
+        /// <param name="take">Page size (must be between 1 and 1000 for performance)</param>
+        /// <returns>Collection of messages with their relationships loaded</returns>
+        /// <exception cref="ArgumentException">When skip or take parameters are invalid</exception>
+        /// <exception cref="InvalidOperationException">When channel access fails</exception>
         Task<IEnumerable<DiscordMessage>> GetByChannelIdAsync(long channelId, int skip = 0, int take = 100);
 
         /// <summary>
