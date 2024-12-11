@@ -42,26 +42,48 @@ namespace Neoron.API.Interfaces
         Task<IEnumerable<DiscordMessage>> GetByAuthorIdAsync(long authorId, int skip = 0, int take = 100);
 
         /// <summary>
-        /// Gets thread messages by thread identifier asynchronously.
+        /// Retrieves paginated messages within a specific thread.
         /// </summary>
-        /// <param name="threadId">The thread identifier.</param>
-        /// <param name="skip">The number of messages to skip.</param>
-        /// <param name="take">The number of messages to take.</param>
-        /// <returns>A collection of Discord messages.</returns>
+        /// <param name="threadId">The Discord thread identifier</param>
+        /// <param name="skip">Number of messages to skip (must be >= 0)</param>
+        /// <param name="take">Number of messages to retrieve (1-1000)</param>
+        /// <returns>Collection of messages in thread order</returns>
+        /// <remarks>
+        /// Messages are ordered by position in thread.
+        /// Includes thread metadata and relationships.
+        /// Supports efficient pagination for long threads.
+        /// </remarks>
+        /// <exception cref="ArgumentException">When skip or take parameters are invalid</exception>
+        /// <exception cref="InvalidOperationException">When thread access fails</exception>
         Task<IEnumerable<DiscordMessage>> GetThreadMessagesAsync(long threadId, int skip = 0, int take = 100);
 
         /// <summary>
-        /// Adds a range of Discord messages asynchronously.
+        /// Adds multiple Discord messages in a single transaction.
         /// </summary>
-        /// <param name="messages">The collection of messages to add.</param>
-        /// <returns>The number of messages added.</returns>
+        /// <param name="messages">Collection of messages to add</param>
+        /// <returns>Number of messages successfully added</returns>
+        /// <remarks>
+        /// Performs bulk insert for better performance.
+        /// Maintains message relationships and integrity.
+        /// Handles duplicate detection.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">When messages collection is null</exception>
+        /// <exception cref="InvalidOperationException">When bulk insert fails</exception>
         Task<int> AddRangeAsync(IEnumerable<DiscordMessage> messages);
 
         /// <summary>
-        /// Updates a range of Discord messages asynchronously.
+        /// Updates multiple Discord messages in a single transaction.
         /// </summary>
-        /// <param name="messages">The collection of messages to update.</param>
-        /// <returns>The number of messages updated.</returns>
+        /// <param name="messages">Collection of messages to update</param>
+        /// <returns>Number of messages successfully updated</returns>
+        /// <remarks>
+        /// Uses optimistic concurrency with Version property.
+        /// Maintains audit history of changes.
+        /// Handles relationship updates.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">When messages collection is null</exception>
+        /// <exception cref="ConcurrencyException">When version conflicts occur</exception>
+        /// <exception cref="InvalidOperationException">When bulk update fails</exception>
         Task<int> UpdateRangeAsync(IEnumerable<DiscordMessage> messages);
 
         /// <summary>
